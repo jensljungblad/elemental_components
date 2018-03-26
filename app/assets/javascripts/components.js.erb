@@ -1,0 +1,5 @@
+<% Components.component_names.each do |component| %>
+  <% begin %>
+    <% require_asset "#{component}/#{component}" %>
+  <% rescue Sprockets::FileNotFound; end %>
+<% end %>

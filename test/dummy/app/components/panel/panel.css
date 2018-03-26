@@ -1,0 +1,13 @@
+.Panel {
+  border: 1px solid black;
+  padding: .5rem;
+}
+
+.Panel + .Panel {
+  margin-top: .5rem;
+}
+
+.Panel-header {
+  border-bottom: 1px solid gray;
+  margin-bottom: .5rem;
+}
