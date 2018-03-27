@@ -29,10 +29,5 @@ module Components
         raise "Unknown props passed to #{self.class.name}: #{props.keys}"
       end
     end
-
-    def to_partial_path
-      name = self.class.name.chomp('Component').underscore
-      "#{name}/#{name}"
-    end
   end
 end
