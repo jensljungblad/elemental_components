@@ -3,8 +3,11 @@ module Components
     def component(name, props = {})
       yield props if block_given?
 
+      component = "#{name}_component".classify.constantize.new(props)
+
       render(
-        "#{name}_component".classify.constantize.new(props)
+        partial: "#{name}/#{name}",
+        object: component
       )
     end
   end
