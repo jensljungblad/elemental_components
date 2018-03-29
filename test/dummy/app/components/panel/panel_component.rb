@@ -1,4 +1,4 @@
 class PanelComponent < Components::Component
-  prop :header
-  prop :body
+  attribute :header, Components::Types::String
+  attribute :body, Components::Types::String
 end
