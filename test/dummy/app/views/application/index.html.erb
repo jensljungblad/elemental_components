@@ -1,7 +1,5 @@
 <%= component :panel, header: "Foo", body: "Bar" %>
 
-<%= component :panel, header: "Foo" do |attrs| %>
-  <% attrs[:body] = capture do %>
-    Bar
-  <% end %>
+<%= component :panel, header: "Foo" do %>
+  Bar
 <% end %>
