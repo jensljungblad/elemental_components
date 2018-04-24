@@ -121,25 +121,32 @@ end
 <%= component :panel, header: "Header", body: "Body" %>
 ```
 
-If we want to assign something more interesting than a string, we can pass a block to `component` and leverage Rails `capture` helper:
+If we want to assign something more interesting than an inline string, we can pass a block to `component`. This will assign the value of the block to an attribute of our choice:
+
+```ruby
+# app/components/panel/panel_component.rb %>
+
+class PanelComponent < Components::Component
+  BLOCK_ATTRIBUTE = :body
+
+  attribute :header, Components::Types::String
+  attribute :body, Components::Types::String
+end
+```
 
 ```erb
-<%= component :panel, header: "Header" do |attrs| %>
-  <% attrs[:body] = capture do %>
-    <ul>
-      <li>...</li>
-    </ul>
-  <% end %>
+<%= component :panel, header: "Header" do %>
+  <ul>
+    <li>...</li>
+  </ul>
 <% end %>
 ```
 
 This means we can nest components:
 
 ```erb
-<%= component :panel, header: "Header" do |attrs| %>
-  <% attrs[:body] = capture do %>
-    <%= component :panel, header: "Nested panel header", body: "Nested panel body" %>
-  <% end %>
+<%= component :panel, header: "Header" do %>
+  <%= component :panel, header: "Nested panel header", body: "Nested panel body" %>
 <% end %>
 ```
 

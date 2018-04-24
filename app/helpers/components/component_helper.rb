@@ -1,13 +1,17 @@
 module Components
   module ComponentHelper
     def component(name, attrs = {})
-      yield attrs if block_given?
+      component_class = "#{name}_component".classify.constantize
 
-      component = "#{name}_component".classify.constantize.new(attrs)
+      if block_given?
+        attrs.reverse_merge!(
+          component_class::BLOCK_ATTRIBUTE => capture { yield }
+        )
+      end
 
       render(
         partial: "#{name}/#{name}",
-        object: component
+        object: component_class.new(attrs)
       )
     end
   end
