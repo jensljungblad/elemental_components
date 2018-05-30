@@ -99,8 +99,8 @@ Let's define some data that we can pass to the component:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 end
 ```
 
@@ -109,10 +109,10 @@ end
 
 <div class="Panel">
   <div class="Panel-header">
-    <%= panel.header %>
+    <%= header %>
   </div>
   <div class="Panel-body">
-    <%= panel.body %>
+    <%= body %>
   </div>
 </div>
 ```
@@ -153,8 +153,8 @@ Attributes can have default values:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String.default('Some default')
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 end
 ```
 
@@ -170,8 +170,8 @@ It's easy to override an attribute with additional logic:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 
   def header
     @header.titleize
@@ -187,8 +187,8 @@ In addition to overriding already defined methods, we can declare our own:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 
   def long_body?
     body.length > 100
@@ -203,13 +203,13 @@ We can access these from the template just like attributes:
 
 <div class="Panel">
   <div class="Panel-header">
-    <%= panel.header %>
+    <%= header %>
   </div>
   <div class="Panel-body">
-    <% if panel.long_body? %>
-      <%= truncate panel.body, length: 100 %>
+    <% if long_body? %>
+      <%= truncate body, length: 100 %>
     <% else %>
-      <%= panel.body %>
+      <%= body %>
     <% end %>
   </div>
 </div>
