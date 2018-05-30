@@ -1,5 +1,6 @@
 require 'components/engine'
 require 'components/component'
+require 'components/view'
 
 module Components
   def self.path
