@@ -67,10 +67,10 @@ Let's add some markup and CSS:
 }
 ```
 
-This component can now be rendered using the `component` helper:
+This component can now be rendered using the `render_component` helper:
 
 ```erb
-<%= component :panel %>
+<%= render_component :panel %>
 ```
 
 ### Component assets
@@ -99,8 +99,8 @@ Let's define some data that we can pass to the component:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 end
 ```
 
@@ -109,22 +109,22 @@ end
 
 <div class="Panel">
   <div class="Panel-header">
-    <%= panel.header %>
+    <%= component.header %>
   </div>
   <div class="Panel-body">
-    <%= panel.body %>
+    <%= component.body %>
   </div>
 </div>
 ```
 
 ```erb
-<%= component :panel, header: "Header", body: "Body" %>
+<%= render_component :panel, header: "Header", body: "Body" %>
 ```
 
-If we want to assign something more interesting than a string, we can pass a block to `component` and leverage Rails `capture` helper:
+If we want to assign something more interesting than a string, we can pass a block to `render_component` and leverage Rails `capture` helper:
 
 ```erb
-<%= component :panel, header: "Header" do |attrs| %>
+<%= render_component :panel, header: "Header" do |attrs| %>
   <% attrs[:body] = capture do %>
     <ul>
       <li>...</li>
@@ -136,9 +136,9 @@ If we want to assign something more interesting than a string, we can pass a blo
 This means we can nest components:
 
 ```erb
-<%= component :panel, header: "Header" do |attrs| %>
+<%= render_component :panel, header: "Header" do |attrs| %>
   <% attrs[:body] = capture do %>
-    <%= component :panel, header: "Nested panel header", body: "Nested panel body" %>
+    <%= render_component :panel, header: "Nested panel header", body: "Nested panel body" %>
   <% end %>
 <% end %>
 ```
@@ -153,13 +153,13 @@ Attributes can have default values:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String.default('Some default')
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 end
 ```
 
 ```erb
-<%= component :panel, body: "Body" %>
+<%= render_component :panel, body: "Body" %>
 ```
 
 ### Attribute overrides
@@ -170,8 +170,8 @@ It's easy to override an attribute with additional logic:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 
   def header
     @header.titleize
@@ -187,8 +187,8 @@ In addition to overriding already defined methods, we can declare our own:
 # app/components/panel/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::String
-  attribute :body, Components::Types::String
+  attribute :header, Components::Types::Strict::String
+  attribute :body, Components::Types::Strict::String
 
   def long_body?
     body.length > 100
@@ -203,13 +203,13 @@ We can access these from the template just like attributes:
 
 <div class="Panel">
   <div class="Panel-header">
-    <%= panel.header %>
+    <%= component.header %>
   </div>
   <div class="Panel-body">
-    <% if panel.long_body? %>
-      <%= truncate panel.body, length: 100 %>
+    <% if component.long_body? %>
+      <%= truncate component.body, length: 100 %>
     <% else %>
-      <%= panel.body %>
+      <%= component.body %>
     <% end %>
   </div>
 </div>

@@ -6,6 +6,5 @@ module Components
   end
 
   class Component < Dry::Struct
-    constructor_type :strict_with_defaults
   end
 end
