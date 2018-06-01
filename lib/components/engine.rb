@@ -10,6 +10,12 @@ module Components
       app.config.autoload_paths += Dir["#{Components.path}/{*}"]
     end
 
+    initializer 'components.view_context' do
+      ActiveSupport.on_load :action_view do
+        include Components::Context
+      end
+    end
+
     initializer 'components.view_helpers' do
       ActiveSupport.on_load :action_controller do
         helper Components::ComponentHelper

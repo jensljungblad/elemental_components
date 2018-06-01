@@ -4,10 +4,9 @@ module Components
       yield attrs if block_given?
 
       component = "#{name}_component".classify.constantize.new(attrs)
-
-      view_renderer.render(
-        Components::View.new(self, component), partial: "#{name}/#{name}"
-      )
+      view = controller.view_context
+      view.instance_variable_set(:@_component, component)
+      view.render "#{name}/#{name}"
     end
   end
 end
