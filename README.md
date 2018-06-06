@@ -147,21 +147,6 @@ This means we can nest components:
 
 Components are built on top of the [dry-struct](https://github.com/dry-rb/dry-struct) library, which in turn is built on top of [dry-types](https://github.com/dry-rb/dry-types). Consult http://dry-rb.org/gems/dry-types for a list of built in types and how to use them.
 
-Attributes can have default values:
-
-```ruby
-# app/components/panel/panel_component.rb %>
-
-class PanelComponent < Components::Component
-  attribute :header, Components::Types::Strict::String
-  attribute :body, Components::Types::Strict::String
-end
-```
-
-```erb
-<%= component :panel, body: "Body" %>
-```
-
 ### Attribute overrides
 
 It's easy to override an attribute with additional logic:
@@ -174,7 +159,7 @@ class PanelComponent < Components::Component
   attribute :body, Components::Types::Strict::String
 
   def header
-    @header.titleize
+    @attributes[:header].titleize
   end
 end
 ```
