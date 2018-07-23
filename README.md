@@ -99,8 +99,8 @@ Let's define some data that we can pass to the component:
 # app/components/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::Strict::String
-  attribute :body, Components::Types::Strict::String
+  attribute :header
+  attribute :body
 end
 ```
 
@@ -143,9 +143,18 @@ This means we can nest components:
 <% end %>
 ```
 
-### Attribute types and defaults
+### Attribute defaults
 
-Components are built on top of the [dry-struct](https://github.com/dry-rb/dry-struct) library, which in turn is built on top of [dry-types](https://github.com/dry-rb/dry-types). Consult http://dry-rb.org/gems/dry-types for a list of built in types and how to use them.
+Attributes can have default values:
+
+```ruby
+# app/components/panel_component.rb %>
+
+class PanelComponent < Components::Component
+  attribute :header, default: "Default value"
+  attribute :body
+end
+```
 
 ### Attribute overrides
 
@@ -155,11 +164,11 @@ It's easy to override an attribute with additional logic:
 # app/components/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::Strict::String
-  attribute :body, Components::Types::Strict::String
+  attribute :header
+  attribute :body
 
   def header
-    @attributes[:header].titleize
+    @header.titleize
   end
 end
 ```
@@ -172,8 +181,8 @@ In addition to overriding already defined methods, we can declare our own:
 # app/components/panel_component.rb %>
 
 class PanelComponent < Components::Component
-  attribute :header, Components::Types::Strict::String
-  attribute :body, Components::Types::Strict::String
+  attribute :header
+  attribute :body
 
   def long_body?
     body.length > 100
