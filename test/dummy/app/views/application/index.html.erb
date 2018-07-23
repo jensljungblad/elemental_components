@@ -1,23 +1,23 @@
 <%= component "panel", header: "Inlined header", body: "Inlined body" %>
 
-<%= component "panel" do |attrs| %>
-  <% attrs[:header] = capture do %>
+<%= component "panel" do |c| %>
+  <% c.header do %>
     Captured header
   <% end %>
-  <% attrs[:body] = capture do %>
+  <% c.body do %>
     Captured body
   <% end %>
 <% end %>
 
-<%= component "card" do |attrs| %>
-  <% attrs[:header] = capture do %>
+<%= component "card" do |c| %>
+  <% c.header do %>
     Captured header
   <% end %>
-  <% attrs[:sections] = capture do %>
+  <% c.sections do %>
     <%= component "card/section", body: "Section subcomponent 1" %>
     <%= component "card/section", body: "Section subcomponent 2" %>
   <% end %>
-  <% attrs[:footer] = capture do %>
+  <% c.footer do %>
     Captured footer
   <% end %>
 <% end %>

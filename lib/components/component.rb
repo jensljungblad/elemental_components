@@ -5,19 +5,37 @@ module Components
         @attributes ||= {}
       end
 
-      def attribute(attribute, default: nil)
-        attributes[attribute] = { default: default }
+      def attribute(name, default: nil)
+        attributes[name] = { default: default }
 
-        define_method(attribute) do
-          instance_variable_get("@#{attribute}")
+        define_method(name) do |value = nil, &block|
+          value = @view.capture(&block) if block
+
+          if value
+            set_attribute(name, value)
+          else
+            get_attribute(name)
+          end
         end
       end
     end
 
-    def initialize(attributes)
+    def initialize(view, attributes)
+      @view = view
+
       self.class.attributes.each do |name, options|
-        instance_variable_set("@#{name}", attributes.delete(name) || options[:default])
+        set_attribute(name, attributes.delete(name) || options[:default])
       end
+    end
+
+    private
+
+    def get_attribute(name)
+      instance_variable_get("@#{name}")
+    end
+
+    def set_attribute(name, value)
+      instance_variable_set("@#{name}", Attribute.new(value))
     end
   end
 end

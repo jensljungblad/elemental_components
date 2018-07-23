@@ -1,9 +1,9 @@
 module Components
   module ComponentHelper
     def component(name, attrs = {})
-      yield attrs if block_given?
+      component = "#{name}_component".classify.constantize.new(self, attrs)
 
-      component = "#{name}_component".classify.constantize.new(attrs)
+      yield component if block_given?
 
       view = controller.view_context
       view.instance_variable_set(:@_component, component)
