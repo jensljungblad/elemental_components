@@ -1,7 +1,23 @@
-<%= component :panel, header: "Foo", body: "Bar" %>
+<%= component "panel", header: "Inlined header", body: "Inlined body" %>
 
-<%= component :panel, header: "Foo" do |attrs| %>
+<%= component "panel" do |attrs| %>
+  <% attrs[:header] = capture do %>
+    Captured header
+  <% end %>
   <% attrs[:body] = capture do %>
-    Bar
+    Captured body
+  <% end %>
+<% end %>
+
+<%= component "card" do |attrs| %>
+  <% attrs[:header] = capture do %>
+    Captured header
+  <% end %>
+  <% attrs[:sections] = capture do %>
+    <%= component "card/section", body: "Section subcomponent 1" %>
+    <%= component "card/section", body: "Section subcomponent 2" %>
+  <% end %>
+  <% attrs[:footer] = capture do %>
+    Captured footer
   <% end %>
 <% end %>

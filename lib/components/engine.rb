@@ -6,10 +6,6 @@ module Components
       app.config.assets.paths << Components.path
     end
 
-    initializer 'components.autoload_paths', before: :set_autoload_paths do |app|
-      app.config.autoload_paths += Dir["#{Components.path}/{*}"]
-    end
-
     initializer 'components.view_helpers' do
       ActiveSupport.on_load :action_controller do
         helper Components::ComponentHelper

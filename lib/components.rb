@@ -7,8 +7,10 @@ module Components
   end
 
   def self.component_names
-    Dir.glob(path.join('*')).map do |component_dir|
-      File.basename(component_dir)
+    Dir.chdir(path) do
+      Dir.glob('**/*_component.rb').map do |component|
+        component.chomp('_component.rb')
+      end.sort
     end
   end
 end
