@@ -1,13 +1,13 @@
 .Panel {
   border: 1px solid black;
-  padding: .5rem;
-}
-
-.Panel + .Panel {
-  margin-top: .5rem;
+  margin-bottom: .5rem;
 }
 
 .Panel-header {
-  border-bottom: 1px solid gray;
-  margin-bottom: .5rem;
+  padding: .5rem;
+  border-bottom: 1px solid black;
+}
+
+.Panel-body {
+  padding: .5rem;
 }

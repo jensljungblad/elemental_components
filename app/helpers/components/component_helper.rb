@@ -12,7 +12,7 @@ module Components
         view.singleton_class.delegate method, to: :@_component
       end
 
-      view.render "#{name}/#{name}"
+      view.render "#{name}/#{name.split('/')[-1]}"
     end
   end
 end
