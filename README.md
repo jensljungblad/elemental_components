@@ -33,7 +33,7 @@ app/
       _panel.html.erb
       panel.css
       panel.js
-      panel_component.rb
+    panel_component.rb
 ```
 
 Let's add some markup and CSS:
@@ -96,7 +96,7 @@ Or require `components`, which will in turn require the assets for all component
 Let's define some data that we can pass to the component:
 
 ```ruby
-# app/components/panel/panel_component.rb %>
+# app/components/panel_component.rb %>
 
 class PanelComponent < Components::Component
   attribute :header, Components::Types::Strict::String
@@ -152,7 +152,7 @@ Components are built on top of the [dry-struct](https://github.com/dry-rb/dry-st
 It's easy to override an attribute with additional logic:
 
 ```ruby
-# app/components/panel/panel_component.rb %>
+# app/components/panel_component.rb %>
 
 class PanelComponent < Components::Component
   attribute :header, Components::Types::Strict::String
@@ -169,7 +169,7 @@ end
 In addition to overriding already defined methods, we can declare our own:
 
 ```ruby
-# app/components/panel/panel_component.rb %>
+# app/components/panel_component.rb %>
 
 class PanelComponent < Components::Component
   attribute :header, Components::Types::Strict::String

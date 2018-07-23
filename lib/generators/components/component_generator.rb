@@ -17,7 +17,7 @@ module Components
     end
 
     def create_component_file
-      template 'component.rb.erb', "app/components/#{name}/#{name}_component.rb"
+      template 'component.rb.erb', "app/components/#{name}_component.rb"
     end
   end
 end
