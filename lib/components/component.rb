@@ -8,11 +8,17 @@ module Components
       def attribute(name, default: nil)
         attributes[name] = { default: default }
 
-        define_method(name) do |value = nil, &block|
+        define_method(name) do |value = nil, attributes = {}, &block|
           value = @view.capture(&block) if block
 
           if value
-            set_attribute(name, value)
+            attribute = Attribute.new(value, attributes)
+
+            if get_attribute(name).is_a?(Array)
+              get_attribute(name) << attribute
+            else
+              set_attribute(name, attribute)
+            end
           else
             get_attribute(name)
           end
@@ -20,11 +26,22 @@ module Components
       end
     end
 
-    def initialize(view, attributes)
+    def initialize(view, attributes = {})
       @view = view
 
       self.class.attributes.each do |name, options|
-        set_attribute(name, attributes.delete(name) || options[:default])
+        value = attributes.delete(name) || options[:default].dup
+
+        # rubocop:disable Lint/ShadowingOuterLocalVariable
+        attribute =
+          if value.is_a?(Array)
+            value.map { |value| Attribute.new(value) }
+          elsif value
+            Attribute.new(value)
+          end
+        # rubocop:enable Lint/ShadowingOuterLocalVariable
+
+        set_attribute(name, attribute)
       end
     end
 
@@ -35,7 +52,7 @@ module Components
     end
 
     def set_attribute(name, value)
-      instance_variable_set("@#{name}", Attribute.new(value))
+      instance_variable_set("@#{name}", value)
     end
   end
 end
