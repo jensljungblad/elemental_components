@@ -1,8 +1,12 @@
-<div class="Card">
+<div id="<%= id %>" class="Card">
   <div class="Card-header">
     <%= header %>
   </div>
-  <%= sections %>
+  <% sections.each do |section| %>
+    <div class="Card-section">
+      <%= section %>
+    </div>
+  <% end %>
   <div class="Card-footer">
     <%= footer %>
   </div>

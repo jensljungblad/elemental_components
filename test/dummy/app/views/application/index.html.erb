@@ -1,23 +1,28 @@
-<%= component "panel", header: "Inlined header", body: "Inlined body" %>
+<%= component "card", {
+  id: "card_1",
+  header: "Header",
+  sections: ["Section 1", "Section 2"],
+  footer: "Footer"
+} %>
 
-<%= component "panel" do |c| %>
-  <% c.header do %>
-    Captured header
-  <% end %>
-  <% c.body do %>
-    Captured body
-  <% end %>
+<%= component "card", id: "card_2" do |c| %>
+  <% c.header "Header" %>
+  <% c.sections "Section 1" %>
+  <% c.sections "Section 2" %>
+  <% c.footer "Footer" %>
 <% end %>
 
-<%= component "card" do |c| %>
+<%= component "card", id: "card_3" do |c| %>
   <% c.header do %>
-    Captured header
+    Header
   <% end %>
   <% c.sections do %>
-    <%= component "card/section", body: "Section subcomponent 1" %>
-    <%= component "card/section", body: "Section subcomponent 2" %>
+    Section 1
+  <% end %>
+  <% c.sections do %>
+    Section 2
   <% end %>
   <% c.footer do %>
-    Captured footer
+    Footer
   <% end %>
 <% end %>
