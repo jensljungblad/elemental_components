@@ -17,3 +17,6 @@ Style/MixinUsage:
   Exclude:
     - 'test/dummy/bin/setup'
     - 'test/dummy/bin/update'
+
+Style/ParallelAssignment:
+  Enabled: false

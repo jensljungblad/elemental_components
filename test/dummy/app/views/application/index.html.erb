@@ -7,7 +7,7 @@
 
 <%= component "card", id: "card_2" do |c| %>
   <% c.header "Header" %>
-  <% c.sections "Section 1" %>
+  <% c.sections "Section 1", size: "large" %>
   <% c.sections "Section 2" %>
   <% c.footer "Footer" %>
 <% end %>
@@ -16,7 +16,7 @@
   <% c.header do %>
     Header
   <% end %>
-  <% c.sections do %>
+  <% c.sections size: "large" do %>
     Section 1
   <% end %>
   <% c.sections do %>

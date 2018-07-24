@@ -8,8 +8,8 @@ module Components
       def attribute(name, default: nil)
         attributes[name] = { default: default }
 
-        define_method(name) do |value = nil, attributes = {}, &block|
-          value = @view.capture(&block) if block
+        define_method(name) do |value = nil, attributes = nil, &block|
+          attributes, value = value, @view.capture(&block) if block
 
           if value
             attribute = Attribute.new(value, attributes)
@@ -32,14 +32,12 @@ module Components
       self.class.attributes.each do |name, options|
         value = attributes.delete(name) || options[:default].dup
 
-        # rubocop:disable Lint/ShadowingOuterLocalVariable
         attribute =
           if value.is_a?(Array)
-            value.map { |value| Attribute.new(value) }
+            value.map { |v| Attribute.new(v) }
           elsif value
             Attribute.new(value)
           end
-        # rubocop:enable Lint/ShadowingOuterLocalVariable
 
         set_attribute(name, attribute)
       end

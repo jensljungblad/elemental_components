@@ -5,9 +5,9 @@ module Components
 
     delegate_missing_to :@value
 
-    def initialize(value, attributes = {})
+    def initialize(value, attributes = nil)
       @value = value
-      @attributes = attributes
+      @attributes = attributes || {}
     end
 
     def to_s

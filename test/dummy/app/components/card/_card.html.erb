@@ -3,7 +3,7 @@
     <%= header %>
   </div>
   <% sections.each do |section| %>
-    <div class="Card-section">
+    <div class="Card-section <%= "Card-section--#{section.attributes[:size]}" if section.attributes[:size] %>">
       <%= section %>
     </div>
   <% end %>
