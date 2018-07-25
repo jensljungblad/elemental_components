@@ -1,9 +1,9 @@
-<div class="Card">
+<div id="<%= id %>" class="Card">
   <div class="Card-header">
     <%= header %>
   </div>
   <% sections.each do |section| %>
-    <div class="Card-section<%= " Card-section--#{section.attributes[:size]}" if section.attributes[:size] %>">
+    <div class="Card-section<%= " Card-section--#{section.size}" if section.size %>">
       <%= section %>
     </div>
   <% end %>

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
-  test 'initialize with no value' do
+  test 'initialize attribute with no value' do
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
@@ -9,30 +9,20 @@ class ComponentTest < ActiveSupport::TestCase
     assert_nil component.instance_variable_get(:@foo)
   end
 
-  test 'initialize with value' do
+  test 'initialize attribute with value' do
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
     component = component_class.new(:view, foo: 'foo')
-    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'foo', component.instance_variable_get(:@foo)
   end
 
-  test 'initialize with array value' do
-    component_class = Class.new(Components::Component) do
-      attribute :foo
-    end
-    component = component_class.new(:view, foo: %w(foo bar))
-    assert_equal 2, component.instance_variable_get(:@foo).length
-    assert_equal 'foo', component.instance_variable_get(:@foo)[0].value
-    assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
-  end
-
-  test 'initialize with default value' do
+  test 'initialize attribute with default value' do
     component_class = Class.new(Components::Component) do
       attribute :foo, default: 'foo'
     end
     component = component_class.new(:view)
-    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'foo', component.instance_variable_get(:@foo)
   end
 
   test 'get attribute' do
@@ -43,72 +33,69 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
 
-  test 'set attribute when not initialized' do
+  test 'set element' do
     component_class = Class.new(Components::Component) do
-      attribute :foo
+      element :foo
     end
     component = component_class.new(:view)
     component.foo 'foo'
     assert_equal 'foo', component.instance_variable_get(:@foo).value
   end
 
-  test 'set attribute when initialized' do
-    component_class = Class.new(Components::Component) do
-      attribute :foo
+  test 'set element with block' do
+    view_class = Class.new do
+      def capture
+        yield
+      end
     end
-    component = component_class.new(:view, foo: 'foo')
-    component.foo 'bar'
-    assert_equal 'bar', component.instance_variable_get(:@foo).value
+    component_class = Class.new(Components::Component) do
+      element :foo
+    end
+    component = component_class.new(view_class.new)
+    component.foo { 'foo' }
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
   end
 
-  test 'set attribute to array value when initialized as non-array' do
+  test 'set element with attribute' do
     component_class = Class.new(Components::Component) do
-      attribute :foo
+      element :foo do
+        attribute :bar
+      end
     end
-    component = component_class.new(:view, foo: 'foo')
-    component.foo ['bar']
-    assert_equal ['bar'], component.instance_variable_get(:@foo).value
+    component = component_class.new(:view)
+    component.foo 'foo', bar: 'baz'
+    assert_equal 'baz', component.instance_variable_get(:@foo).bar
   end
 
-  test 'set attribute when initialized as array' do
+  test 'set element with attribute with default value' do
     component_class = Class.new(Components::Component) do
-      attribute :foo
+      element :foo do
+        attribute :bar, default: 'baz'
+      end
     end
-    component = component_class.new(:view, foo: %w(foo))
+    component = component_class.new(:view)
+    component.foo 'foo'
+    assert_equal 'baz', component.instance_variable_get(:@foo).bar
+  end
+
+  test 'set element collection' do
+    component_class = Class.new(Components::Component) do
+      element :foo, collection: true
+    end
+    component = component_class.new(:view)
+    component.foo 'foo'
     component.foo 'bar'
     assert_equal 2, component.instance_variable_get(:@foo).length
+    assert_equal 'foo', component.instance_variable_get(:@foo)[0].value
     assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
   end
 
-  test 'set attribute to array value when initialized as array' do
+  test 'get element' do
     component_class = Class.new(Components::Component) do
-      attribute :foo
-    end
-    component = component_class.new(:view, foo: %w(foo))
-    component.foo ['bar']
-    assert_equal 2, component.instance_variable_get(:@foo).length
-    assert_equal ['bar'], component.instance_variable_get(:@foo)[1].value
-  end
-
-  test 'set attribute with attributes' do
-    component_class = Class.new(Components::Component) do
-      attribute :foo
+      element :foo
     end
     component = component_class.new(:view)
-    component.foo 'foo', foo: 'foo', bar: 'bar'
-    assert_equal(
-      { foo: 'foo', bar: 'bar' }, component.instance_variable_get(:@foo).attributes
-    )
-  end
-
-  test 'set attribute with attributes when initialized as array' do
-    component_class = Class.new(Components::Component) do
-      attribute :foo
-    end
-    component = component_class.new(:view, foo: %w(foo))
-    component.foo 'foo', foo: 'foo', bar: 'bar'
-    assert_equal(
-      { foo: 'foo', bar: 'bar' }, component.instance_variable_get(:@foo)[1].attributes
-    )
+    component.foo 'foo'
+    assert_equal component.instance_variable_get(:@foo), component.foo
   end
 end
