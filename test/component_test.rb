@@ -35,7 +35,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'set element' do
     component_class = Class.new(Components::Component) do
-      element :foo
+      has_one :foo
     end
     component = component_class.new(:view)
     component.foo 'foo'
@@ -49,7 +49,7 @@ class ComponentTest < ActiveSupport::TestCase
       end
     end
     component_class = Class.new(Components::Component) do
-      element :foo
+      has_one :foo
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
@@ -58,7 +58,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'set element with attribute' do
     component_class = Class.new(Components::Component) do
-      element :foo do
+      has_one :foo do
         attribute :bar
       end
     end
@@ -69,7 +69,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'set element with attribute with default value' do
     component_class = Class.new(Components::Component) do
-      element :foo do
+      has_one :foo do
         attribute :bar, default: 'baz'
       end
     end
@@ -80,7 +80,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'set element collection' do
     component_class = Class.new(Components::Component) do
-      element :foo, collection: true
+      has_many :foo
     end
     component = component_class.new(:view)
     component.foo 'foo'
@@ -92,7 +92,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'get element' do
     component_class = Class.new(Components::Component) do
-      element :foo
+      has_one :foo
     end
     component = component_class.new(:view)
     component.foo 'foo'
@@ -101,7 +101,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'get element when not set' do
     component_class = Class.new(Components::Component) do
-      element :foo
+      has_one :foo
     end
     component = component_class.new(:view)
     assert_nil component.foo.value
@@ -109,7 +109,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'get element collection when not set' do
     component_class = Class.new(Components::Component) do
-      element :foo, collection: true
+      has_many :foo
     end
     component = component_class.new(:view)
     assert_equal [], component.foo

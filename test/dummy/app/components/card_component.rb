@@ -1,9 +1,9 @@
 class CardComponent < Components::Component
   attribute :id
 
-  element :header
-  element :sections, collection: true do
+  has_one :header
+  has_many :sections do
     attribute :size
   end
-  element :footer
+  has_one :footer
 end

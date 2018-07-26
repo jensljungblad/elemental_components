@@ -3,7 +3,7 @@ module Components
     extend ActiveSupport::Concern
 
     class_methods do
-      def element(name, collection: false, &config)
+      def has_one(name, &config)
         define_method(name) do |value = nil, attributes = nil, &block|
           attributes, value = value, @view.capture(&block) if block
 
@@ -11,10 +11,26 @@ module Components
             element_class = config ? Class.new(Element, &config) : Element
 
             set_element(
-              name, element_class.new(@view, value, attributes), collection: collection
+              name, element_class.new(@view, value, attributes)
             )
           else
-            get_element(name, collection: collection)
+            get_element(name)
+          end
+        end
+      end
+
+      def has_many(name, &config)
+        define_method(name) do |value = nil, attributes = nil, &block|
+          attributes, value = value, @view.capture(&block) if block
+
+          if value
+            element_class = config ? Class.new(Element, &config) : Element
+
+            set_element(
+              name, element_class.new(@view, value, attributes), collection: true
+            )
+          else
+            get_element(name, collection: true)
           end
         end
       end
