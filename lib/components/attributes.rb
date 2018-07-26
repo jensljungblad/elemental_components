@@ -11,7 +11,7 @@ module Components
         attributes[name] = { default: default }
 
         define_method(name) do
-          instance_variable_get("@#{name}")
+          get_attribute(name)
         end
       end
     end
@@ -20,18 +20,16 @@ module Components
 
     def assign_attributes(attributes = {})
       self.class.attributes.each do |name, options|
-        value = attributes.delete(name) || options[:default].dup
-
-        # unless value.present?
-        #   raise "Attribute must be passed to ? or assigned a default value: #{name}"
-        # end
-
-        instance_variable_set(:"@#{name}", value)
+        set_attribute(name, attributes.delete(name) || options[:default].dup)
       end
+    end
 
-      # unless attributes.keys.empty?
-      #   raise "Unknown attributes passed to ?: #{attributes.keys}"
-      # end
+    def get_attribute(name)
+      instance_variable_get(:"@#{name}")
+    end
+
+    def set_attribute(name, value)
+      instance_variable_set(:"@#{name}", value)
     end
   end
 end

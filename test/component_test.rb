@@ -98,4 +98,20 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo 'foo'
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
+
+  test 'get element when not set' do
+    component_class = Class.new(Components::Component) do
+      element :foo
+    end
+    component = component_class.new(:view)
+    assert_nil component.foo.value
+  end
+
+  test 'get element collection when not set' do
+    component_class = Class.new(Components::Component) do
+      element :foo, collection: true
+    end
+    component = component_class.new(:view)
+    assert_equal [], component.foo
+  end
 end
