@@ -9,12 +9,8 @@ module Components
     Rails.root.join('app', 'components')
   end
 
-  def self.styleguide_path
-    Rails.root.join('app', 'styleguide')
-  end
-
   def self.component_names
-    Dir.chdir(path) do
+    Dir.chdir(components_path) do
       Dir.glob('**/*_component.rb').map do |component|
         component.chomp('_component.rb')
       end.sort
