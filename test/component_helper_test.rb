@@ -12,11 +12,11 @@ class ComponentHelperTest < ActionView::TestCase
     end
 
     assert_dom_equal_squished %(
-      <div id="id" class="Card">
-        <div class="Card-header"> Header </div>
-        <div class="Card-section Card-section--large"> Section 1 </div>
-        <div class="Card-section Card-section--small"> Section 2 </div>
-        <div class="Card-footer"> Footer </div>
+      <div id="id" class="card">
+        <div class="card__header"> Header </div>
+        <div class="card__section card__section--large"> Section 1 </div>
+        <div class="card__section card__section--small"> Section 2 </div>
+        <div class="card__footer"> Footer </div>
       </div>
     ), output
   end
@@ -30,11 +30,25 @@ class ComponentHelperTest < ActionView::TestCase
     end
 
     assert_dom_equal_squished %(
-      <div id="id" class="Card">
-        <div class="Card-header"> Header </div>
-        <div class="Card-section Card-section--large"> Section 1 </div>
-        <div class="Card-section Card-section--small"> Section 2 </div>
-        <div class="Card-footer"> Footer </div>
+      <div id="id" class="card">
+        <div class="card__header"> Header </div>
+        <div class="card__section card__section--large"> Section 1 </div>
+        <div class="card__section card__section--small"> Section 2 </div>
+        <div class="card__footer"> Footer </div>
+      </div>
+    ), output
+  end
+
+  test 'render namespaced component' do
+    output = component 'objects/media_object' do |c|
+      c.media 'Media'
+      c.body 'Body'
+    end
+
+    assert_dom_equal_squished %(
+      <div class="media-object">
+        <div class="media-object__media"> Media </div>
+        <div class="media-object__body"> Body </div>
       </div>
     ), output
   end

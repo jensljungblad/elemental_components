@@ -1,13 +1,13 @@
-<div id="<%= id %>" class="Card">
-  <div class="Card-header">
+<div id="<%= id %>" class="card">
+  <div class="card__header">
     <%= header %>
   </div>
   <% sections.each do |section| %>
-    <div class="Card-section<%= " Card-section--#{section.size}" if section.size %>">
+    <div class="card__section<%= " card__section--#{section.size}" if section.size %>">
       <%= section %>
     </div>
   <% end %>
-  <div class="Card-footer">
+  <div class="card__footer">
     <%= footer %>
   </div>
 </div>

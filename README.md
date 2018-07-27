@@ -76,7 +76,7 @@ This component can now be rendered using the `component` helper:
 
 ### Assets
 
-In order to require assets such as CSS, either require them manually in e.g. `application.css`:
+In order to require assets such as CSS, either require them manually in the manifest, e.g. `application.css`:
 
 ```css
 /*
@@ -94,7 +94,7 @@ Or require `components`, which will in turn require the assets for all component
 
 ### Attributes
 
-There are two ways of passing data to components: attributes and elements. Attributes are useful for data such as ids, modifiers and data structures, such as models. Elements are useful when you need to inject HTML into components.
+There are two ways of passing data to components: attributes and elements. Attributes are useful for data such as ids, modifiers and data structures (models etc). Elements are useful when you need to inject HTML into components.
 
 Let's define some attributes for the component we just created:
 
@@ -204,7 +204,7 @@ Take a card component. In React, a common approach is to create subcomponents:
 
 There are two problems with this approach:
 
-1. The card header, section and footer would be represented in BEM by elements, "a part of a block (component) that has no standalone meaning". Yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
+1. The card header, section and footer would be represented in BEM by elements, "a part of a block [component] that has no standalone meaning". Yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
 2. We lose control of the structure of the elements. A `CardHeader` can be placed below, or inside a `CardFooter`.
 
 Using this gem, the same component could be written as follows:
@@ -287,7 +287,7 @@ end
 <% end %>
 ```
 
-An alternative here is to pass a data structure to the component as an attribute, if no HTML need to be injected when rendering the component:
+An alternative here is to pass a data structure to the component as an attribute, if no HTML needs to be injected when rendering the component:
 
 ```erb
 <%= component "navigation", items: items %>
@@ -303,10 +303,10 @@ In addition to declaring attributes and elements, it is also possible to declare
 class CardComponent < Components::Component
   ...
 
-  def classes
-    classes = ["card"]
-    classes << "card--flush" if flush
-    classes.join(" ")
+  def css_classes
+    css_classes = ["card"]
+    css_classes << "card--flush" if flush
+    css_classes.join(" ")
   end
 end
 ```
@@ -314,7 +314,7 @@ end
 ```erb
 <% # app/components/card/_card.html.erb %>
 
-<div class="<%= classes %>">
+<div class="<%= css_classes %>">
   ...
 </div>
 ```
@@ -330,10 +330,10 @@ class CardComponent < Components::Component
   has_many :sections do
     attribute :size
 
-    def classes
-      classes = ["card__section"]
-      classes << "card__section--#{size}" if size
-      classes.join(" ")
+    def css_classes
+      css_classes = ["card__section"]
+      css_classes << "card__section--#{size}" if size
+      css_classes.join(" ")
     end
   end
 end
@@ -342,9 +342,9 @@ end
 ```erb
 <% # app/components/card/_card.html.erb %>
 
-<div class="<%= classes %>">
+<div class="<%= css_classes %>">
   ...
-  <div class="<%= section.classes %>">
+  <div class="<%= section.css_classes %>">
     <%= section %>
   </div>
   ...
