@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Components::Engine => '/components'
+  mount Components::Engine => '/styleguide'
 end
