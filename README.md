@@ -198,7 +198,7 @@ Take a card component. In React, a common approach is to create subcomponents:
   </CardSection>
   <CardFooter>
     Footer
-  </CardHeader>
+  </CardFooter>
 </Card>
 ```
 
@@ -344,7 +344,7 @@ end
 
 <div class="<%= classes %>">
   ...
-  <div class="<%= section.classes" %>">
+  <div class="<%= section.classes %>">
     <%= section %>
   </div>
   ...
