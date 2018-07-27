@@ -1,4 +1,5 @@
 require 'redcarpet'
+require 'components/markdown_renderer'
 
 module Components
   class MarkdownHandler
@@ -23,7 +24,7 @@ module Components
 
       def markdown
         @markdown ||= Redcarpet::Markdown.new(
-          Redcarpet::Render::HTML,
+          Components::MarkdownRenderer,
           autolink: true,
           tables: true,
           fenced_code_blocks: true

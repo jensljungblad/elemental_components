@@ -2,7 +2,6 @@ require 'components/attributes'
 require 'components/elements'
 require 'components/element'
 require 'components/component'
-require 'components/markdown_handler'
 require 'components/engine'
 
 module Components

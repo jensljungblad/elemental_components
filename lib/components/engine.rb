@@ -1,3 +1,5 @@
+require 'components/markdown_handler'
+
 module Components
   class Engine < ::Rails::Engine
     isolate_namespace Components

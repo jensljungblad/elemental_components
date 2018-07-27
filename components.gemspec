@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '>= 5.1.0'
   s.add_dependency 'redcarpet', '>= 3.4.0'
+  s.add_dependency 'rouge', '>= 3.1.1'
 
   s.add_development_dependency 'sqlite3'
 end
