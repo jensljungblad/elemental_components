@@ -352,3 +352,19 @@ end
 ```
 
 Helper methods can also make use of the `@view` instance variable in order to call Rails helpers such as `link_to` or `content_tag`.
+
+### Namespaced components
+
+Components can be nested under a namespace. This is useful if you want to practice things like [Atomic Design](http://bradfrost.com/blog/post/atomic-web-design/), [BEMIT](https://csswizardry.com/2015/08/bemit-taking-the-bem-naming-convention-a-step-further/) or any other component classification scheme. In order to create a namespaced component, stick it in a folder and wrap the class in a module:
+
+```ruby
+module Objects
+  class MediaObject < Components::Component; end
+end
+```
+
+Then call it from a template like so:
+
+```erb
+<%= component "objects/media_object" %>
+```
