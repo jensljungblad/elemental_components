@@ -40,7 +40,7 @@ module Components
 
     def get_element(name, collection: false)
       unless instance_variable_defined?(:"@#{name}")
-        instance_variable_set(:"@#{name}", collection ? [] : Element.new(@view, nil))
+        instance_variable_set(:"@#{name}", collection ? [] : nil)
       end
       instance_variable_get(:"@#{name}")
     end
