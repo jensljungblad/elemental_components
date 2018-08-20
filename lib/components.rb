@@ -1,7 +1,12 @@
+require 'redcarpet'
+require 'rouge'
+require 'rouge/plugins/redcarpet'
 require 'components/attributes'
 require 'components/elements'
 require 'components/element'
 require 'components/component'
+require 'components/markdown_handler'
+require 'components/markdown_renderer'
 require 'components/engine'
 
 module Components

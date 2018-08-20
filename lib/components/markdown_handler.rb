@@ -1,6 +1,3 @@
-require 'redcarpet'
-require 'components/markdown_renderer'
-
 module Components
   class MarkdownHandler
     class << self

@@ -1,5 +1,3 @@
-require 'components/markdown_handler'
-
 module Components
   class Engine < ::Rails::Engine
     isolate_namespace Components
@@ -23,7 +21,7 @@ module Components
     end
 
     initializer 'components.template_hander' do
-      ActionView::Template.register_template_handler :md, MarkdownHandler
+      ActionView::Template.register_template_handler :md, Components::MarkdownHandler
     end
   end
 end
