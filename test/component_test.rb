@@ -104,7 +104,7 @@ class ComponentTest < ActiveSupport::TestCase
       has_one :foo
     end
     component = component_class.new(:view)
-    assert_nil component.foo.value
+    assert_nil component.foo
   end
 
   test 'get element collection when not set' do

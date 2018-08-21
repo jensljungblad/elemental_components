@@ -20,7 +20,7 @@ module Components
 
     def assign_attributes(attributes = {})
       self.class.attributes.each do |name, options|
-        set_attribute(name, attributes.delete(name) || options[:default].dup)
+        set_attribute(name, attributes.delete(name) || options[:default]&.dup)
       end
     end
 
