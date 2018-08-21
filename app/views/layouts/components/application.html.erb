@@ -7,6 +7,26 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
+
+    <ul>
+      <% Components.page_names.each do |page| %>
+        <li>
+          <% if page[2] %>
+            <%= page[1] %>
+            <ul>
+              <% page[2].each do |subpage| %>
+                <li>
+                  <%= link_to subpage[1], page_path([page[0], subpage[0]]) %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <%= link_to page[1], page_path(page[0]) %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+
     <%= yield %>
   </body>
 </html>
