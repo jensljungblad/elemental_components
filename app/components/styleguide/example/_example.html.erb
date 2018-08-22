@@ -1,5 +1,11 @@
-<div class="example">
-  <% examples.each do |example| %>
-    <%= example %>
-  <% end %>
+<div class="">
+  <iframe id="<%= iframe_id %>" class=""></iframe>
 </div>
+
+<script>
+  document.getElementById('<%= iframe_id %>').contentWindow.document.write(`
+    <%= j stylesheet_link_tag "application", media: "all" %>
+    <%= j javascript_include_tag "application" %>
+    <%= body %>
+  `)
+</script>
