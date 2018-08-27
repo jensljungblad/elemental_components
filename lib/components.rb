@@ -1,5 +1,8 @@
-require 'components/engine'
+require 'components/attributes'
+require 'components/elements'
+require 'components/element'
 require 'components/component'
+require 'components/engine'
 
 module Components
   def self.path

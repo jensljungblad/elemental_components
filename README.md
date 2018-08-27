@@ -18,10 +18,12 @@ $ bundle
 
 ## Components
 
+The examples provided here will use the [BEM naming conventions](http://getbem.com/naming/).
+
 Components live in `app/components`. Generate a component by executing:
 
 ```sh
-$ bin/rails g components:component panel
+$ bin/rails g components:component alert
 ```
 
 This will create the following files:
@@ -29,57 +31,56 @@ This will create the following files:
 ```
 app/
   components/
-    panel/
-      _panel.html.erb
-      panel.css
-      panel.js
-    panel_component.rb
+    alert/
+      _alert.html.erb
+      alert.css
+      alert.js
+    alert_component.rb
 ```
 
 Let's add some markup and CSS:
 
 ```erb
-<% # app/components/panel/_panel.html.erb %>
+<% # app/components/alert/_alert.html.erb %>
 
-<div class="Panel">
-  <div class="Panel-header">
-    Header
-  </div>
-  <div class="Panel-body">
-    Body
-  </div>
+<div class="alert alert--primary" role="alert">
+  Message
 </div>
 ```
 
 ```css
-/* app/components/panel/panel.css */
+/* app/components/alert/alert.css */
 
-.Panel {
-  border: 1px solid black;
+.alert {
+  padding: 1rem;
 }
 
-.Panel-header {
-  font-weight: bold;
+.alert--primary {
+  background: blue;
 }
 
-.Panel-body {
-  font-weight: normal;
+.alert--success {
+  background: green;
+}
+
+.alert--danger {
+  background: red;
 }
 ```
 
 This component can now be rendered using the `component` helper:
 
 ```erb
-<%= component :panel %>
+<%= component "alert" %>
 ```
 
-### Component assets
+### Assets
 
-In order to require assets such as CSS, either require them manually in e.g. `application.css`:
+In order to require assets such as CSS, either require them manually in the manifest, e.g. `application.css`:
 
 ```css
 /*
- *= require panel/panel
+ *= require alert/alert
  */
 ```
 
@@ -91,55 +92,60 @@ Or require `components`, which will in turn require the assets for all component
  */
 ```
 
-### Component data
+### Attributes
 
-Let's define some data that we can pass to the component:
+There are two ways of passing data to components: attributes and elements. Attributes are useful for data such as ids, modifiers and data structures (models etc). Elements are useful when you need to inject HTML into components.
+
+Let's define some attributes for the component we just created:
 
 ```ruby
-# app/components/panel_component.rb %>
+# app/components/alert_component.rb %>
 
-class PanelComponent < Components::Component
-  attribute :header
-  attribute :body
+class AlertComponent < Components::Component
+  attribute :message
+  attribute :context
 end
 ```
 
 ```erb
-<% # app/components/panel/_panel.html.erb %>
+<% # app/components/alert/_alert.html.erb %>
 
-<div class="Panel">
-  <div class="Panel-header">
-    <%= header %>
+<div class="alert alert--<%= context %>" role="alert">
+  <%= message %>
+</div>
+```
+
+```erb
+<%= component "alert", message: "Something went right!", context: "success" %>
+<%= component "alert", message: "Something went wrong!", context: "danger" %>
+```
+
+Another good use case for attributes is when you have a component backed by a model:
+
+```ruby
+# app/components/comment_component.rb %>
+
+class CommentComponent < Components::Component
+  attribute :comment
+end
+```
+
+```erb
+<% # app/components/comment/_comment.html.erb %>
+
+<div id="comment-<%= comment.id %>" class="comment">
+  <div class="comment__author">
+    <%= link_to comment.author.name, author_path(comment.author) %>
   </div>
-  <div class="Panel-body">
-    <%= body %>
+  <div class="comment__body">
+    <%= comment.body %>
   </div>
 </div>
 ```
 
 ```erb
-<%= component :panel, header: "Header", body: "Body" %>
-```
-
-If we want to assign something more interesting than a string, we can pass a block to `component` and leverage Rails `capture` helper:
-
-```erb
-<%= component :panel, header: "Header" do |attrs| %>
-  <% attrs[:body] = capture do %>
-    <ul>
-      <li>...</li>
-    </ul>
-  <% end %>
-<% end %>
-```
-
-This means we can nest components:
-
-```erb
-<%= component :panel, header: "Header" do |attrs| %>
-  <% attrs[:body] = capture do %>
-    <%= component :panel, header: "Nested panel header", body: "Nested panel body" %>
-  <% end %>
+<% comments.each do |comment| %>
+  <%= component "comment", comment: comment %>
 <% end %>
 ```
 
@@ -148,11 +154,11 @@ This means we can nest components:
 Attributes can have default values:
 
 ```ruby
-# app/components/panel_component.rb %>
+# app/components/alert_component.rb %>
 
-class PanelComponent < Components::Component
-  attribute :header, default: "Default value"
-  attribute :body
+class AlertComponent < Components::Component
+  attribute :message
+  attribute :context, default: "primary"
 end
 ```
 
@@ -161,50 +167,204 @@ end
 It's easy to override an attribute with additional logic:
 
 ```ruby
-# app/components/panel_component.rb %>
+# app/components/alert_component.rb %>
 
-class PanelComponent < Components::Component
-  attribute :header
-  attribute :body
+class AlertComponent < Components::Component
+  attribute :message
+  attribute :context, default: "primary"
 
-  def header
-    @header.titleize
+  def message
+    @message.upcase if context == "danger"
   end
 end
+```
+
+### Elements
+
+Attributes are great for simple components or components backed by a data structure, such as a model. Other components are more generic in nature, and can be used in a variety of contexts. These typically need HTML injected. Sometimes they contain repeating elements. Sometimes these elements need their own modifiers.
+
+Take a card component. In React, a common approach is to create subcomponents:
+
+```jsx
+<Card flush={true}>
+  <CardHeader centered={true}>
+    Header
+  </CardHeader>
+  <CardSection size="large">
+    Section 1
+  </CardSection>
+  <CardSection size="small">
+    Section 2
+  </CardSection>
+  <CardFooter>
+    Footer
+  </CardFooter>
+</Card>
+```
+
+There are two problems with this approach:
+
+1. The card header, section and footer would be represented in BEM by elements, "a part of a block [component] that has no standalone meaning". Yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
+2. We lose control of the structure of the elements. A `CardHeader` can be placed below, or inside a `CardFooter`.
+
+Using this gem, the same component could be written as follows:
+
+```ruby
+# app/components/card_component.rb %>
+
+class CardComponent < Components::Component
+  attribute :flush, default: false
+
+  has_one :header do
+    attribute :centered, default: false
+  end
+
+  has_many :sections do
+    attribute :size
+  end
+
+  has_one :footer
+end
+```
+
+```erb
+<% # app/components/card/_card.html.erb %>
+
+<div class="card <%= "card--flush" if flush %>">
+  <div class="card__header <%= "card__header--centered" if header.centered %>">
+    <%= header %>
+  </div>
+  <% sections.each do |section| %>
+    <div class="card__section <%= "card__section--#{section.size}" %>">
+      <%= section %>
+    </div>
+  <% end %>
+  <div class="card__footer">
+    <%= footer %>
+  </div>
+</div>
+```
+
+Elements are declared using `has_one` or `has_many`. Passing them a block lets us declare attributes on our elements, in the same way we declare attributes on components. To inject content into these elements, we pass a block to the component helper:
+
+```erb
+<%= component "card", flush: true do |c| %>
+  <% c.header "Header", centered: true %>
+  <% c.section "Section 1", size: "large" %>
+  <% c.section "Section 2", size: "small" %>
+  <% c.footer "Footer" %>
+<% end %>
+```
+
+To inject HTML content into the elements, pass a block to the element instead of a string value:
+
+```erb
+<%= component "card", flush: true do |c| %>
+  <% c.header centered: true do %>
+    <strong>Header</strong>
+  <% end %>
+  ...
+<% end %>
+```
+
+Another good use case would be a navigation component:
+
+```ruby
+# app/components/navigation_component.rb %>
+
+class NavigationComponent < Components::Component
+  has_many :items do
+    attribute :url
+    attribute :active, default: false
+  end
+end
+```
+
+```erb
+<%= component "navigation" do |c| %>
+  <% c.items "Home", url: root_path, active: true %>
+  <% c.items "Explore" url: explore_path %>
+<% end %>
+```
+
+An alternative here is to pass a data structure to the component as an attribute, if no HTML needs to be injected when rendering the component:
+
+```erb
+<%= component "navigation", items: items %>
 ```
 
 ### Helper methods
 
-In addition to overriding already defined methods, we can declare our own:
+In addition to declaring attributes and elements, it is also possible to declare helper methods. This is useful if you prefer to keep logic out of your templates. Let's extract the modifier logic from the card component template:
 
 ```ruby
-# app/components/panel_component.rb %>
+# app/components/card_component.rb %>
 
-class PanelComponent < Components::Component
-  attribute :header
-  attribute :body
+class CardComponent < Components::Component
+  ...
 
-  def long_body?
-    body.length > 100
+  def css_classes
+    css_classes = ["card"]
+    css_classes << "card--flush" if flush
+    css_classes.join(" ")
   end
 end
 ```
 
-We can access these from the template just like attributes:
+```erb
+<% # app/components/card/_card.html.erb %>
+
+<div class="<%= css_classes %>">
+  ...
+</div>
+```
+
+It's even possible to declare helpers on elements:
+
+```ruby
+# app/components/card_component.rb %>
+
+class CardComponent < Components::Component
+  ...
+
+  has_many :sections do
+    attribute :size
+
+    def css_classes
+      css_classes = ["card__section"]
+      css_classes << "card__section--#{size}" if size
+      css_classes.join(" ")
+    end
+  end
+end
+```
 
 ```erb
-<% # app/components/panel/_panel.html.erb %>
+<% # app/components/card/_card.html.erb %>
 
-<div class="Panel">
-  <div class="Panel-header">
-    <%= header %>
+<div class="<%= css_classes %>">
+  ...
+  <div class="<%= section.css_classes %>">
+    <%= section %>
   </div>
-  <div class="Panel-body">
-    <% if long_body? %>
-      <%= truncate body, length: 100 %>
-    <% else %>
-      <%= body %>
-    <% end %>
-  </div>
+  ...
 </div>
+```
+
+Helper methods can also make use of the `@view` instance variable in order to call Rails helpers such as `link_to` or `content_tag`.
+
+### Namespaced components
+
+Components can be nested under a namespace. This is useful if you want to practice things like [Atomic Design](http://bradfrost.com/blog/post/atomic-web-design/), [BEMIT](https://csswizardry.com/2015/08/bemit-taking-the-bem-naming-convention-a-step-further/) or any other component classification scheme. In order to create a namespaced component, stick it in a folder and wrap the class in a module:
+
+```ruby
+module Objects
+  class MediaObject < Components::Component; end
+end
+```
+
+Then call it from a template like so:
+
+```erb
+<%= component "objects/media_object" %>
 ```

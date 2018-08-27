@@ -1,23 +1,11 @@
 module Components
   class Component
-    class << self
-      def attributes
-        @attributes ||= {}
-      end
+    include Attributes
+    include Elements
 
-      def attribute(attribute, default: nil)
-        attributes[attribute] = { default: default }
-
-        define_method(attribute) do
-          instance_variable_get("@#{attribute}")
-        end
-      end
-    end
-
-    def initialize(attributes)
-      self.class.attributes.each do |name, options|
-        instance_variable_set("@#{name}", attributes.delete(name) || options[:default])
-      end
+    def initialize(view, attributes = nil)
+      @view = view
+      assign_attributes(attributes || {})
     end
   end
 end

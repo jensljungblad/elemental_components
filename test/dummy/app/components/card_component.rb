@@ -1,5 +1,9 @@
 class CardComponent < Components::Component
-  attribute :header
-  attribute :sections
-  attribute :footer
+  attribute :id
+
+  has_one :header
+  has_many :sections do
+    attribute :size
+  end
+  has_one :footer
 end
