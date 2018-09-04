@@ -2,10 +2,15 @@ module Components
   class MarkdownHandler
     class << self
       def call(template)
-        source = erb.call(template)
+        # source = erb.call(template)
 
+        # <<-SOURCE
+        #   #{name}.render(begin;#{source};end).html_safe
+        # SOURCE
+
+        # TODO: what we want here is to first process with markdown, then with erb
         <<-SOURCE
-          #{name}.render(begin;#{source};end).html_safe
+          #{name}.render(begin;'#{template.source}';end).html_safe
         SOURCE
       end
 
