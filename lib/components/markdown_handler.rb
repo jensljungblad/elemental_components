@@ -10,11 +10,11 @@ module Components
       private
 
       def erb_handler
-        @erb ||= ActionView::Template.registered_template_handler(:erb)
+        @erb_handler ||= ActionView::Template.registered_template_handler(:erb)
       end
 
       def markdown_renderer
-        @markdown ||= Redcarpet::Markdown.new(
+        @markdown_renderer ||= Redcarpet::Markdown.new(
           Components::MarkdownRenderer,
           autolink: true,
           tables: true,

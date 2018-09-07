@@ -1,11 +1,14 @@
 <div class="">
   <iframe id="<%= iframe_id %>" class=""></iframe>
 </div>
+<div class="">
+  <%= example_source %>
+</div>
 
 <script>
   document.getElementById('<%= iframe_id %>').contentWindow.document.write(`
     <%= j stylesheet_link_tag "application", media: "all" %>
     <%= j javascript_include_tag "application" %>
-    <%= body %>
+    <%= example %>
   `)
 </script>

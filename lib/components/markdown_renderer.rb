@@ -4,7 +4,16 @@ module Components
 
     def block_code(code, language)
       if language == 'example'
-        "<div>#{code}</div><div>#{super(code, 'erb')}</div>"
+        <<-EXAMPLE
+          <%= component "styleguide/example" do |c| %>
+            <% c.example do %>
+              #{code}
+            <% end %>
+            <% c.example_source do %>
+              #{super(code, 'erb')}
+            <% end %>
+          <% end %>
+        EXAMPLE
       else
         super
       end
