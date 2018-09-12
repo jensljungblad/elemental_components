@@ -1,14 +1,19 @@
-<div class="">
-  <iframe id="<%= iframe_id %>" class=""></iframe>
+<div>
+  <iframe id="<%= iframe_id %>" width="100%"></iframe>
 </div>
 <div class="">
   <%= example_source %>
 </div>
 
 <script>
-  document.getElementById('<%= iframe_id %>').contentWindow.document.write(`
+  var i = document.getElementById('<%= iframe_id %>');
+  var d = i.contentWindow.document;
+
+  d.write(`
     <%= j stylesheet_link_tag "application", media: "all" %>
     <%= j javascript_include_tag "application" %>
     <%= example %>
-  `)
+  `);
+
+  i.height = d.body.scrollHeight;
 </script>
