@@ -1,5 +1,5 @@
 require 'test_helper'
-require_relative '../lib/generators/components/install_generator'
+require_relative '../../lib/generators/components/install_generator'
 
 class InstallGeneratorTest < Rails::Generators::TestCase
   tests Components::InstallGenerator
