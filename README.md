@@ -23,7 +23,7 @@ The examples provided here will use the [BEM naming conventions](http://getbem.c
 Components live in `app/components`. Generate a component by executing:
 
 ```sh
-$ bin/rails g components:component alert
+$ bin/rails g components:component alert --skip-md
 ```
 
 This will create the following files:
@@ -37,6 +37,8 @@ app/
       alert.js
     alert_component.rb
 ```
+
+The generator also takes `--skip-css` and `--skip-js` options.
 
 Let's add some markup and CSS:
 
@@ -368,3 +370,81 @@ Then call it from a template like so:
 ```erb
 <%= component "objects/media_object" %>
 ```
+
+## Style guide
+
+In order to start using the style guide, run the install generator:
+
+```sh
+$ bin/rails g components:install
+```
+
+This will create the following files and directories:
+
+```
+app/
+  views/
+    styleguide/
+      01_home.md
+      02_components
+```
+
+The style guide can be mounted in your routes file with:
+
+```ruby
+mount Components::Engine => '/styleguide'
+```
+
+You can now access the style guide at `http://localhost:3000/styleguide`.
+
+### Pages
+
+You can create style guide pages simply by adding markdown files to the `app/views/styleguide` directory. These can be structured by putting them in subdirectories, and sorted by prefixing the file names with a digit.
+
+Check out Brad Frost's [Style Guide Guide](https://github.com/bradfrost/style-guide-guide) for style guide inspiration.
+
+### Components
+
+Previously when we ran the `components:component` generator we passed it a `--skip-md` flag. Without this flag we will also generate a style guide page for the component:
+
+
+```sh
+$ bin/rails g components:component alert
+```
+
+This will, in addition to the component files, create the following file:
+
+```
+app/
+  views/
+    02_components/
+      alert.md
+```
+
+A special markdown syntax, inspired by [Catalog](https://www.catalog.style), can be used to render examples of the component on the style guide page:
+
+````markdown
+# Alert
+
+Provide contextual feedback messages for typical user actions with alert messages.
+
+```example
+<%= component "alert", message: "Something went right!", context: "success" %>
+```
+
+```example
+<%= component "alert", message: "Something went wrong!", context: "danger" %>
+```
+````
+
+It is possible to pass options to the example, in order to control the width and height of the wrapping element:
+
+
+````markdown
+```example
+width: 500
+height: 200
+---
+<%= component "alert", message: "Something went right!", context: "success" %>
+```
+````

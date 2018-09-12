@@ -5,18 +5,18 @@ module Components
     def block_code(code, language)
       case language
       when 'example'
-        attrs, code = parse_attrs(code)
-        example(code, attrs)
+        options, code = parse_options(code)
+        example(code, options)
       else
         super
       end
     end
 
-    def example(code, attrs)
+    def example(code, options)
       <<-EXAMPLE
         <%= component "styleguide/example" do |c| %>
-          <% c.example(width: #{attrs['width'] || 'nil'},
-                       height: #{attrs['height'] || 'nil'}) do %>
+          <% c.example(width: #{options['width'] || 'nil'},
+                       height: #{options['height'] || 'nil'}) do %>
             #{code}
           <% end %>
           <% c.example_source do %>
@@ -28,15 +28,15 @@ module Components
 
     private
 
-    def parse_attrs(code)
+    def parse_options(code)
       pieces = code.split('---')
 
       if pieces.length > 1
-        attrs = pieces[0].split("\n").map { |i| i.split(': ') }.to_h
-        [attrs, pieces[1]]
+        options = pieces[0].split("\n").map { |i| i.split(': ') }.to_h
+        [options, pieces[1]]
       else
-        attrs = {}
-        [attrs, pieces[0]]
+        options = {}
+        [options, pieces[0]]
       end
     end
   end
