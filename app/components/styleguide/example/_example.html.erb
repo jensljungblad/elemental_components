@@ -1,5 +1,7 @@
 <div>
-  <iframe id="<%= iframe_id %>" width="100%"></iframe>
+  <iframe id="<%= iframe_id %>"
+          width="<%= example.width || '100%' %>"
+          height="<%= example.height || 'auto' %>"></iframe>
 </div>
 <div class="">
   <%= example_source %>
@@ -15,5 +17,7 @@
     <%= example %>
   `);
 
-  i.height = d.body.scrollHeight;
+  if (i.height == 'auto') {
+    i.height = d.body.scrollHeight;
+  }
 </script>
