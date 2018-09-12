@@ -31,7 +31,7 @@ module Components
       Dir.glob('*').sort.map do |item|
         [
           item.sub(/\..*/, ''),
-          item.sub(/\..*/, '').sub(/[0-9]{2}_/, '').titleize
+          item.sub(/\..*/, '').sub(/[0-9]*_?/, '').titleize
         ].tap do |array|
           array << page_names(item) if File.directory?(item)
         end
