@@ -1,7 +1,7 @@
 module Components
-  class PagesController < ActionController::Base
+  class PagesController < ApplicationController
     def show
-      render "styleguide/#{params[:path]}", layout: 'components/application'
+      render "styleguide/#{params[:path]}"
     end
   end
 end

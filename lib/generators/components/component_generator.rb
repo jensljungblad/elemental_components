@@ -1,6 +1,8 @@
 module Components
   class ComponentGenerator < Rails::Generators::NamedBase
     desc 'Generate a component'
+    class_option :skip_css, type: :boolean, default: false
+    class_option :skip_js, type: :boolean, default: false
 
     source_root File.expand_path('../templates', __FILE__)
 
@@ -9,10 +11,12 @@ module Components
     end
 
     def create_css_file
+      return if options['skip_css']
       create_file "app/components/#{name}/#{name}.css"
     end
 
     def create_js_file
+      return if options['skip_js']
       create_file "app/components/#{name}/#{name}.js"
     end
 
