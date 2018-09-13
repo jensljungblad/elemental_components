@@ -451,7 +451,7 @@ height: 200
 
 ## Acknowledgements
 
-This library was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations are:
+This library was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
 
 - [Catalog](https://www.catalog.style) - style guide for React
 - [Storybook](https://storybook.js.org) - style guide for React
