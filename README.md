@@ -1,6 +1,6 @@
 # Components
 
-Simple view components + style guide for Rails 5.1+.
+Simple view components + style guide for Rails 5.1+. Inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
 
@@ -448,3 +448,15 @@ height: 200
 <%= component "alert", message: "Something went right!", context: "success" %>
 ```
 ````
+
+## Acknowledgements
+
+This library was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations are:
+
+- [Catalog](https://www.catalog.style) - style guide for React
+- [Storybook](https://storybook.js.org) - style guide for React
+- [React Styleguidist](https://react-styleguidist.js.org) - style guide for React
+- [Cells](https://github.com/trailblazer/cells) - view components for Ruby
+- [Komponent](https://github.com/komposable/komponent) - view components for Ruby
+
+For a list of real world style guides, check out http://styleguides.io.
