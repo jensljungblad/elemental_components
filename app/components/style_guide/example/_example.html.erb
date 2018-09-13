@@ -18,6 +18,11 @@
   `);
 
   if (i.height == 'auto') {
-    i.height = d.body.scrollHeight;
+    var interval = setInterval(function() {
+      if (body = d.getElementsByTagName("body")[0]) {
+        i.height = body.scrollHeight;
+        clearInterval(interval);
+      }
+    }, 10);
   }
 </script>
