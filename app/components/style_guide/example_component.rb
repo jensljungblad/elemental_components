@@ -1,4 +1,4 @@
-module Styleguide
+module StyleGuide
   class ExampleComponent < Components::Component
     has_one :example do
       attribute :width

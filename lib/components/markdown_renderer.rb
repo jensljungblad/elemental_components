@@ -14,7 +14,7 @@ module Components
 
     def example(code, options)
       <<-EXAMPLE
-        <%= component "styleguide/example" do |c| %>
+        <%= component "style_guide/example" do |c| %>
           <% c.example(width: #{options['width'] || 'nil'},
                        height: #{options['height'] || 'nil'}) do %>
             #{code}

@@ -28,17 +28,17 @@ module Components
     def create_md_file
       return if options['skip_md']
 
-      styleguide_path = File.join(destination_root, 'app/views/styleguide')
+      style_guide_path = File.join(destination_root, 'app/views/styleguide')
 
-      raise 'No views/styleguide directory found' unless Dir.exist?(styleguide_path)
+      raise 'No views/styleguide directory found' unless Dir.exist?(style_guide_path)
 
-      components_path = Dir.new(styleguide_path).find do |file|
+      components_path = Dir.new(style_guide_path).find do |file|
         file =~ /[0-9]*_?components/
       end
 
       raise 'No views/styleguide/components directory found' unless components_path
 
-      template 'component.md.erb', File.join(styleguide_path, components_path, "#{name}.md")
+      template 'component.md.erb', File.join(style_guide_path, components_path, "#{name}.md")
     end
   end
 end

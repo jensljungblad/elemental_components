@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Jens Ljungblad']
   s.email       = ['jens.ljungblad@gmail.com']
   s.homepage    = 'https://www.github.com/varvet/components'
-  s.summary     = 'View components + styleguide for Rails'
-  s.description = 'View components + styleguide for Rails'
+  s.summary     = 'View components + style guide for Rails'
+  s.description = 'View components + style guide for Rails'
   s.license     = 'MIT'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
