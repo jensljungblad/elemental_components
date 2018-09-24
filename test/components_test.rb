@@ -10,11 +10,14 @@ class ComponentsTest < ActiveSupport::TestCase
     assert_equal [
       ['01_home', 'Home'],
       ['02_pages', 'Pages', [
-        ['01_foo', 'Foo'],
-        ['02_bar', 'Bar']
+        ['01_page_one', 'Page One'],
+        ['02_page_two', 'Page Two']
       ]],
       ['03_components', 'Components', [
-        ['card', 'Card']
+        ['card', 'Card'],
+        ['objects', 'Objects', [
+          ['media_object', 'Media Object']
+        ]]
       ]]
     ], Components.page_names
   end
