@@ -19,7 +19,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   line-height: 1.5;
 }
 
@@ -45,11 +45,14 @@ main {
 }
 
 pre {
-  margin: 0;
-  padding: 10px 30px 30px;
-  border: 1px solid #dfe3e6;
+  margin: 0 0 2em;
+  padding: 30px;
   background: #f4f7fb;
-  font-family: "IBM Plex Sans Mono", "Menlo", "Monaco", monospace;
+  border: 1px solid #dfe3e6;
+}
+
+code {
+  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
   font-size: 15px;
 }
 
@@ -57,7 +60,6 @@ iframe {
   margin: 0;
   border: none;
 }
-
 
 h1 {
   margin: 0 0 1em;
@@ -79,7 +81,7 @@ ol {
 }
 
 table {
-  margin-bottom: 2em;
+  margin: 0 0 2em;
   border-collapse: collapse;
 }
 
@@ -164,8 +166,7 @@ nav ul ul ul {
 
 .example {
   display: grid;
-  margin: 60px 0 0;
-  padding: 40px;
+  padding: 30px;
   border: 1px solid #dfe3e6;
   border-width: 1px 1px 0;
 }

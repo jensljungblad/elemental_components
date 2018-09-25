@@ -20,7 +20,7 @@ module Components
             #{code}
           <% end %>
           <% c.example_source do %>
-            #{block_code(code, 'erb')}
+            #{block_code(code.strip, 'erb')}
           <% end %>
         <% end %>
       EXAMPLE
