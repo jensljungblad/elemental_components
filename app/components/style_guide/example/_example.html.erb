@@ -17,12 +17,14 @@
     <%= example %>
   `);
 
-  if (i.height == 'auto') {
-    var interval = setInterval(function() {
-      if (body = d.getElementsByTagName("body")[0]) {
-        i.height = body.scrollHeight;
-        clearInterval(interval);
+  var interval = setInterval(function() {
+    if (body = d.getElementsByTagName("body")[0]) {
+      if (i.height == 'auto') {
+        i.style.height = body.scrollHeight + 'px';
+      } else {
+        i.style.height = i.height + 'px';
       }
-    }, 10);
-  }
+      clearInterval(interval);
+    }
+  }, 10);
 </script>
