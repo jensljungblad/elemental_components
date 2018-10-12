@@ -7,7 +7,7 @@ module StyleGuide
     has_one :example_source
 
     def iframe_id
-      @iframe_id ||= SecureRandom.uuid
+      @iframe_id ||= SecureRandom.hex
     end
   end
 end

@@ -8,23 +8,23 @@
 </div>
 
 <script>
-  var i = document.getElementById('<%= iframe_id %>');
-  var d = i.contentWindow.document;
+  var i<%= iframe_id %> = document.getElementById('<%= iframe_id %>');
+  var d<%= iframe_id %> = i<%= iframe_id %>.contentWindow.document;
 
-  d.write(`
+  d<%= iframe_id %>.write(`
     <%= j stylesheet_link_tag "application", media: "all" %>
     <%= j javascript_include_tag "application" %>
     <%= example %>
   `);
 
-  var interval = setInterval(function() {
-    if (body = d.getElementsByTagName("body")[0]) {
-      if (i.height == 'auto') {
-        i.style.height = body.scrollHeight + 'px';
+  var interval<%= iframe_id %> = setInterval(function() {
+    if (body = d<%= iframe_id %>.getElementsByTagName('body')[0]) {
+      if (i<%= iframe_id %>.height == 'auto') {
+        i<%= iframe_id %>.style.height = body.scrollHeight + 'px';
       } else {
-        i.style.height = i.height + 'px';
+        i<%= iframe_id %>.style.height = i<%= iframe_id %>.height + 'px';
       }
-      clearInterval(interval);
+      clearInterval(interval<%= iframe_id %>);
     }
   }, 10);
 </script>
