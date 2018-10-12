@@ -1,5 +1,6 @@
 <% Components.component_names.each do |name| %>
   <% begin %>
     <% require_asset "#{name}/#{name.split('/')[-1]}" %>
-  <% rescue Sprockets::FileNotFound; end %>
+  <% rescue Sprockets::FileNotFound %>
+  <% end %>
 <% end %>
