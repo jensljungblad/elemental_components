@@ -23,7 +23,7 @@ module Components
   end
 
   def self.pages_path
-    Rails.root.join('app', 'views', 'styleguide')
+    Rails.root.join('app', 'styleguide', 'pages')
   end
 
   def self.page_names(path = nil)

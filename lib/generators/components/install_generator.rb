@@ -5,7 +5,7 @@ module Components
     source_root File.expand_path('../templates', __FILE__)
 
     def create_style_guide
-      directory 'styleguide', 'app/views/styleguide'
+      directory 'styleguide', 'app/styleguide'
     end
   end
 end

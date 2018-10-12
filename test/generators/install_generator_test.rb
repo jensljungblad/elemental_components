@@ -8,7 +8,8 @@ class InstallGeneratorTest < Rails::Generators::TestCase
 
   test 'component generator' do
     run_generator
-    assert_file 'app/views/styleguide/01_home.md'
-    assert_directory 'app/views/styleguide/02_components'
+    assert_file 'app/styleguide/layouts/example.html.erb'
+    assert_file 'app/styleguide/pages/01_home.md'
+    assert_directory 'app/styleguide/pages/02_components'
   end
 end

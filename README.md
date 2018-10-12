@@ -383,8 +383,10 @@ This will create the following files and directories:
 
 ```
 app/
-  views/
-    styleguide/
+  styleguide/
+    layouts/
+      example.html.erb
+    pages/
       01_home.md
       02_components
 ```
@@ -399,7 +401,7 @@ You can now access the style guide at `http://localhost:3000/styleguide`.
 
 ### Pages
 
-You can create style guide pages simply by adding markdown files to the `app/views/styleguide` directory. These can be structured by putting them in subdirectories, and sorted by prefixing the file names with a digit.
+You can create style guide pages simply by adding markdown files to the `app/styleguide/pages` directory. These can be structured by putting them in subdirectories, and sorted by prefixing the file names with a digit.
 
 Check out Brad Frost's [Style Guide Guide](https://github.com/bradfrost/style-guide-guide) for style guide inspiration.
 
@@ -449,16 +451,7 @@ height: 200
 ```
 ````
 
-Examples need your application's CSS and JS in order to function properly. By default they include the `application` stylesheet and javascript asset pipeline tags. It is possible to configure this behavior in an initializer. To use webpack instead of the asset pipeline:
-
-```ruby
-Components.configure do |config|
-  config.stylesheet_link_tags = []
-  config.javascript_include_tags = []
-  config.stylesheet_pack_tags = ['application']
-  config.javascript_pack_tags = ['application']
-end
-```
+Examples need your application's CSS and JS in order to function properly. There is an `app/styleguide/layouts/example.html.erb` layout file that examples are rendered within. This file can be modified in order to add additional tags to the header, like the `javascript_pack_tag` when using the webpacker gem, or classes and styles to the body tag.
 
 ## Acknowledgements
 
