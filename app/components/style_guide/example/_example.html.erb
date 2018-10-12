@@ -1,5 +1,6 @@
 <div class="example">
   <iframe id="<%= iframe_id %>"
+          src="<%= example_path %>"
           width="<%= example.width || '100%' %>"
           height="<%= example.height || 'auto' %>"></iframe>
 </div>
@@ -9,32 +10,20 @@
 
 <script>
   var i<%= iframe_id %> = document.getElementById('<%= iframe_id %>');
-  var d<%= iframe_id %> = i<%= iframe_id %>.contentWindow.document;
 
-  d<%= iframe_id %>.write(`
-    <% Components.configuration.stylesheet_link_tags.each do |manifest| %>
-      <%= j stylesheet_link_tag manifest, media: "all" %>
-    <% end %>
-    <% Components.configuration.javascript_include_tags.each do |manifest| %>
-      <%= j javascript_include_tag manifest %>
-    <% end %>
-    <% Components.configuration.stylesheet_pack_tags.each do |pack| %>
-      <%= j stylesheet_pack_tag pack %>
-    <% end %>
-    <% Components.configuration.javascript_pack_tags.each do |pack| %>
-      <%= j javascript_pack_tag pack %>
-    <% end %>
-    <%= example %>
-  `);
+  i<%= iframe_id %>.onload = function() {
+    var d<%= iframe_id %> = i<%= iframe_id %>.contentWindow.document;
+    var b<%= iframe_id %> = d<%= iframe_id %>.getElementsByTagName('body')[0];
 
-  var interval<%= iframe_id %> = setInterval(function() {
-    if (body = d<%= iframe_id %>.getElementsByTagName('body')[0]) {
+    b<%= iframe_id %>.innerHTML = `<%= example %>`;
+
+    var interval<%= iframe_id %> = setInterval(function() {
       if (i<%= iframe_id %>.height == 'auto') {
-        i<%= iframe_id %>.style.height = body.scrollHeight + 'px';
+        i<%= iframe_id %>.style.height = b<%= iframe_id %>.scrollHeight + 'px';
       } else {
         i<%= iframe_id %>.style.height = i<%= iframe_id %>.height + 'px';
       }
       clearInterval(interval<%= iframe_id %>);
-    }
-  }, 10);
+    }, 10);
+  }
 </script>
