@@ -2,5 +2,6 @@
   <% begin %>
     <% require_asset "#{name}/#{name.split('/')[-1]}" %>
   <% rescue Sprockets::FileNotFound %>
+    <% Rails.logger.debug "Components: JS not found for #{name}" %>
   <% end %>
 <% end %>
