@@ -38,4 +38,20 @@ module Components
       end
     end
   end
+
+  def self.stylesheet_link_tags
+    ['application']
+  end
+
+  def self.javascript_include_tags
+    ['application']
+  end
+
+  def self.stylesheet_pack_tags
+    []
+  end
+
+  def self.javascript_pack_tags
+    []
+  end
 end
