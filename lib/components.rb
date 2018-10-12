@@ -2,6 +2,7 @@ require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
 require 'components/attributes'
+require 'components/configuration'
 require 'components/elements'
 require 'components/element'
 require 'components/component'
@@ -10,6 +11,14 @@ require 'components/markdown_renderer'
 require 'components/engine'
 
 module Components
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield configuration
+  end
+
   def self.components_path
     Rails.root.join('app', 'components')
   end
@@ -37,21 +46,5 @@ module Components
         end
       end
     end
-  end
-
-  def self.stylesheet_link_tags
-    ['application']
-  end
-
-  def self.javascript_include_tags
-    ['application']
-  end
-
-  def self.stylesheet_pack_tags
-    []
-  end
-
-  def self.javascript_pack_tags
-    []
   end
 end

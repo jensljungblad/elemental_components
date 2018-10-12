@@ -449,6 +449,17 @@ height: 200
 ```
 ````
 
+Examples need your application's CSS and JS in order to function properly. By default they include the `application` stylesheet and javascript asset pipeline tags. It is possible to configure this behavior in an initializer. To use webpack instead of the asset pipeline:
+
+```ruby
+Components.configure do |config|
+  config.stylesheet_link_tags = []
+  config.javascript_include_tags = []
+  config.stylesheet_pack_tags = ['application']
+  config.javascript_pack_tags = ['application']
+end
+```
+
 ## Acknowledgements
 
 This library was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:

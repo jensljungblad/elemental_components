@@ -12,16 +12,16 @@
   var d<%= iframe_id %> = i<%= iframe_id %>.contentWindow.document;
 
   d<%= iframe_id %>.write(`
-    <% Components.stylesheet_link_tags.each do |manifest| %>
+    <% Components.configuration.stylesheet_link_tags.each do |manifest| %>
       <%= j stylesheet_link_tag manifest, media: "all" %>
     <% end %>
-    <% Components.javascript_include_tags.each do |manifest| %>
+    <% Components.configuration.javascript_include_tags.each do |manifest| %>
       <%= j javascript_include_tag manifest %>
     <% end %>
-    <% Components.stylesheet_pack_tags.each do |pack| %>
+    <% Components.configuration.stylesheet_pack_tags.each do |pack| %>
       <%= j stylesheet_pack_tag pack %>
     <% end %>
-    <% Components.javascript_pack_tags.each do |pack| %>
+    <% Components.configuration.javascript_pack_tags.each do |pack| %>
       <%= j javascript_pack_tag pack %>
     <% end %>
     <%= example %>
