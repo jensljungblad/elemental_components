@@ -1,0 +1,30 @@
+<div class="example">
+  <iframe id="<%= iframe_id %>"
+          src="<%= components.example_path %>"
+          width="<%= example.width || '100%' %>"
+          height="<%= example.height || 'auto' %>"></iframe>
+</div>
+<div class="example-source">
+  <%= example_source %>
+</div>
+
+<script>
+  var i<%= iframe_id %> = document.getElementById('<%= iframe_id %>');
+
+  i<%= iframe_id %>.onload = function() {
+    var d<%= iframe_id %> = i<%= iframe_id %>.contentWindow.document;
+    var b<%= iframe_id %> = d<%= iframe_id %>.getElementsByTagName('body')[0];
+    var e<%= iframe_id %> = d<%= iframe_id %>.getElementById('example');
+
+    e<%= iframe_id %>.innerHTML = `<%= example %>`;
+
+    var interval<%= iframe_id %> = setInterval(function() {
+      if (i<%= iframe_id %>.height == 'auto') {
+        i<%= iframe_id %>.style.height = b<%= iframe_id %>.scrollHeight + 'px';
+      } else {
+        i<%= iframe_id %>.style.height = i<%= iframe_id %>.height + 'px';
+      }
+      clearInterval(interval<%= iframe_id %>);
+    }, 10);
+  }
+</script>

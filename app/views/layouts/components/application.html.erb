@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Components</title>
-  <%= stylesheet_link_tag    "components/application", media: "all" %>
-  <%= javascript_include_tag "components/application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-
-<%= yield %>
-
-</body>
+  <head>
+    <title>Style guide</title>
+    <%= stylesheet_link_tag "components/application", media: "all" %>
+    <%= javascript_include_tag "components/application" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div class="grid-container">
+      <nav>
+        <%= navigation %>
+      </nav>
+      <main>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
 </html>
