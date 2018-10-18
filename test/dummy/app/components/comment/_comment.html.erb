@@ -1,0 +1,8 @@
+<%= component "objects/media_object" do |c| %>
+  <% c.media do %>
+    <%= link_to comment.user.name, user_path(comment.user.id) %>
+  <% end %>
+  <% c.body do %>
+    <%= comment.body %>
+  <% end %>
+<% end %>
