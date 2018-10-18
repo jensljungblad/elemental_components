@@ -7,25 +7,25 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   setup :prepare_destination
 
   test 'component generator' do
-    system 'mkdir', '-p', "#{destination_root}/app/views/styleguide/components"
-    run_generator %w(foobar)
+    system 'mkdir', '-p', "#{destination_root}/app/styleguide/pages/components"
+    run_generator %w[foobar]
     assert_file 'app/components/foobar_component.rb'
     assert_file 'app/components/foobar/_foobar.html.erb'
     assert_file 'app/components/foobar/foobar.css'
     assert_file 'app/components/foobar/foobar.js'
-    assert_file 'app/views/styleguide/components/foobar.md'
+    assert_file 'app/styleguide/pages/components/foobar.md'
   end
 
   test 'component generator when no style guide directory' do
     assert_raises do
-      run_generator %w(foobar)
+      run_generator %w[foobar]
     end
   end
 
   test 'component generator when no components directory' do
-    system 'mkdir', '-p', "#{destination_root}/app/views/styleguide"
+    system 'mkdir', '-p', "#{destination_root}/app/styleguide/pages"
     assert_raises do
-      run_generator %w(foobar)
+      run_generator %w[foobar]
     end
   end
 end
