@@ -9,7 +9,7 @@ module Components
       unless params[:path]
         params[:path] = Components.page_names[0][0]
       end
-      render "pages/#{params[:path]}"
+      render "pages/#{params[:path]}", layout: 'components/application'
     end
   end
 end
