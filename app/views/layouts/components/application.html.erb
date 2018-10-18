@@ -24,14 +24,11 @@
           var d = i.contentWindow.document;
           var b = d.getElementsByTagName('body')[0];
 
-          var interval = setInterval(function() {
-            if (i.height == 'auto') {
-              i.style.height = b.scrollHeight + 'px';
-            } else {
-              i.style.height = i.height + 'px';
-            }
-            clearInterval(interval);
-          }, 10);
+          if (i.height == 'auto') {
+            i.style.height = b.scrollHeight + 'px';
+          } else {
+            i.style.height = i.height + 'px';
+          }
         }
       }
     </script>

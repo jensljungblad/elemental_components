@@ -14,3 +14,7 @@
  *= require components
  *= require_self
  */
+
+body {
+  margin: 0;
+}
