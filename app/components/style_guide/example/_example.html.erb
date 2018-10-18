@@ -14,8 +14,9 @@
   i<%= iframe_id %>.onload = function() {
     var d<%= iframe_id %> = i<%= iframe_id %>.contentWindow.document;
     var b<%= iframe_id %> = d<%= iframe_id %>.getElementsByTagName('body')[0];
+    var e<%= iframe_id %> = d<%= iframe_id %>.getElementById('example');
 
-    b<%= iframe_id %>.innerHTML = `<%= example %>`;
+    e<%= iframe_id %>.innerHTML = `<%= example %>`;
 
     var interval<%= iframe_id %> = setInterval(function() {
       if (i<%= iframe_id %>.height == 'auto') {
