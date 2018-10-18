@@ -2,6 +2,7 @@ module Components
   class PagesController < ApplicationController
     prepend_view_path 'app/styleguide'
 
+    helper Rails.application.helpers
     helper Rails.application.routes.url_helpers
 
     def show
