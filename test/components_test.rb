@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ComponentsTest < ActiveSupport::TestCase
   test '#component_names returns an array of components' do
-    assert_equal ['card', 'objects/media_object'], Components.component_names
+    assert_equal ['card', 'comment', 'objects/media_object'], Components.component_names
   end
 
   # rubocop:disable Style/WordArray
@@ -15,6 +15,7 @@ class ComponentsTest < ActiveSupport::TestCase
       ]],
       ['03_components', 'Components', [
         ['card', 'Card'],
+        ['comment', 'Comment'],
         ['objects', 'Objects', [
           ['media_object', 'Media Object']
         ]]
