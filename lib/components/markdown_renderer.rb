@@ -14,15 +14,14 @@ module Components
 
     def example(code, options)
       <<-EXAMPLE
-        <%= component "style_guide/example" do |c| %>
-          <% c.example(width: #{options['width'] || 'nil'},
-                       height: #{options['height'] || 'nil'}) do %>
-            #{code}
-          <% end %>
-          <% c.example_source do %>
-            #{block_code(code.strip, 'erb')}
-          <% end %>
-        <% end %>
+        <div class="example">
+          <iframe src="/styleguide/example?example=#{Base64.urlsafe_encode64(code)}"
+                  width="#{options['width'] || '100%'}"
+                  height="#{options['height'] || 'auto'}"></iframe>
+        </div>
+        <div class="example-source">
+          #{block_code(code.strip, 'erb')}
+        </div>
       EXAMPLE
     end
 
