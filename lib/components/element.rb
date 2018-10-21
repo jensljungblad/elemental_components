@@ -1,6 +1,7 @@
 module Components
   class Element
     include Attributes
+    include Elements
 
     attr_accessor :value
 

@@ -114,4 +114,24 @@ class ComponentTest < ActiveSupport::TestCase
     component = component_class.new(:view)
     assert_equal [], component.foo
   end
+
+  # test 'set foo' do
+  #   view_class = Class.new do
+  #     def capture
+  #       yield
+  #     end
+  #   end
+  #   component_class = Class.new(Components::Component) do
+  #     has_one :foo do
+  #       has_one :bar
+  #     end
+  #   end
+  #   component = component_class.new(view_class.new)
+  #   component.foo do |cc|
+  #     cc.bar { 'bar' }
+  #     'foo'
+  #   end
+  #   assert_equal 'foo', component.instance_variable_get(:@foo).value
+  #   assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  # end
 end

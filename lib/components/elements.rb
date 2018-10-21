@@ -5,33 +5,29 @@ module Components
     class_methods do
       def has_one(name, &config)
         define_method(name) do |value = nil, attributes = nil, &block|
+          return get_element(name) unless value || block
+
+          element_class = config ? Class.new(Element, &config) : Element
+
           attributes, value = value, @view.capture(&block) if block
 
-          if value
-            element_class = config ? Class.new(Element, &config) : Element
-
-            set_element(
-              name, element_class.new(@view, value, attributes)
-            )
-          else
-            get_element(name)
-          end
+          set_element(
+            name, element_class.new(@view, value, attributes)
+          )
         end
       end
 
       def has_many(name, &config)
         define_method(name) do |value = nil, attributes = nil, &block|
+          return get_element(name, collection: true) unless value || block
+
+          element_class = config ? Class.new(Element, &config) : Element
+
           attributes, value = value, @view.capture(&block) if block
 
-          if value
-            element_class = config ? Class.new(Element, &config) : Element
-
-            set_element(
-              name, element_class.new(@view, value, attributes), collection: true
-            )
-          else
-            get_element(name, collection: true)
-          end
+          set_element(
+            name, element_class.new(@view, value, attributes), collection: true
+          )
         end
       end
     end
