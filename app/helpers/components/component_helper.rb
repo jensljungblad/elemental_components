@@ -6,7 +6,10 @@ module Components
       view = controller.view_context
       view.instance_variable_set(:@_component, component)
 
-      component.public_methods(false).each do |method|
+      methods = component.public_methods(false)
+      methods << :value
+
+      methods.each do |method|
         view.singleton_class.delegate method, to: :@_component
       end
 

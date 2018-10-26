@@ -309,7 +309,7 @@ The component's value can then be accessed in the partial:
 <% # app/components/alert/_alert.html.erb %>
 
 <div class="alert alert--<%= context %>" role="alert">
-  <%= @_component.value %>
+  <%= value %>
 </div>
 ```
 
