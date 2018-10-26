@@ -43,11 +43,6 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test 'set element with block' do
-    view_class = Class.new do
-      def capture(element)
-        yield(element)
-      end
-    end
     component_class = Class.new(Components::Component) do
       has_one :foo
     end
@@ -90,6 +85,36 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
   end
 
+  test 'set element with nested element' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo do
+        has_one :bar
+      end
+    end
+    component = component_class.new(view_class.new)
+    component.foo baz: 'baz' do |cc|
+      cc.bar 'bar'
+      'foo'
+    end
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  end
+
+  test 'set element with nested element with block' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo do
+        has_one :bar
+      end
+    end
+    component = component_class.new(view_class.new)
+    component.foo baz: 'baz' do |cc|
+      cc.bar { 'bar' }
+      'foo'
+    end
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  end
+
   test 'get element' do
     component_class = Class.new(Components::Component) do
       has_one :foo
@@ -115,24 +140,13 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal [], component.foo
   end
 
-  # test 'set foo' do
-  #   view_class = Class.new do
-  #     def capture(element)
-  #       yield(element)
-  #     end
-  #   end
-  #   component_class = Class.new(Components::Component) do
-  #     has_one :foo do
-  #       has_one :bar
-  #     end
-  #   end
-  #   component = component_class.new(view_class.new)
-  #   component.foo baz: 'baz' do |cc|
-  #     cc.bar { 'bar' } # TODO: value or block?
-  #     'foo'
-  #   end
-  #   assert_equal 'foo', component.instance_variable_get(:@foo).value
-  #   assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
-  #   assert_equal 'baz', component.instance_variable_get(:@foo).baz # why doesn't this work?
-  # end
+  private
+
+  def view_class
+    Class.new do
+      def capture(element)
+        yield(element)
+      end
+    end
+  end
 end
