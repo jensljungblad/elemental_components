@@ -8,13 +8,11 @@ module Components
         define_method(name) do |value = nil, attributes = nil, &block|
           return get_element(name) unless value || block
 
-          # TODO: this and the same for has many is identical
           element_class = config ? Class.new(Element, &config) : Element
-          attributes, value = value, nil if block
-          element = element_class.new(@view, value, attributes)
-          element.value_from_block(&block) if block
 
-          set_element(name, element)
+          set_element(
+            name, element(element_class, value, attributes, &block)
+          )
         end
       end
 
@@ -22,19 +20,22 @@ module Components
         define_method(name) do |value = nil, attributes = nil, &block|
           return get_element(name, collection: true) unless value || block
 
-          # TODO: this and the same for has one is identical
           element_class = config ? Class.new(Element, &config) : Element
-          attributes, value = value, nil if block
-          element = element_class.new(@view, value, attributes)
-          element.value_from_block(&block) if block
 
-          set_element(name, element, collection: true)
+          set_element(
+            name, element(element_class, value, attributes, &block), collection: true
+          )
         end
       end
     end
     # rubocop:enable Naming/PredicateName
 
     private
+
+    def element(element_class, value, attributes, &block)
+      attributes, value = value, nil if block
+      element_class.new(@view, value, attributes, &block)
+    end
 
     def get_element(name, collection: false)
       unless instance_variable_defined?(:"@#{name}")

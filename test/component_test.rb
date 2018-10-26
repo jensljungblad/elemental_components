@@ -1,6 +1,18 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
+  test 'initialize with value' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(:view, 'foo')
+    assert_equal 'foo', component.instance_variable_get(:@value)
+  end
+
+  test 'get value' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(:view, 'foo')
+    assert_equal component.instance_variable_get(:@value), component.value
+  end
+
   test 'initialize attribute with no value' do
     component_class = Class.new(Components::Component) do
       attribute :foo
@@ -13,7 +25,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, foo: 'foo')
+    component = component_class.new(:view, nil, foo: 'foo')
     assert_equal 'foo', component.instance_variable_get(:@foo)
   end
 
@@ -29,7 +41,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, foo: 'foo')
+    component = component_class.new(:view, nil, foo: 'foo')
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
 

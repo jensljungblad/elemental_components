@@ -5,19 +5,20 @@ module Components
 
     attr_accessor :value
 
-    def initialize(view, value, attributes = nil)
+    def initialize(view, value = nil, attributes = nil, &block)
       @view = view
-      @value = value
+      @value = block ? capture(&block) : value
       assign_attributes(attributes || {})
-    end
-
-    # TODO: can this be moved to initialize?
-    def value_from_block(&block)
-      @value = @view.capture(self, &block)
     end
 
     def to_s
       @value
+    end
+
+    private
+
+    def capture(&block)
+      @view.capture(self, &block)
     end
   end
 end
