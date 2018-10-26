@@ -44,8 +44,8 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'set element with block' do
     view_class = Class.new do
-      def capture
-        yield
+      def capture(element)
+        yield(element)
       end
     end
     component_class = Class.new(Components::Component) do
@@ -117,8 +117,8 @@ class ComponentTest < ActiveSupport::TestCase
 
   # test 'set foo' do
   #   view_class = Class.new do
-  #     def capture
-  #       yield
+  #     def capture(element)
+  #       yield(element)
   #     end
   #   end
   #   component_class = Class.new(Components::Component) do
@@ -127,11 +127,12 @@ class ComponentTest < ActiveSupport::TestCase
   #     end
   #   end
   #   component = component_class.new(view_class.new)
-  #   component.foo do |cc|
-  #     cc.bar { 'bar' }
+  #   component.foo baz: 'baz' do |cc|
+  #     cc.bar { 'bar' } # TODO: value or block?
   #     'foo'
   #   end
   #   assert_equal 'foo', component.instance_variable_get(:@foo).value
   #   assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  #   assert_equal 'baz', component.instance_variable_get(:@foo).baz # why doesn't this work?
   # end
 end

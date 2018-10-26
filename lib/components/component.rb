@@ -1,5 +1,7 @@
 module Components
   class Component
+    # TODO: include Element here instead
+
     include Attributes
     include Elements
 

@@ -11,6 +11,11 @@ module Components
       assign_attributes(attributes || {})
     end
 
+    # TODO: can this be moved to initialize?
+    def value_from_block(&block)
+      @value = @view.capture(self, &block)
+    end
+
     def to_s
       @value
     end
