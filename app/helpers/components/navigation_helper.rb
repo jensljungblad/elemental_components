@@ -1,5 +1,6 @@
 module Components
   module NavigationHelper
+    # rubocop:disable Metrics/MethodLength
     def navigation(pages = nil, paths = [])
       content_tag :ul do
         (pages || Components.page_names).map do |page|
@@ -16,5 +17,6 @@ module Components
         end.join('').html_safe
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

@@ -1,8 +1,16 @@
+AllCops:
+  TargetRubyVersion: 2.2.2
+
 Metrics/LineLength:
   Max: 120
 
-Metrics/MethodLength:
-  Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - 'test/**/*.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*.rb'
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case
