@@ -250,19 +250,19 @@ end
 Elements are declared using `has_one` or `has_many`. Passing them a block lets us declare attributes on our elements, in the same way we declare attributes on components. To inject content into these elements, we pass a block to the component helper:
 
 ```erb
-<%= component "card", flush: true do |c| %>
-  <% c.header "Header", centered: true %>
-  <% c.section "Section 1", size: "large" %>
-  <% c.section "Section 2", size: "small" %>
-  <% c.footer "Footer" %>
+<%= component "card", flush: true do |card| %>
+  <% card.header "Header", centered: true %>
+  <% card.section "Section 1", size: "large" %>
+  <% card.section "Section 2", size: "small" %>
+  <% card.footer "Footer" %>
 <% end %>
 ```
 
 To inject HTML content into the elements, pass a block to the element instead of a string value:
 
 ```erb
-<%= component "card", flush: true do |c| %>
-  <% c.header centered: true do %>
+<%= component "card", flush: true do |card| %>
+  <% card.header centered: true do %>
     <strong>Header</strong>
   <% end %>
   ...
@@ -283,9 +283,9 @@ end
 ```
 
 ```erb
-<%= component "navigation" do |c| %>
-  <% c.items "Home", url: root_path, active: true %>
-  <% c.items "Explore" url: explore_path %>
+<%= component "navigation" do |navigation| %>
+  <% navigation.items "Home", url: root_path, active: true %>
+  <% navigation.items "Explore" url: explore_path %>
 <% end %>
 ```
 
@@ -293,6 +293,41 @@ An alternative here is to pass a data structure to the component as an attribute
 
 ```erb
 <%= component "navigation", items: items %>
+```
+
+The component is itself an element, which means it also has a value, same as other elements. If you have a simple component that only needs one element, you can use the component itself:
+
+```erb
+<%= component "alert", context: "success" do %>
+  Something went right!
+<% end %>
+```
+
+The component's value can then be accessed in the partial:
+
+```erb
+<% # app/components/alert/_alert.html.erb %>
+
+<div class="alert alert--<%= context %>" role="alert">
+  <%= @_component.value %>
+</div>
+```
+
+Elements can also be nested, although it is recommended to keep nesting to a minimum:
+
+```ruby
+# app/components/card_component.rb %>
+
+class CardComponent < Components::Component
+  ...
+
+  has_many :sections do
+    attribute :size
+
+    has_one :header
+    has_one :footer
+  end
+end
 ```
 
 ### Helper methods
