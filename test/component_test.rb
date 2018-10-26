@@ -1,6 +1,18 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
+  test 'initialize with value' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(:view, 'foo')
+    assert_equal 'foo', component.instance_variable_get(:@value)
+  end
+
+  test 'get value' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(:view, 'foo')
+    assert_equal component.instance_variable_get(:@value), component.value
+  end
+
   test 'initialize attribute with no value' do
     component_class = Class.new(Components::Component) do
       attribute :foo
@@ -13,7 +25,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, foo: 'foo')
+    component = component_class.new(:view, nil, foo: 'foo')
     assert_equal 'foo', component.instance_variable_get(:@foo)
   end
 
@@ -29,7 +41,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, foo: 'foo')
+    component = component_class.new(:view, nil, foo: 'foo')
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
 
@@ -43,11 +55,6 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test 'set element with block' do
-    view_class = Class.new do
-      def capture
-        yield
-      end
-    end
     component_class = Class.new(Components::Component) do
       has_one :foo
     end
@@ -90,6 +97,36 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
   end
 
+  test 'set element with nested element' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo do
+        has_one :bar
+      end
+    end
+    component = component_class.new(view_class.new)
+    component.foo baz: 'baz' do |cc|
+      cc.bar 'bar'
+      'foo'
+    end
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  end
+
+  test 'set element with nested element with block' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo do
+        has_one :bar
+      end
+    end
+    component = component_class.new(view_class.new)
+    component.foo baz: 'baz' do |cc|
+      cc.bar { 'bar' }
+      'foo'
+    end
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  end
+
   test 'get element' do
     component_class = Class.new(Components::Component) do
       has_one :foo
@@ -113,5 +150,15 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(:view)
     assert_equal [], component.foo
+  end
+
+  private
+
+  def view_class
+    Class.new do
+      def capture(element)
+        yield(element)
+      end
+    end
   end
 end

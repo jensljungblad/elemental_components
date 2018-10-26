@@ -2,41 +2,40 @@ module Components
   module Elements
     extend ActiveSupport::Concern
 
+    # rubocop:disable Naming/PredicateName
     class_methods do
       def has_one(name, &config)
         define_method(name) do |value = nil, attributes = nil, &block|
-          attributes, value = value, @view.capture(&block) if block
+          return get_element(name) unless value || block
 
-          if value
-            element_class = config ? Class.new(Element, &config) : Element
+          element_class = config ? Class.new(Element, &config) : Element
 
-            set_element(
-              name, element_class.new(@view, value, attributes)
-            )
-          else
-            get_element(name)
-          end
+          set_element(
+            name, element(element_class, value, attributes, &block)
+          )
         end
       end
 
       def has_many(name, &config)
         define_method(name) do |value = nil, attributes = nil, &block|
-          attributes, value = value, @view.capture(&block) if block
+          return get_element(name, collection: true) unless value || block
 
-          if value
-            element_class = config ? Class.new(Element, &config) : Element
+          element_class = config ? Class.new(Element, &config) : Element
 
-            set_element(
-              name, element_class.new(@view, value, attributes), collection: true
-            )
-          else
-            get_element(name, collection: true)
-          end
+          set_element(
+            name, element(element_class, value, attributes, &block), collection: true
+          )
         end
       end
     end
+    # rubocop:enable Naming/PredicateName
 
     private
+
+    def element(element_class, value, attributes, &block)
+      attributes, value = value, nil if block
+      element_class.new(@view, value, attributes, &block)
+    end
 
     def get_element(name, collection: false)
       unless instance_variable_defined?(:"@#{name}")
