@@ -1,7 +1,7 @@
 module Components
   module ComponentHelper
     def component(name, attrs = {}, &block)
-      component = "#{name}_component".classify.constantize.new(self, nil, attrs, &block)
+      component = "#{name}_component".classify.constantize.new(self, attrs, &block)
 
       view = controller.view_context
       view.instance_variable_set(:@_component, component)
