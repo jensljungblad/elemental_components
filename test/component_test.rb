@@ -1,11 +1,21 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
+  test 'initialize with no value' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(:view)
+    assert_nil component.instance_variable_get(:@value)
+  end
+
   test 'initialize with value' do
-    component_class = Class.new(Components::Component) do
-      attribute :foo
-    end
+    component_class = Class.new(Components::Component)
     component = component_class.new(:view, value: 'foo')
+    assert_equal 'foo', component.instance_variable_get(:@value)
+  end
+
+  test 'initialize with value using block' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(view_class.new) { 'foo' }
     assert_equal 'foo', component.instance_variable_get(:@value)
   end
 
@@ -47,7 +57,7 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
 
-  test 'set element' do
+  test 'initialize element with value' do
     component_class = Class.new(Components::Component) do
       has_one :foo
     end
@@ -56,7 +66,7 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal 'foo', component.instance_variable_get(:@foo).value
   end
 
-  test 'set element with block' do
+  test 'initialize element with value using block' do
     component_class = Class.new(Components::Component) do
       has_one :foo
     end
@@ -65,7 +75,7 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal 'foo', component.instance_variable_get(:@foo).value
   end
 
-  test 'set element with attribute' do
+  test 'initialize element with attribute with value' do
     component_class = Class.new(Components::Component) do
       has_one :foo do
         attribute :bar
@@ -77,7 +87,7 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal 'baz', component.instance_variable_get(:@foo).bar
   end
 
-  test 'set element with attribute with default value' do
+  test 'initialize element with attribute with default value' do
     component_class = Class.new(Components::Component) do
       has_one :foo do
         attribute :bar, default: 'baz'
@@ -89,72 +99,72 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal 'baz', component.instance_variable_get(:@foo).bar
   end
 
-  # test 'set element collection' do
-  #   component_class = Class.new(Components::Component) do
-  #     has_many :foo
-  #   end
-  #   component = component_class.new(:view)
-  #   component.foo 'foo'
-  #   component.foo 'bar'
-  #   assert_equal 2, component.instance_variable_get(:@foo).length
-  #   assert_equal 'foo', component.instance_variable_get(:@foo)[0].value
-  #   assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
-  # end
-  #
-  # test 'set element with nested element' do
-  #   component_class = Class.new(Components::Component) do
-  #     has_one :foo do
-  #       has_one :bar
-  #     end
-  #   end
-  #   component = component_class.new(view_class.new)
-  #   component.foo baz: 'baz' do |cc|
-  #     cc.bar 'bar'
-  #     'foo'
-  #   end
-  #   assert_equal 'foo', component.instance_variable_get(:@foo).value
-  #   assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
-  # end
-  #
-  # test 'set element with nested element with block' do
-  #   component_class = Class.new(Components::Component) do
-  #     has_one :foo do
-  #       has_one :bar
-  #     end
-  #   end
-  #   component = component_class.new(view_class.new)
-  #   component.foo baz: 'baz' do |cc|
-  #     cc.bar { 'bar' }
-  #     'foo'
-  #   end
-  #   assert_equal 'foo', component.instance_variable_get(:@foo).value
-  #   assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
-  # end
-  #
-  # test 'get element' do
-  #   component_class = Class.new(Components::Component) do
-  #     has_one :foo
-  #   end
-  #   component = component_class.new(:view)
-  #   component.foo 'foo'
-  #   assert_equal component.instance_variable_get(:@foo), component.foo
-  # end
-  #
-  # test 'get element when not set' do
-  #   component_class = Class.new(Components::Component) do
-  #     has_one :foo
-  #   end
-  #   component = component_class.new(:view)
-  #   assert_nil component.foo
-  # end
-  #
-  # test 'get element collection when not set' do
-  #   component_class = Class.new(Components::Component) do
-  #     has_many :foo
-  #   end
-  #   component = component_class.new(:view)
-  #   assert_equal [], component.foo
-  # end
+  test 'initialize element with nested element with value' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo do
+        has_one :bar
+      end
+    end
+    component = component_class.new(view_class.new)
+    component.foo do |cc|
+      cc.bar value: 'bar'
+      'foo'
+    end
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  end
+
+  test 'initialize element with nested element with value using block' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo do
+        has_one :bar
+      end
+    end
+    component = component_class.new(view_class.new)
+    component.foo do |cc|
+      cc.bar { 'bar' }
+      'foo'
+    end
+    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+  end
+
+  test 'initialize collection elements' do
+    component_class = Class.new(Components::Component) do
+      has_many :foo
+    end
+    component = component_class.new(:view)
+    component.foo value: 'foo'
+    component.foo value: 'bar'
+    assert_equal 2, component.instance_variable_get(:@foo).length
+    assert_equal 'foo', component.instance_variable_get(:@foo)[0].value
+    assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
+  end
+
+  test 'get element' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo
+    end
+    component = component_class.new(:view)
+    component.foo value: 'foo'
+    assert_equal component.instance_variable_get(:@foo), component.foo
+  end
+
+  test 'get element when not set' do
+    component_class = Class.new(Components::Component) do
+      has_one :foo
+    end
+    component = component_class.new(:view)
+    assert_nil component.foo
+  end
+
+  test 'get element collection when not set' do
+    component_class = Class.new(Components::Component) do
+      has_many :foo
+    end
+    component = component_class.new(:view)
+    assert_equal [], component.foo
+  end
 
   private
 
