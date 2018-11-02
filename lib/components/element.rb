@@ -3,18 +3,12 @@ module Components
     include Attributes
     include Elements
 
-    attr_reader :value
+    attr_reader :content
 
     def initialize(view, attributes = nil, &block)
       @view = view
-      attributes ||= {}
-      @value = attributes.delete(:value)
-      @value = capture(&block) if block
-      assign_attributes(attributes)
-    end
-
-    def to_s
-      @value
+      @content = capture(&block) if block
+      assign_attributes(attributes || {})
     end
 
     private

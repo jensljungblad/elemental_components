@@ -1,22 +1,22 @@
 <div id="<%= id %>" class="card">
   <% if header.present? %>
     <div class="card__header">
-      <%= header %>
+      <%= header.content %>
     </div>
   <% end %>
   <% sections.each do |section| %>
     <div class="card__section<%= " card__section--#{section.size}" if section.size %>">
       <% if section.header.present? %>
         <div class="card__section__header">
-          <%= section.header %>
+          <%= section.header.content %>
         </div>
       <% end %>
-      <%= section %>
+      <%= section.content %>
     </div>
   <% end %>
   <% if footer.present? %>
     <div class="card__footer">
-      <%= footer %>
+      <%= footer.content %>
     </div>
   <% end %>
 </div>
