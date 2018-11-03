@@ -3,25 +3,7 @@ require 'test_helper'
 class ComponentHelperTest < ActionView::TestCase
   include Components::ComponentHelper
 
-  test 'render component setting elements' do
-    output = component 'card', id: 'id' do |c|
-      c.header 'Header'
-      c.sections 'Section 1', size: 'large'
-      c.sections 'Section 2', size: 'small'
-      c.footer 'Footer'
-    end
-
-    assert_dom_equal_squished %(
-      <div id="id" class="card">
-        <div class="card__header"> Header </div>
-        <div class="card__section card__section--large"> Section 1 </div>
-        <div class="card__section card__section--small"> Section 2 </div>
-        <div class="card__footer"> Footer </div>
-      </div>
-    ), output
-  end
-
-  test 'render component setting elements with blocks' do
+  test 'render component with elements' do
     output = component 'card', id: 'id' do |c|
       c.header { 'Header' }
       c.sections(size: 'large') { 'Section 1' }
@@ -39,9 +21,8 @@ class ComponentHelperTest < ActionView::TestCase
     ), output
   end
 
-  test 'render component setting nested elements' do
+  test 'render component with nested elements' do
     output = component 'card', id: 'id' do |c|
-      c.header 'Header'
       c.header { 'Header' }
       c.sections do |cc|
         cc.header { 'Section Header 1' }
@@ -72,8 +53,8 @@ class ComponentHelperTest < ActionView::TestCase
 
   test 'render namespaced component' do
     output = component 'objects/media_object' do |c|
-      c.media 'Media'
-      c.body 'Body'
+      c.media { 'Media' }
+      c.body { 'Body' }
     end
 
     assert_dom_equal_squished %(

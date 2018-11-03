@@ -1,16 +1,16 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
-  test 'initialize with value' do
+  test 'initialize with content' do
     component_class = Class.new(Components::Component)
-    component = component_class.new(:view, 'foo')
-    assert_equal 'foo', component.instance_variable_get(:@value)
+    component = component_class.new(view_class.new) { 'foo' }
+    assert_equal 'foo', component.instance_variable_get(:@content)
   end
 
-  test 'get value' do
+  test 'get yield' do
     component_class = Class.new(Components::Component)
-    component = component_class.new(:view, 'foo')
-    assert_equal component.instance_variable_get(:@value), component.value
+    component = component_class.new(view_class.new) { 'foo' }
+    assert_equal component.instance_variable_get(:@content), component.content
   end
 
   test 'initialize attribute with no value' do
@@ -25,7 +25,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, nil, foo: 'foo')
+    component = component_class.new(:view, foo: 'foo')
     assert_equal 'foo', component.instance_variable_get(:@foo)
   end
 
@@ -41,98 +41,63 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, nil, foo: 'foo')
+    component = component_class.new(:view, foo: 'foo')
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
 
-  test 'set element' do
-    component_class = Class.new(Components::Component) do
-      has_one :foo
-    end
-    component = component_class.new(:view)
-    component.foo 'foo'
-    assert_equal 'foo', component.instance_variable_get(:@foo).value
-  end
-
-  test 'set element with block' do
+  test 'initialize element with content' do
     component_class = Class.new(Components::Component) do
       has_one :foo
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
-    assert_equal 'foo', component.instance_variable_get(:@foo).value
+    assert_equal 'foo', component.instance_variable_get(:@foo).content
   end
 
-  test 'set element with attribute' do
+  test 'initialize element with attribute with value' do
     component_class = Class.new(Components::Component) do
       has_one :foo do
         attribute :bar
       end
     end
     component = component_class.new(:view)
-    component.foo 'foo', bar: 'baz'
+    component.foo bar: 'baz'
     assert_equal 'baz', component.instance_variable_get(:@foo).bar
   end
 
-  test 'set element with attribute with default value' do
-    component_class = Class.new(Components::Component) do
-      has_one :foo do
-        attribute :bar, default: 'baz'
-      end
-    end
-    component = component_class.new(:view)
-    component.foo 'foo'
-    assert_equal 'baz', component.instance_variable_get(:@foo).bar
-  end
-
-  test 'set element collection' do
-    component_class = Class.new(Components::Component) do
-      has_many :foo
-    end
-    component = component_class.new(:view)
-    component.foo 'foo'
-    component.foo 'bar'
-    assert_equal 2, component.instance_variable_get(:@foo).length
-    assert_equal 'foo', component.instance_variable_get(:@foo)[0].value
-    assert_equal 'bar', component.instance_variable_get(:@foo)[1].value
-  end
-
-  test 'set element with nested element' do
+  test 'initialize element with nested element with value using block' do
     component_class = Class.new(Components::Component) do
       has_one :foo do
         has_one :bar
       end
     end
     component = component_class.new(view_class.new)
-    component.foo baz: 'baz' do |cc|
-      cc.bar 'bar'
-      'foo'
-    end
-    assert_equal 'foo', component.instance_variable_get(:@foo).value
-    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
-  end
-
-  test 'set element with nested element with block' do
-    component_class = Class.new(Components::Component) do
-      has_one :foo do
-        has_one :bar
-      end
-    end
-    component = component_class.new(view_class.new)
-    component.foo baz: 'baz' do |cc|
+    component.foo do |cc|
       cc.bar { 'bar' }
       'foo'
     end
-    assert_equal 'foo', component.instance_variable_get(:@foo).value
-    assert_equal 'bar', component.instance_variable_get(:@foo).bar.value
+    assert_equal 'foo', component.instance_variable_get(:@foo).content
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.content
+  end
+
+  test 'initialize collection elements' do
+    component_class = Class.new(Components::Component) do
+      has_many :foo
+    end
+    component = component_class.new(view_class.new)
+    component.foo { 'foo' }
+    component.foo { 'bar' }
+    assert_equal 2, component.instance_variable_get(:@foo).length
+    assert_equal 'foo', component.instance_variable_get(:@foo)[0].content
+    assert_equal 'bar', component.instance_variable_get(:@foo)[1].content
   end
 
   test 'get element' do
     component_class = Class.new(Components::Component) do
       has_one :foo
     end
-    component = component_class.new(:view)
-    component.foo 'foo'
+    component = component_class.new(view_class.new)
+    component.foo { 'foo' }
     assert_equal component.instance_variable_get(:@foo), component.foo
   end
 
