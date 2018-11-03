@@ -94,9 +94,9 @@ Or require `components`, which will in turn require the assets for all component
  */
 ```
 
-### Attributes
+### Attributes and content blocks
 
-There are two ways of passing data to components: attributes and elements. Attributes are useful for data such as ids, modifiers and data structures (models etc). Elements are useful when you need to inject HTML into components.
+There are two ways of passing data to components: attributes and content blocks. Attributes are useful for data such as ids, modifiers and data structures (models etc). Content blocks are useful when you need to inject HTML content into components.
 
 Let's define some attributes for the component we just created:
 
@@ -104,8 +104,8 @@ Let's define some attributes for the component we just created:
 # app/components/alert_component.rb %>
 
 class AlertComponent < Components::Component
-  attribute :message
   attribute :context
+  attribute :message
 end
 ```
 
@@ -120,6 +120,22 @@ end
 ```erb
 <%= component "alert", message: "Something went right!", context: "success" %>
 <%= component "alert", message: "Something went wrong!", context: "danger" %>
+```
+
+To inject some HTML content into our component we can use the `content` variable in our template, and populate it by passing a block to the component helper:
+
+```erb
+<% # app/components/alert/_alert.html.erb %>
+
+<div class="alert alert--<%= context %>" role="alert">
+  <%= message || content %>
+</div>
+```
+
+```erb
+<%= component "alert", context: "success" do %>
+  <em>Something</em> went right!
+<% end %>
 ```
 
 Another good use case for attributes is when you have a component backed by a model:
@@ -183,7 +199,7 @@ end
 
 ### Elements
 
-Attributes are great for simple components or components backed by a data structure, such as a model. Other components are more generic in nature, and can be used in a variety of contexts. These typically need HTML injected. Sometimes they contain repeating elements. Sometimes these elements need their own modifiers.
+Attributes and content blocks are great for simple components or components backed by a data structure, such as a model. Other components are more generic in nature and can be used in a variety of contexts. Often they consist of multiple parts or elements, that sometimes repeat, and sometimes need their own modifiers.
 
 Take a card component. In React, a common approach is to create subcomponents:
 
@@ -209,7 +225,7 @@ There are two problems with this approach:
 1. The card header, section and footer would be represented in BEM by elements, "a part of a block [component] that has no standalone meaning". Yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
 2. We lose control of the structure of the elements. A `CardHeader` can be placed below, or inside a `CardFooter`.
 
-Using this gem, the same component could be written as follows:
+Using this gem, the same component could be written like so:
 
 ```ruby
 # app/components/card_component.rb %>
@@ -234,38 +250,35 @@ end
 
 <div class="card <%= "card--flush" if flush %>">
   <div class="card__header <%= "card__header--centered" if header.centered %>">
-    <%= header %>
+    <%= header.content %>
   </div>
   <% sections.each do |section| %>
     <div class="card__section <%= "card__section--#{section.size}" %>">
-      <%= section %>
+      <%= section.content %>
     </div>
   <% end %>
   <div class="card__footer">
-    <%= footer %>
+    <%= footer.content %>
   </div>
 </div>
 ```
 
-Elements are declared using `has_one` or `has_many`. Passing them a block lets us declare attributes on our elements, in the same way we declare attributes on components. To inject content into these elements, we pass a block to the component helper:
+Elements are declared using `has_one` or `has_many`. Passing them a block lets us declare attributes on our elements, in the same way we declare attributes on components. We pass a block to the component helper, which yields the component, which lets us inject content into the elements in the same way we assign attributes and inject content into the component itself:
 
 ```erb
-<%= component "card", flush: true do |card| %>
-  <% card.header "Header", centered: true %>
-  <% card.section "Section 1", size: "large" %>
-  <% card.section "Section 2", size: "small" %>
-  <% card.footer "Footer" %>
-<% end %>
-```
-
-To inject HTML content into the elements, pass a block to the element instead of a string value:
-
-```erb
-<%= component "card", flush: true do |card| %>
-  <% card.header centered: true do %>
-    <strong>Header</strong>
+<%= component "card", flush: true do |c| %>
+  <% c.header centered: true do %>
+    Header
   <% end %>
-  ...
+  <% c.sections size: "large" do %>
+    Section 1
+  <% end %>
+  <% c.sections size: "large" do %>
+    Section 2
+  <% end %>
+  <% c.footer do %>
+    Footer
+  <% end %>
 <% end %>
 ```
 
@@ -276,6 +289,7 @@ Another good use case would be a navigation component:
 
 class NavigationComponent < Components::Component
   has_many :items do
+    attribute :label
     attribute :url
     attribute :active, default: false
   end
@@ -284,8 +298,8 @@ end
 
 ```erb
 <%= component "navigation" do |navigation| %>
-  <% navigation.items "Home", url: root_path, active: true %>
-  <% navigation.items "Explore" url: explore_path %>
+  <% navigation.items label: "Home", url: root_path, active: true %>
+  <% navigation.items label: "Explore" url: explore_path %>
 <% end %>
 ```
 
@@ -382,7 +396,7 @@ end
 <div class="<%= css_classes %>">
   ...
   <div class="<%= section.css_classes %>">
-    <%= section %>
+    <%= section.content %>
   </div>
   ...
 </div>
