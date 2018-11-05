@@ -6,8 +6,8 @@ class ComponentHelperTest < ActionView::TestCase
   test 'render component with elements' do
     output = component 'card', id: 'id' do |c|
       c.header { 'Header' }
-      c.sections(size: 'large') { 'Section 1' }
-      c.sections(size: 'small') { 'Section 2' }
+      c.section(size: 'large') { 'Section 1' }
+      c.section(size: 'small') { 'Section 2' }
       c.footer { 'Footer' }
     end
 
@@ -24,11 +24,11 @@ class ComponentHelperTest < ActionView::TestCase
   test 'render component with nested elements' do
     output = component 'card', id: 'id' do |c|
       c.header { 'Header' }
-      c.sections do |cc|
+      c.section do |cc|
         cc.header { 'Section Header 1' }
         'Section 1'
       end
-      c.sections do |cc|
+      c.section do |cc|
         cc.header { 'Section Header 2' }
         'Section 2'
       end
@@ -51,19 +51,19 @@ class ComponentHelperTest < ActionView::TestCase
     ), output
   end
 
-  test 'render namespaced component' do
-    output = component 'objects/media_object' do |c|
-      c.media { 'Media' }
-      c.body { 'Body' }
-    end
-
-    assert_dom_equal_squished %(
-      <div class="media-object">
-        <div class="media-object__media"> Media </div>
-        <div class="media-object__body"> Body </div>
-      </div>
-    ), output
-  end
+  # test 'render namespaced component' do
+  #   output = component 'objects/media_object' do |c|
+  #     c.media { 'Media' }
+  #     c.body { 'Body' }
+  #   end
+  #
+  #   assert_dom_equal_squished %(
+  #     <div class="media-object">
+  #       <div class="media-object__media"> Media </div>
+  #       <div class="media-object__body"> Body </div>
+  #     </div>
+  #   ), output
+  # end
 
   private
 

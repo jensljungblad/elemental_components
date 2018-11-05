@@ -7,29 +7,35 @@ module Components
         @attributes ||= {}
       end
 
-      def attribute(name, default: nil)
-        attributes[name] = { default: default }
+      def attribute(name, default: nil, &block)
+        attributes[name] = { default: default, block: block }
+      end
+    end
 
-        define_method(name) do
-          get_attribute(name)
+    protected
+
+    def attributes
+      @attributes ||= {}
+    end
+
+    def initialize_attributes(attributes)
+      attributes ||= {}
+
+      self.class.attributes.each do |name, options|
+        self.attributes[name] = attributes.delete(name) || (options[:default] && options[:default].dup)
+      end
+    end
+
+    # TODO: this shouldn't modify the attributes hash.. instead it should
+    # return a new hash..
+    def serialize_attributes
+      attributes.tap do |hash|
+        self.class.attributes.each do |name, options|
+          if options[:block]
+            hash[name] = instance_exec(hash[name], &options[:block])
+          end
         end
       end
-    end
-
-    private
-
-    def assign_attributes(attributes = {})
-      self.class.attributes.each do |name, options|
-        set_attribute(name, attributes.delete(name) || (options[:default] && options[:default].dup))
-      end
-    end
-
-    def get_attribute(name)
-      instance_variable_get(:"@#{name}")
-    end
-
-    def set_attribute(name, value)
-      instance_variable_set(:"@#{name}", value)
     end
   end
 end

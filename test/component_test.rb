@@ -1,74 +1,125 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
-  test 'initialize with content' do
+  test 'to_h when initialized with nothing' do
+    component_class = Class.new(Components::Component)
+    component = component_class.new(view_class.new)
+    assert_equal ({
+      content: nil
+    }), component.to_h
+  end
+
+  test 'to_h when initialized with content' do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { 'foo' }
-    assert_equal 'foo', component.instance_variable_get(:@content)
+    assert_equal ({
+      content: 'foo'
+    }), component.to_h
   end
 
-  test 'get yield' do
-    component_class = Class.new(Components::Component)
-    component = component_class.new(view_class.new) { 'foo' }
-    assert_equal component.instance_variable_get(:@content), component.content
-  end
-
-  test 'initialize attribute with no value' do
+  test 'to_h when initialized with attributes' do
     component_class = Class.new(Components::Component) do
       attribute :foo
+      attribute :bar
+      attribute :baz, default: 'baz'
     end
-    component = component_class.new(:view)
-    assert_nil component.instance_variable_get(:@foo)
+    component = component_class.new(:view, bar: 'bar')
+    assert_equal ({
+      foo: nil,
+      bar: 'bar',
+      baz: 'baz',
+      content: nil
+    }), component.to_h
   end
 
-  test 'initialize attribute with value' do
+  test 'to_h when initialized with attribute with override' do
     component_class = Class.new(Components::Component) do
-      attribute :foo
+      attribute :foo, &:upcase
     end
     component = component_class.new(:view, foo: 'foo')
-    assert_equal 'foo', component.instance_variable_get(:@foo)
+    assert_equal ({
+      foo: 'FOO',
+      content: nil
+    }), component.to_h
   end
 
-  test 'initialize attribute with default value' do
+  test 'to_h when element not initialized' do
     component_class = Class.new(Components::Component) do
-      attribute :foo, default: 'foo'
+      element :foo
     end
-    component = component_class.new(:view)
-    assert_equal 'foo', component.instance_variable_get(:@foo)
+    component = component_class.new(view_class.new)
+    assert_equal ({
+      foo: nil,
+      content: nil
+    }), component.to_h
   end
 
-  test 'get attribute' do
+  test 'to_h when multi-element not initialized' do
     component_class = Class.new(Components::Component) do
-      attribute :foo
+      element :foo, multiple: true
     end
-    component = component_class.new(:view, foo: 'foo')
-    assert_equal component.instance_variable_get(:@foo), component.foo
+    component = component_class.new(view_class.new)
+    assert_equal ({
+      foo: [],
+      content: nil
+    }), component.to_h
   end
 
-  test 'initialize element with content' do
+  test 'to_h when initialized with element with content' do
     component_class = Class.new(Components::Component) do
-      has_one :foo
+      element :foo
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
-    assert_equal 'foo', component.instance_variable_get(:@foo).content
+    assert_equal ({
+      foo: {
+        content: 'foo'
+      },
+      content: nil
+    }), component.to_h
   end
 
-  test 'initialize element with attribute with value' do
+  test 'to_h when initialized with element with attributes' do
     component_class = Class.new(Components::Component) do
-      has_one :foo do
+      element :foo do
+        attribute :foo
         attribute :bar
+        attribute :baz, default: 'baz'
       end
     end
     component = component_class.new(:view)
-    component.foo bar: 'baz'
-    assert_equal 'baz', component.instance_variable_get(:@foo).bar
+    component.foo bar: 'bar'
+    assert_equal ({
+      foo: {
+        foo: nil,
+        bar: 'bar',
+        baz: 'baz',
+        content: nil
+      },
+      content: nil
+    }), component.to_h
   end
 
-  test 'initialize element with nested element with value using block' do
+  test 'to_h when initialized with multi-element' do
     component_class = Class.new(Components::Component) do
-      has_one :foo do
-        has_one :bar
+      element :foo, multiple: true
+    end
+    component = component_class.new(view_class.new)
+    component.foo { 'foo' }
+    component.foo { 'bar' }
+    assert_equal ({
+      foo: [
+        { content: 'foo' },
+        { content: 'bar' }
+      ],
+      content: nil
+    }), component.to_h
+  end
+
+  test 'to_h when initialized with element with content and nested element with content' do
+    component_class = Class.new(Components::Component) do
+      element :foo do
+        element :bar
       end
     end
     component = component_class.new(view_class.new)
@@ -76,45 +127,15 @@ class ComponentTest < ActiveSupport::TestCase
       cc.bar { 'bar' }
       'foo'
     end
-    assert_equal 'foo', component.instance_variable_get(:@foo).content
-    assert_equal 'bar', component.instance_variable_get(:@foo).bar.content
-  end
-
-  test 'initialize collection elements' do
-    component_class = Class.new(Components::Component) do
-      has_many :foo
-    end
-    component = component_class.new(view_class.new)
-    component.foo { 'foo' }
-    component.foo { 'bar' }
-    assert_equal 2, component.instance_variable_get(:@foo).length
-    assert_equal 'foo', component.instance_variable_get(:@foo)[0].content
-    assert_equal 'bar', component.instance_variable_get(:@foo)[1].content
-  end
-
-  test 'get element' do
-    component_class = Class.new(Components::Component) do
-      has_one :foo
-    end
-    component = component_class.new(view_class.new)
-    component.foo { 'foo' }
-    assert_equal component.instance_variable_get(:@foo), component.foo
-  end
-
-  test 'get element when not set' do
-    component_class = Class.new(Components::Component) do
-      has_one :foo
-    end
-    component = component_class.new(:view)
-    assert_nil component.foo
-  end
-
-  test 'get element collection when not set' do
-    component_class = Class.new(Components::Component) do
-      has_many :foo
-    end
-    component = component_class.new(:view)
-    assert_equal [], component.foo
+    assert_equal ({
+      foo: {
+        bar: {
+          content: 'bar'
+        },
+        content: 'foo'
+      },
+      content: nil
+    }), component.to_h
   end
 
   private

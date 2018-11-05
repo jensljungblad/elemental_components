@@ -3,52 +3,36 @@ module Components
     extend ActiveSupport::Concern
 
     class_methods do
-      # rubocop:disable Naming/PredicateName
-      def has_one(name, &config)
+      def elements
+        @elements ||= {}
+      end
+
+      def element(name, multiple: false, &config)
+        elements[name] = { multiple: multiple }
+
         define_method(name) do |attributes = nil, &block|
-          return get_element(name) unless attributes || block
+          # TODO: we should store the class in the config, so we don't have to create
+          # a new class every time we call this method
+          element = Class.new(Element, &config).new(@view, attributes, &block)
 
-          element_class = config ? Class.new(Element, &config) : Element
-
-          set_element(
-            name,
-            element_class.new(@view, attributes, &block)
-          )
+          if multiple
+            elements[name] << element
+          else
+            elements[name] = element
+          end
         end
       end
-      # rubocop:enable Naming/PredicateName
-
-      # rubocop:disable Naming/PredicateName
-      def has_many(name, &config)
-        define_method(name) do |attributes = nil, &block|
-          return get_element(name, collection: true) unless attributes || block
-
-          element_class = config ? Class.new(Element, &config) : Element
-
-          set_element(
-            name,
-            element_class.new(@view, attributes, &block),
-            collection: true
-          )
-        end
-      end
-      # rubocop:enable Naming/PredicateName
     end
 
-    private
+    protected
 
-    def get_element(name, collection: false)
-      unless instance_variable_defined?(:"@#{name}")
-        instance_variable_set(:"@#{name}", collection ? [] : nil)
-      end
-      instance_variable_get(:"@#{name}")
+    def elements
+      @elements ||= {}
     end
 
-    def set_element(name, value, collection: false)
-      if collection
-        get_element(name, collection: collection) << value
-      else
-        instance_variable_set(:"@#{name}", value)
+    def initialize_elements
+      self.class.elements.each do |name, options|
+        elements[name] = options[:multiple] ? [] : nil
       end
     end
   end
