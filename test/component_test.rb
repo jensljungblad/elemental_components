@@ -1,49 +1,40 @@
 require 'test_helper'
 
 class ComponentTest < ActiveSupport::TestCase
-  test 'to_h when initialized with nothing' do
+  test 'serialize when initialized with nothing' do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
     assert_equal ({
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with content' do
+  test 'serialize when initialized with content' do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { 'foo' }
     assert_equal ({
       content: 'foo'
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with attributes' do
+  test 'serialize when initialized with attributes' do
     component_class = Class.new(Components::Component) do
       attribute :foo
       attribute :bar
       attribute :baz, default: 'baz'
+      attribute :qux, &:upcase
     end
-    component = component_class.new(:view, bar: 'bar')
+    component = component_class.new(:view, bar: 'bar', qux: 'qux')
     assert_equal ({
       foo: nil,
       bar: 'bar',
       baz: 'baz',
+      qux: 'QUX',
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with attribute with override' do
-    component_class = Class.new(Components::Component) do
-      attribute :foo, &:upcase
-    end
-    component = component_class.new(:view, foo: 'foo')
-    assert_equal ({
-      foo: 'FOO',
-      content: nil
-    }), component.to_h
-  end
-
-  test 'to_h when element not initialized' do
+  test 'serialize when element not initialized' do
     component_class = Class.new(Components::Component) do
       element :foo
     end
@@ -51,10 +42,10 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal ({
       foo: nil,
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when multi-element not initialized' do
+  test 'serialize when multi-element not initialized' do
     component_class = Class.new(Components::Component) do
       element :foo, multiple: true
     end
@@ -62,10 +53,10 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal ({
       foo: [],
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with element with content' do
+  test 'serialize when initialized with element with content' do
     component_class = Class.new(Components::Component) do
       element :foo
     end
@@ -76,31 +67,33 @@ class ComponentTest < ActiveSupport::TestCase
         content: 'foo'
       },
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with element with attributes' do
+  test 'serialize when initialized with element with attributes' do
     component_class = Class.new(Components::Component) do
       element :foo do
         attribute :foo
         attribute :bar
         attribute :baz, default: 'baz'
+        attribute :qux, &:upcase
       end
     end
     component = component_class.new(:view)
-    component.foo bar: 'bar'
+    component.foo(bar: 'bar', qux: 'qux')
     assert_equal ({
       foo: {
         foo: nil,
         bar: 'bar',
         baz: 'baz',
+        qux: 'QUX',
         content: nil
       },
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with multi-element' do
+  test 'serialize when initialized with multi-element' do
     component_class = Class.new(Components::Component) do
       element :foo, multiple: true
     end
@@ -113,10 +106,10 @@ class ComponentTest < ActiveSupport::TestCase
         { content: 'bar' }
       ],
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
-  test 'to_h when initialized with element with content and nested element with content' do
+  test 'serialize when initialized with element with content and nested element with content' do
     component_class = Class.new(Components::Component) do
       element :foo do
         element :bar
@@ -135,7 +128,7 @@ class ComponentTest < ActiveSupport::TestCase
         content: 'foo'
       },
       content: nil
-    }), component.to_h
+    }), component.serialize
   end
 
   private

@@ -8,12 +8,10 @@ module Components
       end
 
       def element(name, multiple: false, &config)
-        elements[name] = { multiple: multiple }
+        elements[name] = { class: Class.new(Element, &config), multiple: multiple }
 
         define_method(name) do |attributes = nil, &block|
-          # TODO: we should store the class in the config, so we don't have to create
-          # a new class every time we call this method
-          element = Class.new(Element, &config).new(@view, attributes, &block)
+          element = self.class.elements[name][:class].new(@view, attributes, &block)
 
           if multiple
             elements[name] << element
@@ -33,6 +31,17 @@ module Components
     def initialize_elements
       self.class.elements.each do |name, options|
         elements[name] = options[:multiple] ? [] : nil
+      end
+    end
+
+    def serialize_elements
+      elements.each_with_object({}) do |(name, value), hash|
+        hash[name] =
+          if self.class.elements[name][:multiple]
+            value.map(&:serialize)
+          elsif value
+            value.serialize
+          end
       end
     end
   end
