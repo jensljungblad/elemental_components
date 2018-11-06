@@ -19,20 +19,18 @@ module Components
     end
 
     def initialize_attributes(attributes)
-      attributes ||= {}
-
       self.class.attributes.each do |name, options|
         self.attributes[name] = attributes[name] || (options[:default] && options[:default].dup)
       end
     end
 
     def serialize_attributes
-      attributes.each_with_object({}) do |(name, value), hash|
+      self.class.attributes.each_with_object({}) do |(name, options), hash|
         hash[name] =
-          if (block = self.class.attributes[name][:block])
-            instance_exec(value, &block)
+          if (block = options[:block])
+            instance_exec(attributes[name], &block)
           else
-            value
+            attributes[name]
           end
       end
     end

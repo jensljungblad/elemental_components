@@ -8,13 +8,17 @@ module Components
       end
 
       def element(name, multiple: false, &config)
-        elements[name] = { class: Class.new(Element, &config), multiple: multiple }
+        plural_name = name.to_s.pluralize.to_sym if multiple
+
+        elements[name] = {
+          multiple: plural_name, class: Class.new(Element, &config)
+        }
 
         define_method(name) do |attributes = nil, &block|
           element = self.class.elements[name][:class].new(@view, attributes, &block)
 
           if multiple
-            elements[name] << element
+            elements[plural_name] << element
           else
             elements[name] = element
           end
@@ -30,18 +34,21 @@ module Components
 
     def initialize_elements
       self.class.elements.each do |name, options|
-        elements[name] = options[:multiple] ? [] : nil
+        if (plural_name = options[:multiple])
+          elements[plural_name] = []
+        else
+          elements[name] = nil
+        end
       end
     end
 
     def serialize_elements
-      elements.each_with_object({}) do |(name, value), hash|
-        hash[name] =
-          if self.class.elements[name][:multiple]
-            value.map(&:serialize)
-          elsif value
-            value.serialize
-          end
+      self.class.elements.each_with_object({}) do |(name, options), hash|
+        if (plural_name = options[:multiple])
+          hash[plural_name] = elements[plural_name].map(&:serialize)
+        else
+          hash[name] = elements[name] && elements[name].serialize
+        end
       end
     end
   end

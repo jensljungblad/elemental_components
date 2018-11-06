@@ -4,7 +4,7 @@
       <%= header[:content] %>
     </div>
   <% end %>
-  <% section.each do |section| %>
+  <% sections.each do |section| %>
     <div class="card__section<%= " card__section--#{section[:size]}" if section[:size] %>">
       <% if section[:header].present? %>
         <div class="card__section__header">

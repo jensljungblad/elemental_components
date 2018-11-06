@@ -7,7 +7,7 @@ module Components
 
     def initialize(view, attributes = nil, &block)
       @view = view
-      initialize_attributes(attributes)
+      initialize_attributes(attributes || {})
       initialize_elements
       initialize_content(&block)
     end

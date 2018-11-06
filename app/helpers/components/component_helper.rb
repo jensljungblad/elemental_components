@@ -1,7 +1,6 @@
 module Components
   module ComponentHelper
-    # attrs = nil?
-    def component(name, attrs = {}, &block)
+    def component(name, attrs = nil, &block)
       component = "#{name}_component".classify.constantize.new(self, attrs, &block)
       component.render
 

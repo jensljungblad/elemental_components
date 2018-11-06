@@ -51,7 +51,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     assert_equal ({
-      foo: [],
+      foos: [],
       content: nil
     }), component.serialize
   end
@@ -101,7 +101,7 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { 'foo' }
     component.foo { 'bar' }
     assert_equal ({
-      foo: [
+      foos: [
         { content: 'foo' },
         { content: 'bar' }
       ],
