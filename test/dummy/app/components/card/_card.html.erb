@@ -1,22 +1,22 @@
 <div id="<%= id %>" class="card">
   <% if header.present? %>
     <div class="card__header">
-      <%= header[:content] %>
+      <%= header[:yield] %>
     </div>
   <% end %>
   <% sections.each do |section| %>
     <div class="card__section<%= " card__section--#{section[:size]}" if section[:size] %>">
       <% if section[:header].present? %>
         <div class="card__section__header">
-          <%= section[:header][:content] %>
+          <%= section[:header][:yield] %>
         </div>
       <% end %>
-      <%= section[:content] %>
+      <%= section[:yield] %>
     </div>
   <% end %>
   <% if footer.present? %>
     <div class="card__footer">
-      <%= footer[:content] %>
+      <%= footer[:yield] %>
     </div>
   <% end %>
 </div>

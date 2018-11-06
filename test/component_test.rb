@@ -5,7 +5,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
     assert_equal ({
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -13,7 +13,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { 'foo' }
     assert_equal ({
-      content: 'foo'
+      yield: 'foo'
     }), component.serialize
   end
 
@@ -30,7 +30,7 @@ class ComponentTest < ActiveSupport::TestCase
       bar: 'bar',
       baz: 'baz',
       qux: 'QUX',
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -41,7 +41,7 @@ class ComponentTest < ActiveSupport::TestCase
     component = component_class.new(view_class.new)
     assert_equal ({
       foo: nil,
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -52,7 +52,7 @@ class ComponentTest < ActiveSupport::TestCase
     component = component_class.new(view_class.new)
     assert_equal ({
       foos: [],
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -64,9 +64,9 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { 'foo' }
     assert_equal ({
       foo: {
-        content: 'foo'
+        yield: 'foo'
       },
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -87,9 +87,9 @@ class ComponentTest < ActiveSupport::TestCase
         bar: 'bar',
         baz: 'baz',
         qux: 'QUX',
-        content: nil
+        yield: nil
       },
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -102,10 +102,10 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { 'bar' }
     assert_equal ({
       foos: [
-        { content: 'foo' },
-        { content: 'bar' }
+        { yield: 'foo' },
+        { yield: 'bar' }
       ],
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
@@ -123,11 +123,11 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal ({
       foo: {
         bar: {
-          content: 'bar'
+          yield: 'bar'
         },
-        content: 'foo'
+        yield: 'foo'
       },
-      content: nil
+      yield: nil
     }), component.serialize
   end
 
