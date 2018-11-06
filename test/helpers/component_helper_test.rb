@@ -51,19 +51,19 @@ class ComponentHelperTest < ActionView::TestCase
     ), output
   end
 
-  # test 'render namespaced component' do
-  #   output = component 'objects/media_object' do |c|
-  #     c.media { 'Media' }
-  #     c.body { 'Body' }
-  #   end
-  #
-  #   assert_dom_equal_squished %(
-  #     <div class="media-object">
-  #       <div class="media-object__media"> Media </div>
-  #       <div class="media-object__body"> Body </div>
-  #     </div>
-  #   ), output
-  # end
+  test 'render namespaced component' do
+    output = component 'objects/media_object' do |c|
+      c.media { 'Media' }
+      c.body { 'Body' }
+    end
+
+    assert_dom_equal_squished %(
+      <div class="media-object">
+        <div class="media-object__media"> Media </div>
+        <div class="media-object__body"> Body </div>
+      </div>
+    ), output
+  end
 
   private
 
