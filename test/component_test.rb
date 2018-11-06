@@ -47,7 +47,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'initialize element with content' do
     component_class = Class.new(Components::Component) do
-      has_one :foo
+      element :foo
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
@@ -56,7 +56,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'initialize element with attribute with value' do
     component_class = Class.new(Components::Component) do
-      has_one :foo do
+      element :foo do
         attribute :bar
       end
     end
@@ -67,8 +67,8 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'initialize element with nested element with value using block' do
     component_class = Class.new(Components::Component) do
-      has_one :foo do
-        has_one :bar
+      element :foo do
+        element :bar
       end
     end
     component = component_class.new(view_class.new)
@@ -82,19 +82,19 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'initialize collection elements' do
     component_class = Class.new(Components::Component) do
-      has_many :foo
+      element :foo, multiple: true
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
     component.foo { 'bar' }
-    assert_equal 2, component.instance_variable_get(:@foo).length
-    assert_equal 'foo', component.instance_variable_get(:@foo)[0].to_s
-    assert_equal 'bar', component.instance_variable_get(:@foo)[1].to_s
+    assert_equal 2, component.instance_variable_get(:@foos).length
+    assert_equal 'foo', component.instance_variable_get(:@foos)[0].to_s
+    assert_equal 'bar', component.instance_variable_get(:@foos)[1].to_s
   end
 
   test 'get element' do
     component_class = Class.new(Components::Component) do
-      has_one :foo
+      element :foo
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
@@ -103,7 +103,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'get element when not set' do
     component_class = Class.new(Components::Component) do
-      has_one :foo
+      element :foo
     end
     component = component_class.new(:view)
     assert_nil component.foo
@@ -111,10 +111,10 @@ class ComponentTest < ActiveSupport::TestCase
 
   test 'get element collection when not set' do
     component_class = Class.new(Components::Component) do
-      has_many :foo
+      element :foo, multiple: true
     end
     component = component_class.new(:view)
-    assert_equal [], component.foo
+    assert_equal [], component.foos
   end
 
   private

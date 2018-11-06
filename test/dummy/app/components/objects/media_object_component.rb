@@ -1,6 +1,6 @@
 module Objects
   class MediaObjectComponent < Components::Component
-    has_one :media
-    has_one :body
+    element :media
+    element :body
   end
 end
