@@ -3,18 +3,14 @@ module Components
     include Attributes
     include Elements
 
-    attr_reader :content
-
     def initialize(view, attributes = nil, &block)
       @view = view
-      @content = capture(&block) if block
       assign_attributes(attributes || {})
+      @yield = block ? @view.capture(self, &block) : nil
     end
 
-    private
-
-    def capture(&block)
-      @view.capture(self, &block)
+    def to_s
+      @yield
     end
   end
 end

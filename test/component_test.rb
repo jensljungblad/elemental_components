@@ -4,13 +4,13 @@ class ComponentTest < ActiveSupport::TestCase
   test 'initialize with content' do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { 'foo' }
-    assert_equal 'foo', component.instance_variable_get(:@content)
+    assert_equal 'foo', component.instance_variable_get(:@yield)
   end
 
   test 'get yield' do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { 'foo' }
-    assert_equal component.instance_variable_get(:@content), component.content
+    assert_equal component.instance_variable_get(:@yield), component.to_s
   end
 
   test 'initialize attribute with no value' do
@@ -51,7 +51,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     component.foo { 'foo' }
-    assert_equal 'foo', component.instance_variable_get(:@foo).content
+    assert_equal 'foo', component.instance_variable_get(:@foo).to_s
   end
 
   test 'initialize element with attribute with value' do
@@ -76,8 +76,8 @@ class ComponentTest < ActiveSupport::TestCase
       cc.bar { 'bar' }
       'foo'
     end
-    assert_equal 'foo', component.instance_variable_get(:@foo).content
-    assert_equal 'bar', component.instance_variable_get(:@foo).bar.content
+    assert_equal 'foo', component.instance_variable_get(:@foo).to_s
+    assert_equal 'bar', component.instance_variable_get(:@foo).bar.to_s
   end
 
   test 'initialize collection elements' do
@@ -88,8 +88,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { 'foo' }
     component.foo { 'bar' }
     assert_equal 2, component.instance_variable_get(:@foo).length
-    assert_equal 'foo', component.instance_variable_get(:@foo)[0].content
-    assert_equal 'bar', component.instance_variable_get(:@foo)[1].content
+    assert_equal 'foo', component.instance_variable_get(:@foo)[0].to_s
+    assert_equal 'bar', component.instance_variable_get(:@foo)[1].to_s
   end
 
   test 'get element' do
