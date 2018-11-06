@@ -1,10 +1,10 @@
-<div id="<%= card[:id] %>" class="card">
-  <% if (header = card[:header]) %>
+<div id="<%= id %>" class="card">
+  <% if header.present? %>
     <div class="card__header">
       <%= header[:content] %>
     </div>
   <% end %>
-  <% card[:sections].each do |section| %>
+  <% sections.each do |section| %>
     <div class="card__section<%= " card__section--#{section[:size]}" if section[:size] %>">
       <% if section[:header].present? %>
         <div class="card__section__header">
@@ -14,7 +14,7 @@
       <%= section[:content] %>
     </div>
   <% end %>
-  <% if (footer = card[:footer]) %>
+  <% if footer.present? %>
     <div class="card__footer">
       <%= footer[:content] %>
     </div>

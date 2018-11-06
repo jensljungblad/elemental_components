@@ -9,7 +9,7 @@ module Components
     end
 
     def render
-      @view.render partial: to_partial_path, object: serialize
+      @view.render partial: to_partial_path, locals: serialize
     end
 
     def to_partial_path
