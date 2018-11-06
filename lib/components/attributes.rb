@@ -18,9 +18,9 @@ module Components
 
     private
 
-    def assign_attributes(attributes = {})
+    def assign_attributes(attributes)
       self.class.attributes.each do |name, options|
-        set_attribute(name, attributes.delete(name) || (options[:default] && options[:default].dup))
+        set_attribute(name, attributes[name] || (options[:default] && options[:default].dup))
       end
     end
 
