@@ -5,7 +5,8 @@ module Components
 
     def initialize(view, attributes = nil, &block)
       @view = view
-      assign_attributes(attributes || {})
+      initialize_attributes(attributes || {})
+      initialize_elements
       @yield = block ? @view.capture(self, &block) : nil
     end
 
