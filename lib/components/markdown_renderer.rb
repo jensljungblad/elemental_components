@@ -4,7 +4,7 @@ module Components
 
     def block_code(code, language)
       case language
-      when 'example'
+      when "example"
         options, code = parse_options(code)
         example(code, options)
       else
@@ -28,10 +28,10 @@ module Components
     private
 
     def parse_options(code)
-      pieces = code.split('---')
+      pieces = code.split("---")
 
       if pieces.length > 1
-        options = pieces[0].split("\n").map { |i| i.split(': ') }.to_h
+        options = pieces[0].split("\n").map { |i| i.split(": ") }.to_h
         [options, pieces[1]]
       else
         options = {}

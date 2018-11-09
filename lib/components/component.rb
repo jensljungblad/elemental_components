@@ -1,11 +1,11 @@
 module Components
   class Component < Element
     def self.component_name
-      name.chomp('Component').demodulize.underscore
+      name.chomp("Component").demodulize.underscore
     end
 
     def self.component_path
-      name.chomp('Component').underscore
+      name.chomp("Component").underscore
     end
 
     def render
@@ -13,7 +13,7 @@ module Components
     end
 
     def to_partial_path
-      [self.class.component_path, self.class.component_name].join('/')
+      [self.class.component_path, self.class.component_name].join("/")
     end
   end
 end

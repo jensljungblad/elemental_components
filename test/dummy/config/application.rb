@@ -1,9 +1,9 @@
-require_relative 'boot'
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
 
 Bundler.require(*Rails.groups)
-require 'components'
+require "components"
 
 module Dummy
   class Application < Rails::Application
