@@ -11,7 +11,7 @@ module Components
         plural_name = name.to_s.pluralize.to_sym if multiple
 
         elements[name] = {
-          multiple: plural_name, class: Class.new(Element, &config)
+          multiple: plural_name || false, class: Class.new(Element, &config)
         }
 
         define_method(name) do |attributes = nil, &block|
