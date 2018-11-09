@@ -1,14 +1,14 @@
-require 'test_helper'
+require "test_helper"
 
 class ComponentHelperTest < ActionView::TestCase
   include Components::ComponentHelper
 
-  test 'render component with elements' do
-    output = component 'card', id: 'id' do |c|
-      c.header { 'Header' }
-      c.section(size: 'large') { 'Section 1' }
-      c.section(size: 'small') { 'Section 2' }
-      c.footer { 'Footer' }
+  test "render component with elements" do
+    output = component "card", id: "id" do |c|
+      c.header { "Header" }
+      c.section(size: "large") { "Section 1" }
+      c.section(size: "small") { "Section 2" }
+      c.footer { "Footer" }
     end
 
     assert_dom_equal_squished %(
@@ -21,18 +21,18 @@ class ComponentHelperTest < ActionView::TestCase
     ), output
   end
 
-  test 'render component with nested elements' do
-    output = component 'card', id: 'id' do |c|
-      c.header { 'Header' }
+  test "render component with nested elements" do
+    output = component "card", id: "id" do |c|
+      c.header { "Header" }
       c.section do |cc|
-        cc.header { 'Section Header 1' }
-        'Section 1'
+        cc.header { "Section Header 1" }
+        "Section 1"
       end
       c.section do |cc|
-        cc.header { 'Section Header 2' }
-        'Section 2'
+        cc.header { "Section Header 2" }
+        "Section 2"
       end
-      c.footer { 'Footer' }
+      c.footer { "Footer" }
     end
 
     assert_dom_equal_squished %(
@@ -51,10 +51,10 @@ class ComponentHelperTest < ActionView::TestCase
     ), output
   end
 
-  test 'render namespaced component' do
-    output = component 'objects/media_object' do |c|
-      c.media { 'Media' }
-      c.body { 'Body' }
+  test "render namespaced component" do
+    output = component "objects/media_object" do |c|
+      c.media { "Media" }
+      c.body { "Body" }
     end
 
     assert_dom_equal_squished %(

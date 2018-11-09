@@ -25,3 +25,6 @@ Style/MixinUsage:
   Exclude:
     - 'test/dummy/bin/setup'
     - 'test/dummy/bin/update'
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

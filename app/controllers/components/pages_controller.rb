@@ -1,6 +1,6 @@
 module Components
   class PagesController < ApplicationController
-    prepend_view_path 'app/styleguide'
+    prepend_view_path "app/styleguide"
 
     def show
       unless params[:path]

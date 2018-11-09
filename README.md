@@ -7,7 +7,7 @@ Simple view components + style guide for Rails 5.1+. Inspired by the works of [B
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'components', git: 'https://github.com/varvet/components.git'
+gem "components", git: "https://github.com/varvet/components.git"
 ```
 
 And then execute:
