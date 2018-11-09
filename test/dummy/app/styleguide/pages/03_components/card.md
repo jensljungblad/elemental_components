@@ -6,13 +6,17 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 width: 500
 ---
 <%= component "card" do |c| %>
-  <% c.header "header" %>
-  <% c.sections do %>
+  <% c.header do %>
+    Header
+  <% end %>
+  <% c.section do %>
     Section 1
   <% end %>
-  <% c.sections do %>
+  <% c.section do %>
     Section 2
   <% end %>
-  <% c.footer "footer" %>
+  <% c.footer do %>
+    Footer
+  <% end %>
 <% end %>
 ```
