@@ -26,7 +26,6 @@ module Components
           end
         end
 
-        # TODO: not sure this is working.. write test for when name == plural_name
         return if !multiple || name == plural_name
 
         define_method(plural_name) do

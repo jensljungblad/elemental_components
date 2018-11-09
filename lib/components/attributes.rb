@@ -18,7 +18,6 @@ module Components
 
     protected
 
-    # TODO: will this crash when passing attributes that are not defined? test?
     def initialize_attributes(attributes)
       self.class.attributes.each do |name, options|
         set_attribute(name, attributes[name] || (options[:default] && options[:default].dup))
