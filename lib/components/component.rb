@@ -9,7 +9,7 @@ module Components
     end
 
     def render
-      @view.render self
+      @view.render partial: to_partial_path, object: self
     end
 
     def to_partial_path
