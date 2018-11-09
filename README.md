@@ -94,9 +94,9 @@ Or require `components`, which will in turn require the assets for all component
  */
 ```
 
-### Attributes and content blocks
+### Attributes and blocks
 
-There are two ways of passing data to components: attributes and content blocks. Attributes are useful for data such as ids, modifiers and data structures (models etc). Content blocks are useful when you need to inject HTML content into components.
+There are two ways of passing data to components: attributes and blocks. Attributes are useful for data such as ids, modifiers and data structures (models etc). Blocks are useful when you need to inject HTML content into components.
 
 Let's define some attributes for the component we just created:
 
@@ -112,8 +112,8 @@ end
 ```erb
 <% # app/components/alert/_alert.html.erb %>
 
-<div class="alert alert--<%= context %>" role="alert">
-  <%= message %>
+<div class="alert alert--<%= alert.context %>" role="alert">
+  <%= alert.message %>
 </div>
 ```
 
@@ -122,13 +122,13 @@ end
 <%= component "alert", message: "Something went wrong!", context: "danger" %>
 ```
 
-To inject some HTML content into our component we can use the `content` variable in our template, and populate it by passing a block to the component helper:
+To inject some HTML content into our component we can print the component variable in our template, and populate it by passing a block to the component helper:
 
 ```erb
 <% # app/components/alert/_alert.html.erb %>
 
-<div class="alert alert--<%= context %>" role="alert">
-  <%= message || content %>
+<div class="alert alert--<%= alert.context %>" role="alert">
+  <%= alert %>
 </div>
 ```
 
@@ -145,6 +145,10 @@ Another good use case for attributes is when you have a component backed by a mo
 
 class CommentComponent < Components::Component
   attribute :comment
+
+  delegate :id,
+           :author,
+           :body, to: :comment
 end
 ```
 
@@ -199,7 +203,7 @@ end
 
 ### Elements
 
-Attributes and content blocks are great for simple components or components backed by a data structure, such as a model. Other components are more generic in nature and can be used in a variety of contexts. Often they consist of multiple parts or elements, that sometimes repeat, and sometimes need their own modifiers.
+Attributes and blocks are great for simple components or components backed by a data structure, such as a model. Other components are more generic in nature and can be used in a variety of contexts. Often they consist of multiple parts or elements, that sometimes repeat, and sometimes need their own modifiers.
 
 Take a card component. In React, a common approach is to create subcomponents:
 
@@ -225,7 +229,7 @@ There are two problems with this approach:
 1. The card header, section and footer would be represented in BEM by elements, "a part of a block [component] that has no standalone meaning". Yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
 2. We lose control of the structure of the elements. A `CardHeader` can be placed below, or inside a `CardFooter`.
 
-Using this gem, the same component could be written like so:
+Using this gem, the same component can be written like this:
 
 ```ruby
 # app/components/card_component.rb %>
@@ -233,47 +237,49 @@ Using this gem, the same component could be written like so:
 class CardComponent < Components::Component
   attribute :flush, default: false
 
-  has_one :header do
+  element :header do
     attribute :centered, default: false
   end
 
-  has_many :sections do
+  element :section, multiple: true do
     attribute :size
   end
 
-  has_one :footer
+  element :footer
 end
 ```
 
 ```erb
 <% # app/components/card/_card.html.erb %>
 
-<div class="card <%= "card--flush" if flush %>">
-  <div class="card__header <%= "card__header--centered" if header.centered %>">
-    <%= header.content %>
+<div class="card <%= "card--flush" if card.flush %>">
+  <div class="card__header <%= "card__header--centered" if card.header.centered %>">
+    <%= card.header %>
   </div>
-  <% sections.each do |section| %>
+  <% card.sections.each do |section| %>
     <div class="card__section <%= "card__section--#{section.size}" %>">
-      <%= section.content %>
+      <%= section %>
     </div>
   <% end %>
   <div class="card__footer">
-    <%= footer.content %>
+    <%= card.footer %>
   </div>
 </div>
 ```
 
-Elements are declared using `has_one` or `has_many`. Passing them a block lets us declare attributes on our elements, in the same way we declare attributes on components. We pass a block to the component helper, which yields the component, which lets us inject content into the elements in the same way we assign attributes and inject content into the component itself:
+Elements can be thought of as isolated subcomponents, and they are defined on the component. Passing `multiple: true` makes it a repeating element, and passing a block lets us declare attributes on our elements, in the same way we declare attributes on components.
+
+In order to populate them with data, we pass a block to the component helper, which yields the component, which lets us set attributes and blocks on the element in the same way we do for components:
 
 ```erb
 <%= component "card", flush: true do |c| %>
   <% c.header centered: true do %>
     Header
   <% end %>
-  <% c.sections size: "large" do %>
+  <% c.section size: "large" do %>
     Section 1
   <% end %>
-  <% c.sections size: "large" do %>
+  <% c.section size: "large" do %>
     Section 2
   <% end %>
   <% c.footer do %>
@@ -282,13 +288,15 @@ Elements are declared using `has_one` or `has_many`. Passing them a block lets u
 <% end %>
 ```
 
-Another good use case would be a navigation component:
+Multiple calls to a repeating element, such as `section` in the example above, will append each section to an array.
+
+Another good use case is a navigation component:
 
 ```ruby
 # app/components/navigation_component.rb %>
 
 class NavigationComponent < Components::Component
-  has_many :items do
+  element :items, multiple: true do
     attribute :label
     attribute :url
     attribute :active, default: false
@@ -297,9 +305,9 @@ end
 ```
 
 ```erb
-<%= component "navigation" do |navigation| %>
-  <% navigation.items label: "Home", url: root_path, active: true %>
-  <% navigation.items label: "Explore" url: explore_path %>
+<%= component "navigation" do |c| %>
+  <% c.item label: "Home", url: root_path, active: true %>
+  <% c.item label: "Explore" url: explore_path %>
 <% end %>
 ```
 
@@ -307,24 +315,6 @@ An alternative here is to pass a data structure to the component as an attribute
 
 ```erb
 <%= component "navigation", items: items %>
-```
-
-The component is itself an element, which means it also has a value, same as other elements. If you have a simple component that only needs one element, you can use the component itself:
-
-```erb
-<%= component "alert", context: "success" do %>
-  Something went right!
-<% end %>
-```
-
-The component's value can then be accessed in the partial:
-
-```erb
-<% # app/components/alert/_alert.html.erb %>
-
-<div class="alert alert--<%= context %>" role="alert">
-  <%= value %>
-</div>
 ```
 
 Elements can also be nested, although it is recommended to keep nesting to a minimum:
@@ -335,11 +325,11 @@ Elements can also be nested, although it is recommended to keep nesting to a min
 class CardComponent < Components::Component
   ...
 
-  has_many :sections do
+  element :section, multiple: true do
     attribute :size
 
-    has_one :header
-    has_one :footer
+    element :header
+    element :footer
   end
 end
 ```
@@ -378,7 +368,7 @@ It's even possible to declare helpers on elements:
 class CardComponent < Components::Component
   ...
 
-  has_many :sections do
+  element :section, multiple: true do
     attribute :size
 
     def css_classes
@@ -396,13 +386,42 @@ end
 <div class="<%= css_classes %>">
   ...
   <div class="<%= section.css_classes %>">
-    <%= section.content %>
+    <%= section %>
   </div>
   ...
 </div>
 ```
 
 Helper methods can also make use of the `@view` instance variable in order to call Rails helpers such as `link_to` or `content_tag`.
+
+### Rendering components without a partial
+
+For some small components, such as buttons, it might make sense to skip the partial altogether, in order to speed up rendering. This can be done by overriding `render` on the component:
+
+```ruby
+# app/components/button_component.rb %>
+
+class ButtonComponent < Components::Component
+  attribute :label
+  attribute :url
+  attribute :context
+
+  def render
+    @view.link_to label, url, class: css_classes
+  end
+
+  def css_classes
+    css_classes = "button"
+    css_classes << "button--#{context}" if context
+    css_classes.join(" ")
+  end
+end
+```
+
+```erb
+<%= component "button", label: "Sign up", url: sign_up_path, context: "primary" %>
+<%= component "button", label: "Sign in", url: sign_in_path %>
+```
 
 ### Namespaced components
 

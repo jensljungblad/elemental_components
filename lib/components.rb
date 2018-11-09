@@ -1,8 +1,6 @@
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
-require 'components/attributes'
-require 'components/elements'
 require 'components/element'
 require 'components/component'
 require 'components/markdown_handler'
