@@ -17,9 +17,5 @@ module Components
         append_view_path Components.components_path
       end
     end
-
-    initializer "components.template_hander" do
-      ActionView::Template.register_template_handler :md, Components::MarkdownHandler
-    end
   end
 end
