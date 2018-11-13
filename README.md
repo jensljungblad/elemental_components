@@ -7,7 +7,7 @@ Simple view components for Rails 5.1+, designed to go well with [styleguide](htt
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "components", git: "https://github.com/varvet/components.git"
+gem "components", git: "https://github.com/jensljungblad/components.git"
 ```
 
 And then execute:
