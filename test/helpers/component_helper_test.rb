@@ -51,6 +51,26 @@ class ComponentHelperTest < ActionView::TestCase
     ), output
   end
 
+  test "render component with model" do
+    output = component "comment", comment: Comment.new(
+      id: 1,
+      user: User.new(
+        id: 1,
+        name: "Name"
+      ),
+      body: "Body"
+    )
+
+    assert_dom_equal_squished %(
+      <div class="media-object">
+        <div class="media-object__media">
+          <a href="/users/1">Name</a>
+        </div>
+        <div class="media-object__body"> Body </div>
+      </div>
+    ), output
+  end
+
   test "render namespaced component" do
     output = component "objects/media_object" do |c|
       c.media { "Media" }

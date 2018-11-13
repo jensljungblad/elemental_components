@@ -1,6 +1,6 @@
 # Components
 
-Simple view components + style guide for Rails 5.1+. Inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
+Simple view components for Rails 5.1+, designed to go well with [styleguide](https://github.com/jensljungblad/styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
 
@@ -23,7 +23,7 @@ The examples provided here will use the [BEM naming conventions](http://getbem.c
 Components live in `app/components`. Generate a component by executing:
 
 ```sh
-$ bin/rails g components:component alert --skip-md
+$ bin/rails g components:component alert
 ```
 
 This will create the following files:
@@ -439,91 +439,9 @@ Then call it from a template like so:
 <%= component "objects/media_object" %>
 ```
 
-## Style guide
-
-In order to start using the style guide, run the install generator:
-
-```sh
-$ bin/rails g components:install
-```
-
-This will create the following files and directories:
-
-```
-app/
-  styleguide/
-    layouts/
-      example.html.erb
-    pages/
-      01_home.md
-      02_components
-```
-
-The style guide can be mounted in your routes file with:
-
-```ruby
-mount Components::Engine => '/styleguide'
-```
-
-You can now access the style guide at `http://localhost:3000/styleguide`.
-
-### Pages
-
-You can create style guide pages simply by adding markdown files to the `app/styleguide/pages` directory. These can be structured by putting them in subdirectories, and sorted by prefixing the file names with a digit.
-
-Check out Brad Frost's [Style Guide Guide](https://github.com/bradfrost/style-guide-guide) for style guide inspiration.
-
-### Components
-
-Previously when we ran the `components:component` generator we passed it a `--skip-md` flag. Without this flag we will also generate a style guide page for the component:
-
-
-```sh
-$ bin/rails g components:component alert
-```
-
-This will, in addition to the component files, create the following file:
-
-```
-app/
-  views/
-    02_components/
-      alert.md
-```
-
-A special markdown syntax, inspired by [Catalog](https://www.catalog.style), can be used to render examples of the component on the style guide page:
-
-````markdown
-# Alert
-
-Provide contextual feedback messages for typical user actions with alert messages.
-
-```example
-<%= component "alert", message: "Something went right!", context: "success" %>
-```
-
-```example
-<%= component "alert", message: "Something went wrong!", context: "danger" %>
-```
-````
-
-It is possible to pass options to the example, in order to control the width and height of the wrapping element:
-
-
-````markdown
-```example
-width: 500
-height: 200
----
-<%= component "alert", message: "Something went right!", context: "success" %>
-```
-````
-
-Examples need your application's CSS and JS in order to function properly. There is an `app/styleguide/layouts/example.html.erb` layout file that examples are rendered within. This file can be modified in order to add additional tags to the header, like the `javascript_pack_tag` when using the webpacker gem, or classes and styles to the body tag.
-
 ## Acknowledgements
 
-This library was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
+This library, together with [styleguide](https://github.com/jensljungblad/styleguide), was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
 
 - [Catalog](https://www.catalog.style) - style guide for React
 - [Storybook](https://storybook.js.org) - style guide for React
