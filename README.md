@@ -226,7 +226,7 @@ Take a card component. In React, a common approach is to create subcomponents:
 
 There are two problems with this approach:
 
-1. The card header, section and footer would be represented in BEM by elements, "a part of a block [component] that has no standalone meaning". Yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
+1. The card header, section and footer have no standalone meaning, yet we treat them as standalone components. This means a `CardHeader` could be placed outside of a `Card`.
 2. We lose control of the structure of the elements. A `CardHeader` can be placed below, or inside a `CardFooter`.
 
 Using this gem, the same component can be written like this:
@@ -355,9 +355,9 @@ end
 ```erb
 <% # app/components/card/_card.html.erb %>
 
-<div class="<%= css_classes %>">
+<%= content_tag :div, class: card.css_classes do %>
   ...
-</div>
+<% end %>
 ```
 
 It's even possible to declare helpers on elements:
@@ -383,13 +383,13 @@ end
 ```erb
 <% # app/components/card/_card.html.erb %>
 
-<div class="<%= css_classes %>">
+<%= content_tag :div, class: card.css_classes do %>
   ...
-  <div class="<%= section.css_classes %>">
+  <%= content_tag :div, class: section.css_classes do %>
     <%= section %>
-  </div>
+  <% end %>
   ...
-</div>
+<% end %>
 ```
 
 Helper methods can also make use of the `@view` instance variable in order to call Rails helpers such as `link_to` or `content_tag`.
