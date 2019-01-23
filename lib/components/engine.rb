@@ -3,7 +3,7 @@ module Components
     isolate_namespace Components
 
     initializer "components.asset_paths" do |app|
-      app.config.assets.paths << Components.components_path
+      app.config.assets.paths << Components.components_path if app.config.respond_to?(:assets)
     end
 
     initializer "components.view_helpers" do
