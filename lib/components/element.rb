@@ -45,16 +45,25 @@ module Components
         get_instance_variable(plural_name)
       end
     end
+
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
 
+    attr_reader :nested_block
+
     def initialize(view, attributes = nil, &block)
       @view = view
+      @nested_block = block
       initialize_attributes(attributes || {})
       initialize_elements
-      @yield = block ? @view.capture(self, &block) : nil
+      @yield = nested_block? ? @view.capture(self, &nested_block) : nil
+      run_validations
+    end
+
+    def nested_block?
+      nested_block.present?
     end
 
     def to_s
@@ -77,6 +86,14 @@ module Components
           set_instance_variable(name, nil)
         end
       end
+    end
+
+    def run_validations
+      validate! if validate?
+    end
+
+    def validate?
+      self.class.included_modules.include?(ActiveModel::Validations)
     end
 
     private

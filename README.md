@@ -423,6 +423,28 @@ end
 <%= component "button", label: "Sign in", url: sign_in_path %>
 ```
 
+### Component validation
+
+To ensure your components get initialized correctly you can use Rails validations. You can include the Rails ActiveModel::Validations module into each component separatly or include it into your ApplicationComponent to enable validations on all components.
+
+Afterwards you can define your validations in your components:
+
+```ruby
+# app/components/button_component.rb %>
+
+class ButtonComponent < Components::Component
+  include ActiveModel::Validations
+  
+  attribute :label
+  attribute :url
+  
+  validates :label, presence: true
+end
+
+```
+
+Your validations will be executed during the components initialization and raise an ActiveModel::ValidationError if any validation fails.
+
 ### Namespaced components
 
 Components can be nested under a namespace. This is useful if you want to practice things like [Atomic Design](http://bradfrost.com/blog/post/atomic-web-design/), [BEMIT](https://csswizardry.com/2015/08/bemit-taking-the-bem-naming-convention-a-step-further/) or any other component classification scheme. In order to create a namespaced component, stick it in a folder and wrap the class in a module:

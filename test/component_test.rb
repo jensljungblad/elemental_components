@@ -5,12 +5,14 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
     assert_nil component.to_s
+    assert_equal false, component.nested_block?
   end
 
   test "initialize with block" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { "foo" }
     assert_equal "foo", component.to_s
+    assert_equal true, component.nested_block?
   end
 
   test "initialize attribute with no value" do
@@ -112,6 +114,32 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(:view)
     assert_equal [], component.foos
+  end
+
+  class TestValidationComponent < Components::Component
+    include ActiveModel::Validations
+    attribute :foo
+    validates :foo, presence: true
+  end
+
+  test "initialize with given attribute and successfull validation" do
+    assert_nothing_raised { TestValidationComponent.new(:view, foo: "bar") }
+  end
+
+  test "initialize without attribute and failing validation" do
+    exception = assert_raises { TestValidationComponent.new(:view) }
+    assert_instance_of ActiveModel::ValidationError, exception
+    assert_equal "Validation failed: Foo can't be blank", exception.message
+  end
+
+  class TestValidationWithDefaultComponent < Components::Component
+    include ActiveModel::Validations
+    attribute :foo, default: "bar"
+    validates :foo, presence: true
+  end
+
+  test "initialize with default value and successfull validation" do
+    assert_nothing_raised { TestValidationWithDefaultComponent.new(:view) }
   end
 
   private
