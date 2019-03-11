@@ -423,18 +423,14 @@ end
 <%= component "button", label: "Sign in", url: sign_in_path %>
 ```
 
-### Component validation
+### Validation
 
-To ensure your components get initialized correctly you can use Rails validations. You can include the Rails ActiveModel::Validations module into each component separatly or include it into your ApplicationComponent to enable validations on all components.
-
-Afterwards you can define your validations in your components:
+To ensure your components get initialized properly you can use ActiveModel::Validations in your elements or components:
 
 ```ruby
 # app/components/button_component.rb %>
 
 class ButtonComponent < Components::Component
-  include ActiveModel::Validations
-  
   attribute :label
   attribute :url
   

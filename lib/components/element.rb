@@ -1,5 +1,7 @@
 module Components
   class Element
+    include ActiveModel::Validations
+
     def self.attributes
       @attributes ||= {}
     end
@@ -59,7 +61,7 @@ module Components
       initialize_attributes(attributes || {})
       initialize_elements
       @yield = nested_block? ? @view.capture(self, &nested_block) : nil
-      run_validations
+      validate!
     end
 
     def nested_block?
@@ -86,14 +88,6 @@ module Components
           set_instance_variable(name, nil)
         end
       end
-    end
-
-    def run_validations
-      validate! if validate?
-    end
-
-    def validate?
-      self.class.included_modules.include?(ActiveModel::Validations)
     end
 
     private

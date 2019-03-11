@@ -117,7 +117,6 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   class TestValidationComponent < Components::Component
-    include ActiveModel::Validations
     attribute :foo
     validates :foo, presence: true
   end
@@ -133,7 +132,6 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   class TestValidationWithDefaultComponent < Components::Component
-    include ActiveModel::Validations
     attribute :foo, default: "bar"
     validates :foo, presence: true
   end
