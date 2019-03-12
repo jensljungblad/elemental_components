@@ -7,23 +7,27 @@ module Components
 
     source_root File.expand_path("../templates", __FILE__)
 
+    def filename
+      name.split('/').last
+    end
+
     def create_component_file
       template "component.rb.erb", "app/components/#{name}_component.rb"
     end
 
     def create_erb_file
       return if options["skip_erb"]
-      create_file "app/components/#{name}/_#{name}.html.erb"
+      create_file "app/components/#{name}/_#{filename}.html.erb"
     end
 
     def create_css_file
       return if options["skip_css"]
-      create_file "app/components/#{name}/#{name}.css"
+      create_file "app/components/#{name}/#{filename}.css"
     end
 
     def create_js_file
       return if options["skip_js"]
-      create_file "app/components/#{name}/#{name}.js"
+      create_file "app/components/#{name}/#{filename}.js"
     end
   end
 end
