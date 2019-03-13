@@ -201,6 +201,23 @@ class AlertComponent < Components::Component
 end
 ```
 
+### Attribute validation
+
+To ensure your components get initialized properly you can use `ActiveModel::Validations` in your elements or components:
+
+```ruby
+# app/components/alert_component.rb %>
+
+class AlertComponent < Components::Component
+  attribute :label
+  
+  validates :label, presence: true
+end
+
+```
+
+Your validations will be executed during the components initialization and raise an `ActiveModel::ValidationError` if any validation fails.
+
 ### Elements
 
 Attributes and blocks are great for simple components or components backed by a data structure, such as a model. Other components are more generic in nature and can be used in a variety of contexts. Often they consist of multiple parts or elements, that sometimes repeat, and sometimes need their own modifiers.
@@ -422,24 +439,6 @@ end
 <%= component "button", label: "Sign up", url: sign_up_path, context: "primary" %>
 <%= component "button", label: "Sign in", url: sign_in_path %>
 ```
-
-### Validation
-
-To ensure your components get initialized properly you can use ActiveModel::Validations in your elements or components:
-
-```ruby
-# app/components/button_component.rb %>
-
-class ButtonComponent < Components::Component
-  attribute :label
-  attribute :url
-  
-  validates :label, presence: true
-end
-
-```
-
-Your validations will be executed during the components initialization and raise an ActiveModel::ValidationError if any validation fails.
 
 ### Namespaced components
 
