@@ -7,10 +7,6 @@ module Components
 
     source_root File.expand_path("../templates", __FILE__)
 
-    def filename
-      name.split('/').last
-    end
-
     def create_component_file
       template "component.rb.erb", "app/components/#{name}_component.rb"
     end
@@ -29,5 +25,12 @@ module Components
       return if options["skip_js"]
       create_file "app/components/#{name}/#{filename}.js"
     end
+
+    private
+
+    def filename
+      name.split('/').last
+    end
+
   end
 end

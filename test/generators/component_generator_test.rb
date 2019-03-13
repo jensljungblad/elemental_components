@@ -14,7 +14,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/foobar/foobar.js"
   end
 
-  test "component generator with sub component" do
+  test "component generator for namespaced component" do
     run_generator %w[baz/foobar]
     assert_file "app/components/baz/foobar_component.rb"
     assert_file "app/components/baz/foobar/_foobar.html.erb"
