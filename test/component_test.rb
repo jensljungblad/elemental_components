@@ -116,28 +116,38 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal [], component.foos
   end
 
-  class TestValidationComponent < Components::Component
-    attribute :foo
-    validates :foo, presence: true
-  end
-
   test "initialize with given attribute and successfull validation" do
-    assert_nothing_raised { TestValidationComponent.new(:view, foo: "bar") }
+    component_class = Class.new(Components::Component) do
+      attribute :foo
+      validates :foo, presence: true
+    end
+
+    assert_nothing_raised { component_class.new(:view, foo: "bar") }
   end
 
   test "initialize without attribute and failing validation" do
-    exception = assert_raises { TestValidationComponent.new(:view) }
+    component_class = Class.new(Components::Component) do
+      attribute :foo
+      validates :foo, presence: true
+
+      # supplies a name argument for active validations on anonymous classes
+      def self.model_name
+        ActiveModel::Name.new(self, nil, "temp")
+      end
+    end
+
+    exception = assert_raises { component_class.new(:view) }
     assert_instance_of ActiveModel::ValidationError, exception
     assert_equal "Validation failed: Foo can't be blank", exception.message
   end
 
-  class TestValidationWithDefaultComponent < Components::Component
-    attribute :foo, default: "bar"
-    validates :foo, presence: true
-  end
-
   test "initialize with default value and successfull validation" do
-    assert_nothing_raised { TestValidationWithDefaultComponent.new(:view) }
+    component_class = Class.new(Components::Component) do
+      attribute :foo, default: "bar"
+      validates :foo, presence: true
+    end
+
+    assert_nothing_raised { component_class.new(:view) }
   end
 
   private
