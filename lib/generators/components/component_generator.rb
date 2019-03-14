@@ -31,6 +31,5 @@ module Components
     def filename
       name.split('/').last
     end
-
   end
 end
