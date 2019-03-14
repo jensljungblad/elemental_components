@@ -136,9 +136,8 @@ class ComponentTest < ActiveSupport::TestCase
       end
     end
 
-    exception = assert_raises { component_class.new(:view) }
-    assert_instance_of ActiveModel::ValidationError, exception
-    assert_equal "Validation failed: Foo can't be blank", exception.message
+    e = assert_raises(ActiveModel::ValidationError) { component_class.new(:view) }
+    assert_equal "Validation failed: Foo can't be blank", e.message
   end
 
   test "initialize with default value and successfull validation" do
