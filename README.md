@@ -334,6 +334,21 @@ An alternative here is to pass a data structure to the component as an attribute
 <%= component "navigation", items: items %>
 ```
 
+Similar to components defined elements can have validations too:
+
+```ruby
+class NavigationComponent < Components::Component
+  element :items, multiple: true do
+    attribute :label
+    attribute :url
+    attribute :active, default: false
+    
+    validate :label, presence: true
+    validate :url, presence: true
+  end
+end
+```
+
 Elements can also be nested, although it is recommended to keep nesting to a minimum:
 
 ```ruby

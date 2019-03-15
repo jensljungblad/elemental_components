@@ -176,7 +176,7 @@ class ComponentTest < ActiveSupport::TestCase
         c.foo(label: "lalal") { "label" }
       end
     end
-    
+
     assert_equal "Validation failed: Bar can't be blank", e.message
   end
 
