@@ -2,6 +2,10 @@ module Components
   class Element
     include ActiveModel::Validations
 
+    def self.model_name
+      ActiveModel::Name.new(Components::Element)
+    end
+
     def self.attributes
       @attributes ||= {}
     end

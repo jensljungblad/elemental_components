@@ -1,5 +1,9 @@
 module Components
   class Component < Element
+    def self.model_name
+      ActiveModel::Name.new(Components::Component)
+    end
+
     def self.component_name
       name.chomp("Component").demodulize.underscore
     end
