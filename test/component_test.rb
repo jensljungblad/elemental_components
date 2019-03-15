@@ -121,7 +121,6 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo
       validates :foo, presence: true
     end
-
     assert_nothing_raised { component_class.new(view_class.new, foo: "bar") }
   end
 
@@ -130,7 +129,6 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo
       validates :foo, presence: true
     end
-
     e = assert_raises(ActiveModel::ValidationError) { component_class.new(view_class.new) }
     assert_equal "Validation failed: Foo can't be blank", e.message
   end
@@ -140,7 +138,6 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo, default: "bar"
       validates :foo, presence: true
     end
-
     assert_nothing_raised { component_class.new(view_class.new) }
   end
 
@@ -148,11 +145,9 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       element :foo do
         attribute :bar
-
         validates :bar, presence: true
       end
     end
-
     assert_nothing_raised do
       component_class.new(view_class.new, {}) do |c|
         c.foo(bar: "lalal") { "something" }
@@ -164,17 +159,14 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       element :foo do
         attribute :bar
-
         validates :bar, presence: true
       end
     end
-
     e = assert_raises(ActiveModel::ValidationError) do
       component_class.new(view_class.new, {}) do |c|
         c.foo { "something" }
       end
     end
-
     assert_equal "Validation failed: Bar can't be blank", e.message
   end
 

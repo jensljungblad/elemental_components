@@ -63,7 +63,7 @@ module Components
       @view = view
       initialize_attributes(attributes || {})
       initialize_elements
-      @content_block = block_given? ? @view.capture(self, &block): nil
+      @content_block = block_given? ? @view.capture(self, &block) : nil
       validate!
     end
 
