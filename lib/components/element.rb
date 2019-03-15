@@ -57,23 +57,22 @@ module Components
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
 
-    attr_reader :nested_block
+    attr_reader :content_block
 
     def initialize(view, attributes = nil, &block)
       @view = view
-      @nested_block = block
       initialize_attributes(attributes || {})
       initialize_elements
-      @yield = nested_block? ? @view.capture(self, &nested_block) : nil
+      @content_block = block_given? ? @view.capture(self, &block): nil
       validate!
     end
 
-    def nested_block?
-      nested_block.present?
+    def content_block?
+      @content_block.present?
     end
 
     def to_s
-      @yield
+      @content_block
     end
 
     protected
