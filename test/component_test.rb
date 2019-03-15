@@ -147,7 +147,6 @@ class ComponentTest < ActiveSupport::TestCase
   test "initialize element and successfull validation" do
     component_class = Class.new(Components::Component) do
       element :foo do
-        attribute :label
         attribute :bar
 
         validates :bar, presence: true
@@ -164,7 +163,6 @@ class ComponentTest < ActiveSupport::TestCase
   test "initialize element and failing validation" do
     component_class = Class.new(Components::Component) do
       element :foo do
-        attribute :label
         attribute :bar
 
         validates :bar, presence: true
@@ -173,7 +171,7 @@ class ComponentTest < ActiveSupport::TestCase
 
     e = assert_raises(ActiveModel::ValidationError) do
       component_class.new(view_class.new, {}) do |c|
-        c.foo(label: "lalal") { "label" }
+        c.foo { "something" }
       end
     end
 
