@@ -68,11 +68,11 @@ module Components
     end
 
     def content_block?
-      @content_block.present?
+      content_block.present?
     end
 
     def to_s
-      @content_block
+      content_block
     end
 
     protected
