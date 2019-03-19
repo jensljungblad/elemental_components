@@ -57,22 +57,22 @@ module Components
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
 
-    attr_reader :content_block
+    attr_reader :block_content
 
     def initialize(view, attributes = nil, &block)
       @view = view
       initialize_attributes(attributes || {})
       initialize_elements
-      @content_block = block_given? ? @view.capture(self, &block) : nil
+      @block_content = block_given? ? @view.capture(self, &block) : nil
       validate!
     end
 
-    def content_block?
-      content_block.present?
+    def block_content?
+      block_content.present?
     end
 
     def to_s
-      content_block
+      block_content
     end
 
     protected

@@ -5,14 +5,14 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
     assert_nil component.to_s
-    assert_equal false, component.content_block?
+    assert_equal false, component.block_content?
   end
 
   test "initialize with block" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { "foo" }
     assert_equal "foo", component.to_s
-    assert_equal true, component.content_block?
+    assert_equal true, component.block_content?
   end
 
   test "initialize attribute with no value" do
