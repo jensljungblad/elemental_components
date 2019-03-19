@@ -213,7 +213,6 @@ class AlertComponent < Components::Component
   
   validates :label, presence: true
 end
-
 ```
 
 Your validations will be executed during the components initialization and raise an `ActiveModel::ValidationError` if any validation fails.
@@ -334,7 +333,7 @@ An alternative here is to pass a data structure to the component as an attribute
 <%= component "navigation", items: items %>
 ```
 
-Similar to components defined elements can have validations too:
+Elements can have validations, too:
 
 ```ruby
 class NavigationComponent < Components::Component
@@ -343,8 +342,8 @@ class NavigationComponent < Components::Component
     attribute :url
     attribute :active, default: false
     
-    validate :label, presence: true
-    validate :url, presence: true
+    validates :label, presence: true
+    validates :url, presence: true
   end
 end
 ```
