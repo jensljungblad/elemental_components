@@ -3,6 +3,8 @@ require "components/component"
 require "components/engine"
 
 module Components
+  class Error < StandardError; end
+
   def self.components_path
     Rails.root.join("app", "components")
   end

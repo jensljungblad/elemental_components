@@ -13,6 +13,15 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal "foo", component.to_s
   end
 
+  test "initialize by overwriting existing attribute" do
+    e = assert_raises(Components::Error) do
+      Class.new(Components::Component) do
+        attribute :to_s
+      end
+    end
+    assert_equal "Attribute 'to_s' already exists.", e.message
+  end
+
   test "initialize attribute with no value" do
     component_class = Class.new(Components::Component) do
       attribute :foo

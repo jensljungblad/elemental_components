@@ -5,6 +5,8 @@ module Components
     end
 
     def self.attribute(name, default: nil)
+      raise(Components::Error, "Attribute '#{name}' already exists.") if respond_to?(name.to_sym)
+
       attributes[name] = { default: default }
 
       define_method(name) do
