@@ -1,22 +1,22 @@
 <div id="<%= card.id %>" class="card">
   <% if card.header %>
     <div class="card__header">
-      <%= card.header.block_content %>
+      <%= card.header.block %>
     </div>
   <% end %>
   <% card.sections.each do |section| %>
     <div class="card__section<%= " card__section--#{section.size}" if section.size %>">
-      <% if section.header && section.header.block_content? %>
+      <% if section.header && section.header.block? %>
         <div class="card__section__header">
-          <%= section.header.block_content %>
+          <%= section.header.block %>
         </div>
       <% end %>
-      <%= section.block_content %>
+      <%= section.block %>
     </div>
   <% end %>
-  <% if card.footer && card.footer.block_content? %>
+  <% if card.footer && card.footer.block? %>
     <div class="card__footer">
-      <%= card.footer.block_content %>
+      <%= card.footer.block %>
     </div>
   <% end %>
 </div>
