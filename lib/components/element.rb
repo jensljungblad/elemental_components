@@ -51,7 +51,6 @@ module Components
         get_instance_variable(plural_name)
       end
     end
-
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/MethodLength
@@ -69,10 +68,6 @@ module Components
 
     def block_content?
       block_content.present?
-    end
-
-    def to_s
-      block_content
     end
 
     protected

@@ -4,14 +4,14 @@ class ComponentTest < ActiveSupport::TestCase
   test "initialize with nothing" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
-    assert_nil component.to_s
+    assert_nil component.block_content
     assert_equal false, component.block_content?
   end
 
   test "initialize with block" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { "foo" }
-    assert_equal "foo", component.to_s
+    assert_equal "foo", component.block_content
     assert_equal true, component.block_content?
   end
 
@@ -45,7 +45,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     component.foo { "foo" }
-    assert_equal "foo", component.foo.to_s
+    assert_equal "foo", component.foo.block_content
   end
 
   test "initialize element with attribute with value" do
@@ -72,8 +72,8 @@ class ComponentTest < ActiveSupport::TestCase
       end
       "foo"
     end
-    assert_equal "foo", component.foo.to_s
-    assert_equal "bar", component.foo.bar.to_s
+    assert_equal "foo", component.foo.block_content
+    assert_equal "bar", component.foo.bar.block_content
   end
 
   test "initialize element with multiple true" do
@@ -84,8 +84,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { "foo" }
     component.foo { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].to_s
-    assert_equal "bar", component.foos[1].to_s
+    assert_equal "foo", component.foos[0].block_content
+    assert_equal "bar", component.foos[1].block_content
   end
 
   test "initialize element with multiple true when singular and plural name are the same" do
@@ -96,8 +96,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foos { "foo" }
     component.foos { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].to_s
-    assert_equal "bar", component.foos[1].to_s
+    assert_equal "foo", component.foos[0].block_content
+    assert_equal "bar", component.foos[1].block_content
   end
 
   test "get element when not set" do
