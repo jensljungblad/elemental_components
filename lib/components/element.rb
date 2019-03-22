@@ -5,7 +5,7 @@ module Components
     end
 
     def self.attribute(name, default: nil)
-      raise(Components::Error, "Method '#{name}' already exists.") if respond_to?(name.to_sym)
+      raise_if_method_exists(name)
 
       attributes[name] = { default: default }
 
@@ -23,7 +23,7 @@ module Components
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/PerceivedComplexity
     def self.element(name, multiple: false, &config)
-      raise(Components::Error, "Method '#{name}' already exists.") if respond_to?(name.to_sym)
+      raise_if_method_exists(name)
 
       plural_name = name.to_s.pluralize.to_sym if multiple
 
@@ -45,7 +45,7 @@ module Components
 
       return if !multiple || name == plural_name
 
-      raise(Components::Error, "Method '#{plural_name}' already exists.") if respond_to?(plural_name.to_sym)
+      raise_if_method_exists(plural_name)
 
       define_method(plural_name) do
         get_instance_variable(plural_name)
@@ -55,6 +55,14 @@ module Components
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
+
+    class << self
+      private
+
+      def raise_if_method_exists(method)
+        raise(Components::Error, "Method '#{method}' already exists.") if respond_to?(method.to_sym)
+      end
+    end
 
     def initialize(view, attributes = nil, &block)
       @view = view
