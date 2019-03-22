@@ -7,7 +7,7 @@ module Components
     def self.attribute(name, default: nil)
       attributes[name] = { default: default }
 
-      define_method(name) do
+      define_method_or_raise(name) do
         get_instance_variable(name)
       end
     end
@@ -27,7 +27,7 @@ module Components
         multiple: plural_name || false, class: Class.new(Element, &config)
       }
 
-      define_method(name) do |attributes = nil, &block|
+      define_method_or_raise(name) do |attributes = nil, &block|
         return get_instance_variable(multiple ? plural_name : name) unless attributes || block
 
         element = self.class.elements[name][:class].new(@view, attributes, &block)
@@ -41,7 +41,7 @@ module Components
 
       return if !multiple || name == plural_name
 
-      define_method(plural_name) do
+      define_method_or_raise(plural_name) do
         get_instance_variable(plural_name)
       end
     end
@@ -49,6 +49,13 @@ module Components
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
+
+    def self.define_method_or_raise(method_name, &block)
+      raise(Components::Error, "Method '#{method_name}' already exists.") if method_defined?(method_name.to_sym)
+
+      define_method(method_name, &block)
+    end
+    private_class_method :define_method_or_raise
 
     def initialize(view, attributes = nil, &block)
       @view = view

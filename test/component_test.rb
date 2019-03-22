@@ -13,6 +13,15 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal "foo", component.to_s
   end
 
+  test "initialize by overwriting existing method with attribute" do
+    e = assert_raises(Components::Error) do
+      Class.new(Components::Component) do
+        attribute :to_s
+      end
+    end
+    assert_equal "Method 'to_s' already exists.", e.message
+  end
+
   test "initialize attribute with no value" do
     component_class = Class.new(Components::Component) do
       attribute :foo
@@ -35,6 +44,19 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(:view)
     assert_equal "foo", component.foo
+  end
+
+  test "initialize by overwriting existing method with element" do
+    e = assert_raises(Components::Error) do
+      Class.new(Components::Component) do
+        def foo
+          "foo"
+        end
+
+        element :foo
+      end
+    end
+    assert_equal "Method 'foo' already exists.", e.message
   end
 
   test "initialize element with block" do
