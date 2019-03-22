@@ -49,10 +49,14 @@ class ComponentTest < ActiveSupport::TestCase
   test "initialize by overwriting existing method with element" do
     e = assert_raises(Components::Error) do
       Class.new(Components::Component) do
-        element :to_s
+        def foo
+          'foo'
+        end
+
+        element :foo
       end
     end
-    assert_equal "Method 'to_s' already exists.", e.message
+    assert_equal "Method 'foo' already exists.", e.message
   end
 
   test "initialize element with block" do

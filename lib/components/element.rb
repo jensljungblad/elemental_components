@@ -56,13 +56,12 @@ module Components
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
 
-    class << self
-      private
-
-      def raise_if_method_exists(method)
-        raise(Components::Error, "Method '#{method}' already exists.") if respond_to?(method.to_sym)
-      end
+    def self.define_method_or_raise(method_name, &block)
+      raise(Components::Error, "Method '#{method_name}' already exists.") if self.method_defined?(method_name.to_sym)
+      
+      define_method(method_name, &block)
     end
+    private_class_method :define_method_or_raise
 
     def initialize(view, attributes = nil, &block)
       @view = view
