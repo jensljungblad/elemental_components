@@ -51,8 +51,8 @@ module Components
     # rubocop:enable Metrics/PerceivedComplexity
 
     def self.define_method_or_raise(method_name, &block)
-      raise(Components::Error, "Method '#{method_name}' already exists.") if self.method_defined?(method_name.to_sym)
-      
+      raise(Components::Error, "Method '#{method_name}' already exists.") if method_defined?(method_name.to_sym)
+
       define_method(method_name, &block)
     end
     private_class_method :define_method_or_raise

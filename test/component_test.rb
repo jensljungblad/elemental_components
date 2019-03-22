@@ -50,7 +50,7 @@ class ComponentTest < ActiveSupport::TestCase
     e = assert_raises(Components::Error) do
       Class.new(Components::Component) do
         def foo
-          'foo'
+          "foo"
         end
 
         element :foo
