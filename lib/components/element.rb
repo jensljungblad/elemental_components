@@ -5,11 +5,9 @@ module Components
     end
 
     def self.attribute(name, default: nil)
-      raise_if_method_exists(name)
-
       attributes[name] = { default: default }
 
-      define_method(name) do
+      define_method_or_raise(name) do
         get_instance_variable(name)
       end
     end
@@ -23,15 +21,13 @@ module Components
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/PerceivedComplexity
     def self.element(name, multiple: false, &config)
-      raise_if_method_exists(name)
-
       plural_name = name.to_s.pluralize.to_sym if multiple
 
       elements[name] = {
         multiple: plural_name || false, class: Class.new(Element, &config)
       }
 
-      define_method(name) do |attributes = nil, &block|
+      define_method_or_raise(name) do |attributes = nil, &block|
         return get_instance_variable(multiple ? plural_name : name) unless attributes || block
 
         element = self.class.elements[name][:class].new(@view, attributes, &block)
@@ -45,9 +41,7 @@ module Components
 
       return if !multiple || name == plural_name
 
-      raise_if_method_exists(plural_name)
-
-      define_method(plural_name) do
+      define_method_or_raise(plural_name) do
         get_instance_variable(plural_name)
       end
     end
