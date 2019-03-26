@@ -139,7 +139,30 @@ class ComponentTest < ActiveSupport::TestCase
     assert_nothing_raised { component_class.new(view_class.new) }
   end
 
-  test "initialize element and successfull validation" do
+  test "initialize element and successfull element validation" do
+    component_class = Class.new(Components::Component) do
+      element :foo
+      validates :foo, presence: true
+    end
+    assert_nothing_raised do
+      component_class.new(view_class.new, {}) do |c|
+        c.foo { "lalala" }
+      end
+    end
+  end
+
+  test "initialize element and failing element validation" do
+    component_class = Class.new(Components::Component) do
+      element :foo
+      validates :foo, presence: true
+    end
+    e = assert_raises(ActiveModel::ValidationError) do
+      component_class.new(view_class.new, {})
+    end
+    assert_equal "Validation failed: Foo can't be blank", e.message
+  end
+
+  test "initialize element and successfull element attribute validation" do
     component_class = Class.new(Components::Component) do
       element :foo do
         attribute :bar
@@ -153,7 +176,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
   end
 
-  test "initialize element and failing validation" do
+  test "initialize element and failing element attribute validation" do
     component_class = Class.new(Components::Component) do
       element :foo do
         attribute :bar
