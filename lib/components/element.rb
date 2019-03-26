@@ -1,5 +1,11 @@
 module Components
   class Element
+    include ActiveModel::Validations
+
+    def self.model_name
+      ActiveModel::Name.new(Components::Element)
+    end
+
     def self.attributes
       @attributes ||= {}
     end
@@ -61,7 +67,8 @@ module Components
       @view = view
       initialize_attributes(attributes || {})
       initialize_elements
-      @yield = block ? @view.capture(self, &block) : nil
+      @yield = block_given? ? @view.capture(self, &block) : nil
+      validate!
     end
 
     def to_s

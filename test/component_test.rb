@@ -26,7 +26,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view)
+    component = component_class.new(view_class.new)
     assert_nil component.foo
   end
 
@@ -34,7 +34,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo
     end
-    component = component_class.new(:view, foo: "foo")
+    component = component_class.new(view_class.new, foo: "foo")
     assert_equal "foo", component.foo
   end
 
@@ -42,7 +42,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       attribute :foo, default: "foo"
     end
-    component = component_class.new(:view)
+    component = component_class.new(view_class.new)
     assert_equal "foo", component.foo
   end
 
@@ -74,7 +74,7 @@ class ComponentTest < ActiveSupport::TestCase
         attribute :bar
       end
     end
-    component = component_class.new(:view)
+    component = component_class.new(view_class.new)
     component.foo bar: "baz"
     assert_equal "baz", component.foo.bar
   end
@@ -124,7 +124,7 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       element :foo
     end
-    component = component_class.new(:view)
+    component = component_class.new(view_class.new)
     assert_nil component.foo
   end
 
@@ -132,8 +132,85 @@ class ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(Components::Component) do
       element :foo, multiple: true
     end
-    component = component_class.new(:view)
+    component = component_class.new(view_class.new)
     assert_equal [], component.foos
+  end
+
+  test "initialize with given attribute and successfull validation" do
+    component_class = Class.new(Components::Component) do
+      attribute :foo
+      validates :foo, presence: true
+    end
+    assert_nothing_raised { component_class.new(view_class.new, foo: "bar") }
+  end
+
+  test "initialize without attribute and failing validation" do
+    component_class = Class.new(Components::Component) do
+      attribute :foo
+      validates :foo, presence: true
+    end
+    e = assert_raises(ActiveModel::ValidationError) { component_class.new(view_class.new) }
+    assert_equal "Validation failed: Foo can't be blank", e.message
+  end
+
+  test "initialize with default value and successfull validation" do
+    component_class = Class.new(Components::Component) do
+      attribute :foo, default: "bar"
+      validates :foo, presence: true
+    end
+    assert_nothing_raised { component_class.new(view_class.new) }
+  end
+
+  test "initialize element and successfull element validation" do
+    component_class = Class.new(Components::Component) do
+      element :foo
+      validates :foo, presence: true
+    end
+    assert_nothing_raised do
+      component_class.new(view_class.new, {}) do |c|
+        c.foo { "lalala" }
+      end
+    end
+  end
+
+  test "initialize element and failing element validation" do
+    component_class = Class.new(Components::Component) do
+      element :foo
+      validates :foo, presence: true
+    end
+    e = assert_raises(ActiveModel::ValidationError) do
+      component_class.new(view_class.new, {})
+    end
+    assert_equal "Validation failed: Foo can't be blank", e.message
+  end
+
+  test "initialize element and successfull element attribute validation" do
+    component_class = Class.new(Components::Component) do
+      element :foo do
+        attribute :bar
+        validates :bar, presence: true
+      end
+    end
+    assert_nothing_raised do
+      component_class.new(view_class.new, {}) do |c|
+        c.foo(bar: "lalal") { "something" }
+      end
+    end
+  end
+
+  test "initialize element and failing element attribute validation" do
+    component_class = Class.new(Components::Component) do
+      element :foo do
+        attribute :bar
+        validates :bar, presence: true
+      end
+    end
+    e = assert_raises(ActiveModel::ValidationError) do
+      component_class.new(view_class.new, {}) do |c|
+        c.foo { "something" }
+      end
+    end
+    assert_equal "Validation failed: Bar can't be blank", e.message
   end
 
   private

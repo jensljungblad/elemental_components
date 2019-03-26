@@ -6,7 +6,7 @@
   <% end %>
   <% card.sections.each do |section| %>
     <div class="card__section<%= " card__section--#{section.size}" if section.size %>">
-      <% if section.header.present? %>
+      <% if section.header %>
         <div class="card__section__header">
           <%= section.header %>
         </div>

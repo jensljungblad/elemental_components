@@ -122,7 +122,7 @@ end
 <%= component "alert", message: "Something went wrong!", context: "danger" %>
 ```
 
-To inject some HTML content into our component we can print the component variable in our template, and populate it by passing a block to the component helper:
+To inject some text or HTML content into our component we can print the component variable in our template, and populate it by passing a block to the component helper:
 
 ```erb
 <% # app/components/alert/_alert.html.erb %>
@@ -200,6 +200,22 @@ class AlertComponent < Components::Component
   end
 end
 ```
+
+### Attribute validation
+
+To ensure your components get initialized properly you can use `ActiveModel::Validations` in your elements or components:
+
+```ruby
+# app/components/alert_component.rb %>
+
+class AlertComponent < Components::Component
+  attribute :label
+  
+  validates :label, presence: true
+end
+```
+
+Your validations will be executed during the components initialization and raise an `ActiveModel::ValidationError` if any validation fails.
 
 ### Elements
 
@@ -315,6 +331,21 @@ An alternative here is to pass a data structure to the component as an attribute
 
 ```erb
 <%= component "navigation", items: items %>
+```
+
+Elements can have validations, too:
+
+```ruby
+class NavigationComponent < Components::Component
+  element :items, multiple: true do
+    attribute :label
+    attribute :url
+    attribute :active, default: false
+    
+    validates :label, presence: true
+    validates :url, presence: true
+  end
+end
 ```
 
 Elements can also be nested, although it is recommended to keep nesting to a minimum:
