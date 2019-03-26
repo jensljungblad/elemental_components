@@ -122,13 +122,13 @@ end
 <%= component "alert", message: "Something went wrong!", context: "danger" %>
 ```
 
-To inject some text or HTML content into our component we can print the components ```block``` attribute in our template, and populate it by passing a block to the component helper:
+To inject some text or HTML content into our component we can print the component variable in our template, and populate it by passing a block to the component helper:
 
 ```erb
 <% # app/components/alert/_alert.html.erb %>
 
 <div class="alert alert--<%= alert.context %>" role="alert">
-  <%= alert.block %>
+  <%= alert %>
 </div>
 ```
 
@@ -136,18 +136,6 @@ To inject some text or HTML content into our component we can print the componen
 <%= component "alert", context: "success" do %>
   <em>Something</em> went right!
 <% end %>
-```
-
-In case you want to render the block and some surrounding HTML only when a block exists you can verify with the ```block?``` method:  
-
-```erb
-<% # app/components/alert/_alert.html.erb %>
-
-<div class="alert alert--<%= alert.context %>" role="alert">
-  <% if alert.block? %>
-    <div class="alert alert-body"><%= alert.block %></div>
-  <% end %>
-</div>
 ```
 
 Another good use case for attributes is when you have a component backed by a model:
@@ -282,15 +270,15 @@ end
 
 <div class="card <%= "card--flush" if card.flush %>">
   <div class="card__header <%= "card__header--centered" if card.header.centered %>">
-    <%= card.header.block %>
+    <%= card.header %>
   </div>
   <% card.sections.each do |section| %>
     <div class="card__section <%= "card__section--#{section.size}" %>">
-      <%= section.block %>
+      <%= section %>
     </div>
   <% end %>
   <div class="card__footer">
-    <%= card.footer.block %>
+    <%= card.footer %>
   </div>
 </div>
 ```
@@ -429,7 +417,7 @@ end
 <%= content_tag :div, class: card.css_classes do %>
   ...
   <%= content_tag :div, class: section.css_classes do %>
-    <%= section.block %>
+    <%= section %>
   <% end %>
   ...
 <% end %>

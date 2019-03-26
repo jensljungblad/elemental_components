@@ -56,18 +56,16 @@ module Components
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
 
-    attr_reader :block
-
     def initialize(view, attributes = nil, &block)
       @view = view
       initialize_attributes(attributes || {})
       initialize_elements
-      @block = block_given? ? @view.capture(self, &block) : nil
+      @yield = block_given? ? @view.capture(self, &block) : nil
       validate!
     end
 
-    def block?
-      block.present?
+    def to_s
+      @yield
     end
 
     protected

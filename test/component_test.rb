@@ -4,15 +4,13 @@ class ComponentTest < ActiveSupport::TestCase
   test "initialize with nothing" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
-    assert_nil component.block
-    assert_equal false, component.block?
+    assert_nil component.to_s
   end
 
   test "initialize with block" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { "foo" }
-    assert_equal "foo", component.block
-    assert_equal true, component.block?
+    assert_equal "foo", component.to_s
   end
 
   test "initialize attribute with no value" do
@@ -28,7 +26,7 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo
     end
     component = component_class.new(view_class.new, foo: "foo")
-    assert_equal "foo", component.foo
+    assert_equal "foo", component.foo.to_s
   end
 
   test "initialize attribute with default value" do
@@ -36,7 +34,7 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo, default: "foo"
     end
     component = component_class.new(view_class.new)
-    assert_equal "foo", component.foo
+    assert_equal "foo", component.foo.to_s
   end
 
   test "initialize element with block" do
@@ -45,7 +43,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     component.foo { "foo" }
-    assert_equal "foo", component.foo.block
+    assert_equal "foo", component.foo.to_s
   end
 
   test "initialize element with attribute with value" do
@@ -56,7 +54,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     component.foo bar: "baz"
-    assert_equal "baz", component.foo.bar
+    assert_equal "baz", component.foo.bar.to_s
   end
 
   test "initialize element with block with nested element with block" do
@@ -72,8 +70,8 @@ class ComponentTest < ActiveSupport::TestCase
       end
       "foo"
     end
-    assert_equal "foo", component.foo.block
-    assert_equal "bar", component.foo.bar.block
+    assert_equal "foo", component.foo.to_s
+    assert_equal "bar", component.foo.bar.to_s
   end
 
   test "initialize element with multiple true" do
@@ -84,8 +82,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { "foo" }
     component.foo { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].block
-    assert_equal "bar", component.foos[1].block
+    assert_equal "foo", component.foos[0].to_s
+    assert_equal "bar", component.foos[1].to_s
   end
 
   test "initialize element with multiple true when singular and plural name are the same" do
@@ -96,8 +94,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foos { "foo" }
     component.foos { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].block
-    assert_equal "bar", component.foos[1].block
+    assert_equal "foo", component.foos[0].to_s
+    assert_equal "bar", component.foos[1].to_s
   end
 
   test "get element when not set" do
