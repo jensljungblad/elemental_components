@@ -26,7 +26,7 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo
     end
     component = component_class.new(view_class.new, foo: "foo")
-    assert_equal "foo", component.foo.to_s
+    assert_equal "foo", component.foo
   end
 
   test "initialize attribute with default value" do
@@ -34,7 +34,7 @@ class ComponentTest < ActiveSupport::TestCase
       attribute :foo, default: "foo"
     end
     component = component_class.new(view_class.new)
-    assert_equal "foo", component.foo.to_s
+    assert_equal "foo", component.foo
   end
 
   test "initialize element with block" do
@@ -54,7 +54,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     component.foo bar: "baz"
-    assert_equal "baz", component.foo.bar.to_s
+    assert_equal "baz", component.foo.bar
   end
 
   test "initialize element with block with nested element with block" do
