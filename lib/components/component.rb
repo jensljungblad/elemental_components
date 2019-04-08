@@ -5,15 +5,25 @@ module Components
     end
 
     def self.component_name
-      name.chomp("Component").demodulize.underscore
+      class_name.chomp("Component").demodulize.underscore
     end
 
     def self.component_path
-      name.chomp("Component").underscore
+      class_name.chomp("Component").underscore
+    end
+
+    # Allow Components to lookup their original classname
+    # even if created with Class.new(SomeComponent)
+    def self.class_name
+      name || superclass.name
     end
 
     def render
-      @view.render partial: to_partial_path, object: self
+      render_partial to_partial_path
+    end
+
+    def _name
+      super || self.class.component_name
     end
 
     def to_partial_path

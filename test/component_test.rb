@@ -213,6 +213,146 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal "Validation failed: Bar can't be blank", e.message
   end
 
+  # Makes it easy for elements to do basic templating
+  test "element supports render method" do
+    component_class = Class.new(Components::Component) do
+      element :foo do
+        attribute :tag, default: :span
+
+        def render
+          "<#{tag}>#{block_content}</#{tag}>"
+        end
+      end
+    end
+
+    component = component_class.new(view_class.new)
+    component.foo(tag: :div) { "bar" }
+
+    assert_equal "<div>bar</div>", component.foo.to_s
+  end
+
+  # Reduce the overhead of creating very similar components
+  test "extending a component extends its elements and attributes" do
+    base_component_class = Class.new(Components::Component) do
+      attribute :foo
+
+      element :bar do
+        element :baz
+      end
+    end
+
+    # Extend the base class
+    component_class = Class.new(base_component_class)
+
+    component = component_class.new(view_class.new, foo: "foo")
+
+    component.bar { "bar" }
+    component.bar.baz { "baz" }
+    assert_equal "foo", component.foo.to_s
+    assert_equal "bar", component.bar.to_s
+    assert_equal "baz", component.bar.baz.to_s
+  end
+
+  # Allows Components to be integrated into other components as elements.
+  test "element can extend a component" do
+    base_component_class = Class.new(Components::Component) do
+      attribute :tag, default: :h1
+
+      def render
+        "<#{tag}>#{block_content}</#{tag}>"
+      end
+    end
+
+    component_class = Class.new(Components::Component) do
+      element :header, extends: base_component_class
+    end
+
+    component = component_class.new(view_class.new)
+
+    component.header(tag: :h2) { "test" }
+    assert_equal "<h2>test</h2>", component.header.to_s
+  end
+
+  # This reduces duplicate code when components share very similar elements
+  test "extending a component extends elements of that component with matching names" do
+    base_component_class = Class.new(Components::Component) do
+      element :foo do
+        attribute :tag, default: :span
+
+        def render
+          "<#{tag}>#{block_content}</#{tag}>"
+        end
+      end
+    end
+
+    component_class = Class.new(base_component_class) do
+      element :foo do
+        attribute :bar, default: :baz
+      end
+    end
+
+    component = component_class.new(view_class.new)
+    component.foo { "test" }
+    assert_equal "<span>test</span>", component.foo.to_s
+    assert_equal "baz", component.foo.bar.to_s
+  end
+
+  # This way an element can interact with another element through its parent component
+  # allowing for more complex list creation
+  test "elements should be able to interact with their parent component" do
+    component_class = Class.new(Components::Component) do
+      element :item, multiple: true
+
+      element :group do
+        element :item, multiple: true
+
+        def render
+          parent.items << "(#{items.join(', ')})"
+        end
+      end
+    end
+
+    component = component_class.new(view_class.new)
+    component.item { "hi" }
+    component.item { "hello" }
+    component.group do |group|
+      group.item { "yo" }
+      group.item { "howdy" }
+    end
+
+    assert_equal "hi, hello, (yo, howdy)", component.items.join(", ")
+  end
+
+  test "classnames can be derived from element structure" do
+    class CardComponent < Components::Component
+      element :foo do
+        element :bar
+      end
+    end
+
+    component = CardComponent.new(view_class.new)
+    component.foo { "" }
+    component.foo.bar { "" }
+
+    assert_equal "card", component.modular_classname
+    assert_equal "card__foo", component.foo.modular_classname
+    assert_equal "card--foo--bar", component.foo.bar.modular_classname(separator: "--")
+
+    class FormComponent < Components::Component
+      element :card, extends: CardComponent
+    end
+
+    component_2 = FormComponent.new(view_class.new)
+    component_2.card { "" }
+    component_2.card.foo { "" }
+    component_2.card.foo.bar { "" }
+
+    assert_equal "form", component_2.modular_classname
+    assert_equal "form__card", component_2.card.modular_classname
+    assert_equal "form__card__foo", component_2.card.foo.modular_classname
+    assert_equal "form__card__foo__bar", component_2.card.foo.bar.modular_classname
+  end
+
   private
 
   def view_class
@@ -220,6 +360,9 @@ class ComponentTest < ActiveSupport::TestCase
       def capture(element)
         yield(element)
       end
+
+      # Avoid breakage if render is called on components
+      def render(*args) end
     end
   end
 end

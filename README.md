@@ -210,7 +210,7 @@ To ensure your components get initialized properly you can use `ActiveModel::Val
 
 class AlertComponent < Components::Component
   attribute :label
-  
+
   validates :label, presence: true
 end
 ```
@@ -341,7 +341,7 @@ class NavigationComponent < Components::Component
     attribute :label
     attribute :url
     attribute :active, default: false
-    
+
     validates :label, presence: true
     validates :url, presence: true
   end
@@ -469,6 +469,137 @@ Then call it from a template like so:
 ```erb
 <%= component "objects/media_object" %>
 ```
+
+### Extending Components
+
+Components can share basic functionallity by extending a base component. For example you may want to create several different cards which share features.
+
+```ruby
+# app/components/card_component.rb %>
+
+class FeaturedCardComponent < CardComponent
+  attribute :banner_image
+
+  element :header do
+    attrbiute :action
+
+    element :subheading
+  end
+end
+```
+
+This `FeaturedCardComponent` will extend `CardComponent` and all its attributes (`flush`) and elements (`header`, `section`, `footer`) but will render its template from
+`app/components/feature_card/_feature_card.html.erb`. The featured card's `header` element will retain the `centered, default: false` attribute defined in `CardComponent`'s `header` element, while adding its own `action` attribute and `subheading` element.
+
+
+### Extending Components as Elements
+
+You can build a more modular UI where defining one component and using it as an element inside another component. For example, you might define a button component,
+which you want to reuse in an alert component.
+
+```ruby
+class ButtonComponent < Components::Component
+  attribute :label
+  attribute :url
+  attribute :context
+
+  ...
+end
+```
+
+Then in an alert component you can extend the button component as an element.
+
+```ruby
+class AlertComponent < Components::Component
+  ...
+
+  # Extend the button component
+  element :button, extends: 'button' do
+    attribute :context, default: 'alert'
+  end
+end
+```
+
+An element's `extends` parameter can accept either a string `"objects/media_object"` or a class, `Objects::MediaObjectComponent`. This element will inherit all the
+properties of its base component, but those can also be added to or modified like the `context` attribute in the example above. The element will render its base
+components template, but you can override the render method if you prefer not to render its template.
+
+```ruby
+class AlertComponent < Components::Component
+  ...
+
+  element :button, extends: 'button' do
+    attribute :context, default: 'alert'
+
+    def render
+      "<button class='#{css_classes}'>#{block_content}</button>"
+    end
+  end
+end
+```
+
+Note that the button component's `css_classes` method is available because the button element inherits that from the button component.
+
+### Using an Element's render method
+
+Element can render their own template. By keeping an elements template logic self contained,  This makes reuse of elements easier because it separates an element's template from the Component.
+
+Adding a render method to an element allows you write your own template logic within the template declaration. Then component can simply output `<%= component.element_name %>`.
+
+```ruby
+class CardComponent < Components::Component
+
+  element :header do
+    attribute :tag, default: :h1
+
+    # Return a template
+    def render
+      @view.content_tag(:header) do
+        @view.content_tag(tag, super)
+      end
+    end
+  end
+
+end
+```
+
+Or if you'd rather, you can render a partial.
+
+```ruby
+class CardComponent < Components::Component
+
+  # Render element template
+  element :footer do
+    def render
+      render_partial "path/to/footer_partial"
+    end
+  end
+end
+```
+
+### Generating modular classnames
+
+Hard coding your template classnames is fine, but if you're extending components as elements, it's much nicer to be abl to generate modular classnames.
+Consider a form component which contains a card, like this:
+
+```ruby
+class FormComponent < Components::Component
+  element :card, extend 'core/card' do
+
+  end
+end
+```
+
+That card's template uses `modular_classname` to generate a classname from its own name and its parents names.
+
+```html
+<div class="<%= card.modular_classname $>">
+  <%= card %>
+</div>
+```
+
+When used as a standalone card, the classanme would be `card` when used in a form it would be `form__card`.
+
 
 ## Acknowledgements
 
