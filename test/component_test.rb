@@ -353,6 +353,23 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal "form__card__foo__bar", component_2.card.foo.bar.modular_classname
   end
 
+  test "elements can to manage classnames" do
+    component_class = Class.new(Components::Component) do
+      attribute :baz
+      add_class :foo, :bar
+
+      def classname
+        add_class 'baz' if baz
+        super
+      end
+    end
+    component = component_class.new(view_class.new)
+    assert_equal "foo bar", component.classname
+
+    component_2 = component_class.new(view_class.new, baz: true)
+    assert_equal "foo bar baz", component_2.classname
+  end
+
   private
 
   def view_class
