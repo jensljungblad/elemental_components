@@ -120,11 +120,7 @@ module Components
     end
 
     def parent
-      parents.first
-    end
-
-    def modular_classname(separator: "__")
-      [parents, self].flatten.map(&:_name).join(separator)
+      parents.last
     end
 
     def render_partial(file)
@@ -135,7 +131,7 @@ module Components
       @classnames.push(*args)
     end
 
-    def classname
+    def classnames
       @classnames.join(' ').strip
     end
 

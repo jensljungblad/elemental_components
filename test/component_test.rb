@@ -323,51 +323,21 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal "hi, hello, (yo, howdy)", component.items.join(", ")
   end
 
-  test "classnames can be derived from element structure" do
-    class CardComponent < Components::Component
-      element :foo do
-        element :bar
-      end
-    end
-
-    component = CardComponent.new(view_class.new)
-    component.foo { "" }
-    component.foo.bar { "" }
-
-    assert_equal "card", component.modular_classname
-    assert_equal "card__foo", component.foo.modular_classname
-    assert_equal "card--foo--bar", component.foo.bar.modular_classname(separator: "--")
-
-    class FormComponent < Components::Component
-      element :card, extends: CardComponent
-    end
-
-    component_2 = FormComponent.new(view_class.new)
-    component_2.card { "" }
-    component_2.card.foo { "" }
-    component_2.card.foo.bar { "" }
-
-    assert_equal "form", component_2.modular_classname
-    assert_equal "form__card", component_2.card.modular_classname
-    assert_equal "form__card__foo", component_2.card.foo.modular_classname
-    assert_equal "form__card__foo__bar", component_2.card.foo.bar.modular_classname
-  end
-
   test "elements can to manage classnames" do
     component_class = Class.new(Components::Component) do
       attribute :baz
       add_class :foo, :bar
 
-      def classname
+      def classnames
         add_class 'baz' if baz
         super
       end
     end
     component = component_class.new(view_class.new)
-    assert_equal "foo bar", component.classname
+    assert_equal "foo bar", component.classnames
 
     component_2 = component_class.new(view_class.new, baz: true)
-    assert_equal "foo bar baz", component_2.classname
+    assert_equal "foo bar baz", component_2.classnames
   end
 
   private

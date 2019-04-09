@@ -577,29 +577,37 @@ class CardComponent < Components::Component
 end
 ```
 
-### Generating modular classnames
+### Working With Classnames
 
-Hard coding your template classnames is fine, but if you're extending components as elements, it's much nicer to be abl to generate modular classnames.
-Consider a form component which contains a card, like this:
+While hard coding classnames in your templates is fine often we want to assign classnames based on an attribute or set a default classname. Sure we can write this code
+in the view, but it's much cleaner and easier to do so in a component using the `add_class` and `classnames` method.
 
 ```ruby
-class FormComponent < Components::Component
-  element :card, extend 'core/card' do
+class CardComponent < Components::Component
+  attribute :flush
+  add_class 'card'
+
+  element :header do
+    add_class 'card__header'
 
   end
+
+  def classnames
+    add_class 'card--flush' if flush
+    super
+  end
+
 end
 ```
 
-That card's template uses `modular_classname` to generate a classname from its own name and its parents names.
+Then use the `classnames` method in your template to output classnames for that element or component.
 
 ```html
-<div class="<%= card.modular_classname $>">
+<div class="<%= card.classnames %>">
+  <header class="<%= header.classnames %>"><%= header %></header>
   <%= card %>
 </div>
 ```
-
-When used as a standalone card, the classanme would be `card` when used in a form it would be `form__card`.
-
 
 ## Acknowledgements
 
