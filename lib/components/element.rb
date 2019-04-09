@@ -7,18 +7,14 @@ module Components
     end
 
     attr_accessor :_name, :block_content
-    attr_reader :parents
+    attr_reader :parents, :classnames
 
     def self.attributes
       @attributes ||= {}
     end
 
     def self.classnames
-      @classnames ||= []
-    end
-
-    def self.add_class(*args)
-      classnames.push(*args)
+      @classnames ||= Components::Classnames.new
     end
 
     def self.attribute(name, default: nil)
@@ -93,8 +89,6 @@ module Components
 
     # Pass on attributes and elements to subclassed elements/components
     def self.inherited(subclass)
-      subclass.add_class classnames
-
       attributes.each do |name, options|
         subclass.attribute(name, options)
       end
@@ -108,7 +102,7 @@ module Components
       @view = view
       @options ||= {}
       @parents = []
-      @classnames = self.class.classnames
+      initialize_classnames
       initialize_attributes(attributes || {})
       initialize_elements
       @block_content = block_given? ? @view.capture(self, &block) : nil
@@ -125,14 +119,6 @@ module Components
 
     def render_partial(file)
       @view.render(partial: file, object: self)
-    end
-
-    def add_class(*args)
-      @classnames.push(*args)
-    end
-
-    def classnames
-      @classnames.join(' ').strip
     end
 
     def to_s
@@ -156,6 +142,11 @@ module Components
           set_instance_variable(name, nil)
         end
       end
+    end
+
+    def initialize_classnames
+      @classnames = self.class.classnames
+      @classnames.add *self.class.superclass.classnames
     end
 
     private

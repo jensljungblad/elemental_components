@@ -585,16 +585,14 @@ in the view, but it's much cleaner and easier to do so in a component using the 
 ```ruby
 class CardComponent < Components::Component
   attribute :flush
-  add_class 'card'
+  classnames.base = 'card'
 
   element :header do
-    add_class 'card__header'
-
+    classnames.base = 'card__header'
   end
 
   def classnames
-    add_class 'card--flush' if flush
-    super
+    super.add 'card--flush' if flush
   end
 
 end

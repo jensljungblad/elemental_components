@@ -326,18 +326,39 @@ class ComponentTest < ActiveSupport::TestCase
   test "elements can to manage classnames" do
     component_class = Class.new(Components::Component) do
       attribute :baz
-      add_class :foo, :bar
+      classnames.add :foo, :bar
 
       def classnames
-        add_class 'baz' if baz
+        super.add :baz if baz
         super
       end
     end
     component = component_class.new(view_class.new)
-    assert_equal "foo bar", component.classnames
+    assert_equal "foo bar", component.classnames.to_s
 
     component_2 = component_class.new(view_class.new, baz: true)
-    assert_equal "foo bar baz", component_2.classnames
+    assert_equal "foo bar baz", component_2.classnames.to_s
+  end
+
+  test "components inherit classnames when extending other components" do
+    base_component_class = Class.new(Components::Component) do
+      classnames.add 'component'
+
+      element :foo do
+        classnames.add 'foo'
+      end
+    end
+
+    component_class = Class.new(base_component_class) do
+      element :foo do
+        classnames.add 'foo--alt'
+      end
+    end
+
+    component = component_class.new(view_class.new)
+    component.foo { "test" }
+    assert_equal "component", component.classnames.to_s
+    assert_equal "foo--alt foo", component.foo.classnames.to_s
   end
 
   private
