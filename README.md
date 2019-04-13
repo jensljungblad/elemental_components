@@ -470,6 +470,58 @@ Then call it from a template like so:
 <%= component "objects/media_object" %>
 ```
 
+### Nesting Components
+
+You can easily render a component within another component. In this example the nav_item component is a generic navigation element which is used in both the tab component and the breadcrumb component.
+
+```ruby
+# app/components/nav_item_component.rb %>
+
+class NavItemComponent < Components::Components
+  attribute :name
+  attribute :url
+  attribute :icon
+end
+```
+
+```ruby
+# app/components/tabs_component.rb %>
+
+class TabsComponent < Components::Components
+  element :tab, multiple: true, component: 'nav_item'
+end
+```
+
+```ruby
+# app/components/breadcrumb_component.rb %>
+
+class BreadcrumbComponent < Components::Components
+  element :crumb, multiple: true, component: 'nav_item'
+end
+```
+
+The erb template could look like this.
+
+```erb
+<% # app/components/tab_nav/_tab_nav.html.erb %>
+
+<nav class="tab__nav" role="navigation">
+  <% tabs.each do |tab| %>
+    <%= tab %>
+  <% end %>
+</nav>
+```
+
+Then a user would use the nav_item component as an element of the tab_nav component like this.
+
+```erb
+<%= component "tab_nav" do |nav| %>
+  <% nav.tab name: "Home", url: "/home", icon: 'house' %>
+  <% nav.tab name: "Search", url: "/search", icon: 'magnifing_glass'  %>
+  ...
+<% end %>
+```
+
 ## Acknowledgements
 
 This library, together with [styleguide](https://github.com/jensljungblad/styleguide), was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:

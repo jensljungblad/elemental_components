@@ -213,6 +213,25 @@ class ComponentTest < ActiveSupport::TestCase
     assert_equal "Validation failed: Bar can't be blank", e.message
   end
 
+  test "element can render a component" do
+    base_component_class = Class.new(Components::Component) do
+      attribute :tag, default: :h1
+
+      def render
+        "<#{tag}>#{self}</#{tag}>"
+      end
+    end
+
+    component_class = Class.new(Components::Component) do
+      element :header, component: base_component_class
+    end
+
+    component = component_class.new(view_class.new)
+
+    component.header(tag: :h2) { "test" }
+    assert_equal "<h2>test</h2>", component.header.to_s
+  end
+
   private
 
   def view_class

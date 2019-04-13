@@ -2,6 +2,8 @@ module Components
   class Element
     include ActiveModel::Validations
 
+    attr_accessor :yield
+
     def self.model_name
       ActiveModel::Name.new(Components::Element)
     end
@@ -26,17 +28,21 @@ module Components
     # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/PerceivedComplexity
-    def self.element(name, multiple: false, &config)
+    def self.element(name, multiple: false, component: nil, &config)
       plural_name = name.to_s.pluralize.to_sym if multiple
 
+      # Extend components by string or class; e.g., "core/header" or Core::HeaderComponent
+      component = "#{component}_component".classify.constantize if component.is_a?(String)
+
       elements[name] = {
-        multiple: plural_name || false, class: Class.new(Element, &config)
+        multiple: plural_name || false, class: Class.new(component || Element, &config)
       }
 
       define_method_or_raise(name) do |attributes = nil, &block|
         return get_instance_variable(multiple ? plural_name : name) unless attributes || block
 
         element = self.class.elements[name][:class].new(@view, attributes, &block)
+        element.yield = element.render if element.respond_to?(:render)
 
         if multiple
           get_instance_variable(plural_name) << element
@@ -57,11 +63,18 @@ module Components
     # rubocop:enable Metrics/PerceivedComplexity
 
     def self.define_method_or_raise(method_name, &block)
-      raise(Components::Error, "Method '#{method_name}' already exists.") if method_defined?(method_name.to_sym)
+      # Select instance methods but not those which are intance methods received by extending a class
+      methods = (instance_methods - superclass.instance_methods(false))
+      raise(Components::Error, "Method '#{method_name}' already exists.") if methods.include?(method_name.to_sym)
 
       define_method(method_name, &block)
     end
     private_class_method :define_method_or_raise
+
+    def self.inherited(subclass)
+      attributes.each { |name, options| subclass.attribute(name, options) }
+      elements.each   { |name, options| subclass.elements[name] = options }
+    end
 
     def initialize(view, attributes = nil, &block)
       @view = view

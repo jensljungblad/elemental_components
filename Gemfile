@@ -12,3 +12,4 @@ gemspec
 # your gem to rubygems.org.
 
 gem "pry", group: %i[development test]
+gem "pry-byebug", group: %i[development test]
