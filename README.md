@@ -122,13 +122,13 @@ end
 <%= component "alert", message: "Something went wrong!", context: "danger" %>
 ```
 
-To inject some text or HTML content into our component we can print the component variable in our template, and populate it by passing a block to the component helper:
+To inject some text or HTML content into our component we can print the component .block method in our template, and populate it by passing a block to the component helper:
 
 ```erb
 <% # app/components/alert/_alert.html.erb %>
 
 <div class="alert alert--<%= alert.context %>" role="alert">
-  <%= alert %>
+  <%= alert.block %>  
 </div>
 ```
 
@@ -269,17 +269,21 @@ end
 <% # app/components/card/_card.html.erb %>
 
 <div class="card <%= "card--flush" if card.flush %>">
-  <div class="card__header <%= "card__header--centered" if card.header.centered %>">
-    <%= card.header %>
-  </div>
+  <% if card.header.block? %>
+    <div class="card__header <%= "card__header--centered" if card.header.centered %>">
+      <%= card.header.block %>
+    </div>
+  <% end%>
   <% card.sections.each do |section| %>
     <div class="card__section <%= "card__section--#{section.size}" %>">
-      <%= section %>
+      <%= section.block %>
     </div>
   <% end %>
-  <div class="card__footer">
-    <%= card.footer %>
-  </div>
+  <% if card.footer.block? %>
+    <div class="card__footer">
+      <%= card.footer.block %>
+    </div>
+  <% end %>
 </div>
 ```
 

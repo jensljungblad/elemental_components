@@ -71,7 +71,11 @@ module Components
       validate!
     end
 
-    def to_s
+    def block?
+      block.present?
+    end
+
+    def block
       @yield
     end
 

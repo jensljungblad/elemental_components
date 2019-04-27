@@ -4,13 +4,13 @@ class ComponentTest < ActiveSupport::TestCase
   test "initialize with nothing" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new)
-    assert_nil component.to_s
+    assert_nil component.block
   end
 
   test "initialize with block" do
     component_class = Class.new(Components::Component)
     component = component_class.new(view_class.new) { "foo" }
-    assert_equal "foo", component.to_s
+    assert_equal "foo", component.block
   end
 
   test "initialize by overwriting existing method with attribute" do
@@ -65,7 +65,7 @@ class ComponentTest < ActiveSupport::TestCase
     end
     component = component_class.new(view_class.new)
     component.foo { "foo" }
-    assert_equal "foo", component.foo.to_s
+    assert_equal "foo", component.foo.block
   end
 
   test "initialize element with attribute with value" do
@@ -92,8 +92,8 @@ class ComponentTest < ActiveSupport::TestCase
       end
       "foo"
     end
-    assert_equal "foo", component.foo.to_s
-    assert_equal "bar", component.foo.bar.to_s
+    assert_equal "foo", component.foo.block
+    assert_equal "bar", component.foo.bar.block
   end
 
   test "initialize element with multiple true" do
@@ -104,8 +104,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foo { "foo" }
     component.foo { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].to_s
-    assert_equal "bar", component.foos[1].to_s
+    assert_equal "foo", component.foos[0].block
+    assert_equal "bar", component.foos[1].block
   end
 
   test "initialize element with multiple true when singular and plural name are the same" do
@@ -116,8 +116,8 @@ class ComponentTest < ActiveSupport::TestCase
     component.foos { "foo" }
     component.foos { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].to_s
-    assert_equal "bar", component.foos[1].to_s
+    assert_equal "foo", component.foos[0].block
+    assert_equal "bar", component.foos[1].block
   end
 
   test "get element when not set" do
