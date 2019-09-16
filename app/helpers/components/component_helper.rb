@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Components
   module ComponentHelper
     def component(name, attrs = nil, &block)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Components
   class ComponentGenerator < Rails::Generators::NamedBase
     desc "Generate a component"

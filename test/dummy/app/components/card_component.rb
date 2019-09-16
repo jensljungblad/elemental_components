@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CardComponent < Components::Component
   attribute :id
   element :header

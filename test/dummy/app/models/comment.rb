@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Comment
   attr_reader :id, :user, :body
 
