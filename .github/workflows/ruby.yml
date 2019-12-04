@@ -1,0 +1,28 @@
+name: Ruby
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - '2.5.x'
+          - '2.6.x'
+        rails:
+          - 'rails_5'
+          - 'rails_6'
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Build and test
+      run: |
+        sudo apt-get update
+        sudo apt-get install libsqlite3-dev
+        gem install bundler
+        bundle install --gemfile gemfiles/${{ matrix.rails }}.gemfile --jobs 4 --retry 3
+        bundle exec rake
