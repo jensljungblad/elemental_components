@@ -15,11 +15,11 @@ jobs:
           - 'rails_6'
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Ruby 2.6
+    - name: Set up Ruby
       uses: actions/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - name: Build and test with Rake
+    - name: Build and test
       run: |
         sudo apt-get update
         sudo apt-get install libsqlite3-dev
