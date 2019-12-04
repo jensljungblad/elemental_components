@@ -17,4 +17,5 @@ jobs:
         sudo apt-get install libsqlite3-dev
         gem install bundler
         bundle install --jobs 4 --retry 3
-        bundle exec rake
+        bin/appraisal install
+        bin/appraisal rake
