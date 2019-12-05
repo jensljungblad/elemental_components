@@ -3,7 +3,7 @@
 require "test_helper"
 
 class ComponentHelperTest < ActionView::TestCase
-  include Components::ComponentHelper
+  include ElementalComponents::ComponentHelper
 
   test "render component with elements" do
     output = component "card", id: "id" do |c|
