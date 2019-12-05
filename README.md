@@ -1,4 +1,4 @@
-# Components
+# Elemental Components
 
 Simple view components for Rails 5.1+, designed to go well with [styleguide](https://github.com/jensljungblad/styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
@@ -7,7 +7,7 @@ Simple view components for Rails 5.1+, designed to go well with [styleguide](htt
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "components", git: "https://github.com/jensljungblad/components.git"
+gem "components", git: "https://github.com/jensljungblad/elemental_components.git"
 ```
 
 And then execute:
@@ -210,7 +210,7 @@ To ensure your components get initialized properly you can use `ActiveModel::Val
 
 class AlertComponent < Components::Component
   attribute :label
-  
+
   validates :label, presence: true
 end
 ```
@@ -341,7 +341,7 @@ class NavigationComponent < Components::Component
     attribute :label
     attribute :url
     attribute :active, default: false
-    
+
     validates :label, presence: true
     validates :url, presence: true
   end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Components
+module ElementalComponents
   class Component < Element
     def self.model_name
-      ActiveModel::Name.new(Components::Component)
+      ActiveModel::Name.new(ElementalComponents::Component)
     end
 
     def self.component_name
