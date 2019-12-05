@@ -25,4 +25,5 @@ jobs:
         sudo apt-get install libsqlite3-dev
         gem install bundler
         bundle install --gemfile gemfiles/${{ matrix.rails }}.gemfile --jobs 4 --retry 3
+        bundle exec rubocop
         bundle exec rake
