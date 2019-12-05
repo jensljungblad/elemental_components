@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ComponentTest < ActiveSupport::TestCase
+class ElementalComponentTest < ActiveSupport::TestCase
   test "initialize with nothing" do
     component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new)

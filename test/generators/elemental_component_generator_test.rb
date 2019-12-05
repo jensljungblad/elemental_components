@@ -3,7 +3,7 @@
 require "test_helper"
 require_relative "../../lib/generators/elemental_components/component_generator"
 
-class ComponentGeneratorTest < Rails::Generators::TestCase
+class ElementalComponentGeneratorTest < Rails::Generators::TestCase
   tests ElementalComponents::ComponentGenerator
   destination File.expand_path("../tmp", __dir__)
   setup :prepare_destination

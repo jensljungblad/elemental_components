@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ComponentHelperTest < ActionView::TestCase
+class ElementalComponentHelperTest < ActionView::TestCase
   include ElementalComponents::ComponentHelper
 
   test "render component with elements" do

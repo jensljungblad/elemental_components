@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ComponentsTest < ActiveSupport::TestCase
+class ElementalComponentsTest < ActiveSupport::TestCase
   test "Components::Error class is defined" do
     assert defined?(ElementalComponents::Error)
   end
