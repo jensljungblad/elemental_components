@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "../../lib/generators/elemental_components/component_generator"
+require_relative "../../../lib/generators/elemental_components/component_generator"
 
-class ElementalComponentGeneratorTest < Rails::Generators::TestCase
+class ElementalComponents::ComponentGeneratorTest < Rails::Generators::TestCase
   tests ElementalComponents::ComponentGenerator
   destination File.expand_path("../tmp", __dir__)
   setup :prepare_destination
