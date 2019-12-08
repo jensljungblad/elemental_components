@@ -1,6 +1,6 @@
 # Elemental Components
 
-Simple view components for Rails 5.1+, designed to go well with [styleguide](https://github.com/jensljungblad/styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
+Simple view components for Rails 5.1+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
 
@@ -472,7 +472,7 @@ Then call it from a template like so:
 
 ## Acknowledgements
 
-This library, together with [styleguide](https://github.com/jensljungblad/styleguide), was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
+This library, together with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide), was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
 
 - [Catalog](https://www.catalog.style) - style guide for React
 - [Storybook](https://storybook.js.org) - style guide for React
