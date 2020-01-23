@@ -81,8 +81,16 @@ module Components
 
     def initialize_attributes(attributes)
       self.class.attributes.each do |name, options|
-        set_instance_variable(name, attributes[name] || (options[:default] && options[:default].dup))
+        set_instance_variable(name, attribute_value(attributes, name, options[:default]))
       end
+    end
+
+    def attribute_value(attributes, name, default)
+      if attributes.has_key?(name)
+        return attributes[name]
+      end
+
+      default && default.dup
     end
 
     def initialize_elements
