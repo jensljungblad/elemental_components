@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Components
+module ElementalComponents
   class Railtie < ::Rails::Railtie
   end
 end

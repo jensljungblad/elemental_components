@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Components
+module ElementalComponents
   class ComponentGenerator < Rails::Generators::NamedBase
     desc "Generate a component"
     class_option :skip_erb, type: :boolean, default: false

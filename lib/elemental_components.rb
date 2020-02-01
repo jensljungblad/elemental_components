@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "components/element"
-require "components/component"
-require "components/engine"
+require "elemental_components/element"
+require "elemental_components/component"
+require "elemental_components/engine"
 
-module Components
+module ElementalComponents
   class Error < StandardError; end
 
   def self.components_path
