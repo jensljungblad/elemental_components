@@ -7,7 +7,7 @@ Simple view components for Rails 5.1+, designed to go well with [elemental_style
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "elemental_components", git: "https://github.com/jensljungblad/elemental_components.git"
+gem "elemental_components"
 ```
 
 And then execute:
