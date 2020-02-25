@@ -1,0 +1,7 @@
+<% ElementalComponents.component_names.each do |name| %>
+  <% begin %>
+    <% require_asset "#{name}/#{name.split('/')[-1]}" %>
+  <% rescue Sprockets::FileNotFound %>
+    <% Rails.logger.debug "ElementalComponents: JS not found for #{name}" %>
+  <% end %>
+<% end %>

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Objects
-  class MediaObjectComponent < Components::Component
+  class MediaObjectComponent < ElementalComponents::Component
     element :media
     element :body
   end

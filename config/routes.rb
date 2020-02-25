@@ -1,2 +1,4 @@
-Components::Engine.routes.draw do
+# frozen_string_literal: true
+
+ElementalComponents::Engine.routes.draw do
 end

@@ -1,9 +1,11 @@
-module Components
+# frozen_string_literal: true
+
+module ElementalComponents
   class Element
     include ActiveModel::Validations
 
     def self.model_name
-      ActiveModel::Name.new(Components::Element)
+      ActiveModel::Name.new(ElementalComponents::Element)
     end
 
     def self.attributes
@@ -57,7 +59,9 @@ module Components
     # rubocop:enable Metrics/PerceivedComplexity
 
     def self.define_method_or_raise(method_name, &block)
-      raise(Components::Error, "Method '#{method_name}' already exists.") if method_defined?(method_name.to_sym)
+      if method_defined?(method_name.to_sym)
+        raise(ElementalComponents::Error, "Method '#{method_name}' already exists.")
+      end
 
       define_method(method_name, &block)
     end

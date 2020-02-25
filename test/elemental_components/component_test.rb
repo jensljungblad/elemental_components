@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
-class ComponentTest < ActiveSupport::TestCase
+class ElementalComponents::ComponentTest < ActiveSupport::TestCase
   test "initialize with nothing" do
-    component_class = Class.new(Components::Component)
+    component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new)
     assert_nil component.block
   end
 
   test "initialize with block" do
-    component_class = Class.new(Components::Component)
+    component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new) { "foo" }
     assert_equal "foo", component.block
   end
 
   test "initialize by overwriting existing method with attribute" do
-    e = assert_raises(Components::Error) do
-      Class.new(Components::Component) do
+    e = assert_raises(ElementalComponents::Error) do
+      Class.new(ElementalComponents::Component) do
         attribute :to_s
       end
     end
@@ -23,7 +25,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize attribute with no value" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       attribute :foo
     end
     component = component_class.new(view_class.new)
@@ -31,7 +33,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize attribute with value" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       attribute :foo
     end
     component = component_class.new(view_class.new, foo: "foo")
@@ -39,7 +41,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize attribute with default value" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       attribute :foo, default: "foo"
     end
     component = component_class.new(view_class.new)
@@ -47,8 +49,8 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize by overwriting existing method with element" do
-    e = assert_raises(Components::Error) do
-      Class.new(Components::Component) do
+    e = assert_raises(ElementalComponents::Error) do
+      Class.new(ElementalComponents::Component) do
         def foo
           "foo"
         end
@@ -60,7 +62,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element with block" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo
     end
     component = component_class.new(view_class.new)
@@ -69,7 +71,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element with attribute with value" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         attribute :bar
       end
@@ -80,7 +82,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element with block with nested element with block" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         element :bar
       end
@@ -97,7 +99,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element with multiple true" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo, multiple: true
     end
     component = component_class.new(view_class.new)
@@ -109,7 +111,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element with multiple true when singular and plural name are the same" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foos, multiple: true
     end
     component = component_class.new(view_class.new)
@@ -121,7 +123,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "get element when not set" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo
     end
     component = component_class.new(view_class.new)
@@ -129,7 +131,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "get element with multiple true when not set" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo, multiple: true
     end
     component = component_class.new(view_class.new)
@@ -137,7 +139,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize with given attribute and successfull validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       attribute :foo
       validates :foo, presence: true
     end
@@ -145,7 +147,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize without attribute and failing validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       attribute :foo
       validates :foo, presence: true
     end
@@ -154,7 +156,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize with default value and successfull validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       attribute :foo, default: "bar"
       validates :foo, presence: true
     end
@@ -162,7 +164,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element and successfull element validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo
       validates :foo, presence: true
     end
@@ -174,7 +176,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element and failing element validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo
       validates :foo, presence: true
     end
@@ -185,7 +187,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element and successfull element attribute validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         attribute :bar
         validates :bar, presence: true
@@ -199,7 +201,7 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "initialize element and failing element attribute validation" do
-    component_class = Class.new(Components::Component) do
+    component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         attribute :bar
         validates :bar, presence: true

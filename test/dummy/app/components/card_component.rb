@@ -1,4 +1,6 @@
-class CardComponent < Components::Component
+# frozen_string_literal: true
+
+class CardComponent < ElementalComponents::Component
   attribute :id
   element :header
   element :section, multiple: true do

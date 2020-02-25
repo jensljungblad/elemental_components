@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
-class ComponentHelperTest < ActionView::TestCase
-  include Components::ComponentHelper
+class ElementalComponents::ComponentHelperTest < ActionView::TestCase
+  include ElementalComponents::ComponentHelper
 
   test "render component with elements" do
     output = component "card", id: "id" do |c|

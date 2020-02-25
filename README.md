@@ -1,13 +1,13 @@
-# Components
+# Elemental Components
 
-Simple view components for Rails 5.1+, designed to go well with [styleguide](https://github.com/jensljungblad/styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
+Simple view components for Rails 5.1+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "components", git: "https://github.com/jensljungblad/components.git"
+gem "elemental_components"
 ```
 
 And then execute:
@@ -23,7 +23,7 @@ The examples provided here will use the [BEM naming conventions](http://getbem.c
 Components live in `app/components`. Generate a component by executing:
 
 ```sh
-$ bin/rails g components:component alert
+$ bin/rails g elemental_components:component alert
 ```
 
 This will create the following files:
@@ -90,7 +90,7 @@ Or require `components`, which will in turn require the assets for all component
 
 ```css
 /*
- *= require components
+ *= require elemental_components
  */
 ```
 
@@ -103,7 +103,7 @@ Let's define some attributes for the component we just created:
 ```ruby
 # app/components/alert_component.rb %>
 
-class AlertComponent < Components::Component
+class AlertComponent < ElementalComponents::Component
   attribute :context
   attribute :message
 end
@@ -143,7 +143,7 @@ Another good use case for attributes is when you have a component backed by a mo
 ```ruby
 # app/components/comment_component.rb %>
 
-class CommentComponent < Components::Component
+class CommentComponent < ElementalComponents::Component
   attribute :comment
 
   delegate :id,
@@ -178,7 +178,7 @@ Attributes can have default values:
 ```ruby
 # app/components/alert_component.rb %>
 
-class AlertComponent < Components::Component
+class AlertComponent < ElementalComponents::Component
   attribute :message
   attribute :context, default: "primary"
 end
@@ -191,7 +191,7 @@ It's easy to override an attribute with additional logic:
 ```ruby
 # app/components/alert_component.rb %>
 
-class AlertComponent < Components::Component
+class AlertComponent < ElementalComponents::Component
   attribute :message
   attribute :context, default: "primary"
 
@@ -208,9 +208,9 @@ To ensure your components get initialized properly you can use `ActiveModel::Val
 ```ruby
 # app/components/alert_component.rb %>
 
-class AlertComponent < Components::Component
+class AlertComponent < ElementalComponents::Component
   attribute :label
-  
+
   validates :label, presence: true
 end
 ```
@@ -250,7 +250,7 @@ Using this gem, the same component can be written like this:
 ```ruby
 # app/components/card_component.rb %>
 
-class CardComponent < Components::Component
+class CardComponent < ElementalComponents::Component
   attribute :flush, default: false
 
   element :header do
@@ -315,7 +315,7 @@ Another good use case is a navigation component:
 ```ruby
 # app/components/navigation_component.rb %>
 
-class NavigationComponent < Components::Component
+class NavigationComponent < ElementalComponents::Component
   element :items, multiple: true do
     attribute :label
     attribute :url
@@ -340,12 +340,12 @@ An alternative here is to pass a data structure to the component as an attribute
 Elements can have validations, too:
 
 ```ruby
-class NavigationComponent < Components::Component
+class NavigationComponent < ElementalComponents::Component
   element :items, multiple: true do
     attribute :label
     attribute :url
     attribute :active, default: false
-    
+
     validates :label, presence: true
     validates :url, presence: true
   end
@@ -357,7 +357,7 @@ Elements can also be nested, although it is recommended to keep nesting to a min
 ```ruby
 # app/components/card_component.rb %>
 
-class CardComponent < Components::Component
+class CardComponent < ElementalComponents::Component
   ...
 
   element :section, multiple: true do
@@ -376,7 +376,7 @@ In addition to declaring attributes and elements, it is also possible to declare
 ```ruby
 # app/components/card_component.rb %>
 
-class CardComponent < Components::Component
+class CardComponent < ElementalComponents::Component
   ...
 
   def css_classes
@@ -400,7 +400,7 @@ It's even possible to declare helpers on elements:
 ```ruby
 # app/components/card_component.rb %>
 
-class CardComponent < Components::Component
+class CardComponent < ElementalComponents::Component
   ...
 
   element :section, multiple: true do
@@ -436,7 +436,7 @@ For some small components, such as buttons, it might make sense to skip the part
 ```ruby
 # app/components/button_component.rb %>
 
-class ButtonComponent < Components::Component
+class ButtonComponent < ElementalComponents::Component
   attribute :label
   attribute :url
   attribute :context
@@ -464,7 +464,7 @@ Components can be nested under a namespace. This is useful if you want to practi
 
 ```ruby
 module Objects
-  class MediaObject < Components::Component; end
+  class MediaObject < ElementalComponents::Component; end
 end
 ```
 
@@ -476,7 +476,7 @@ Then call it from a template like so:
 
 ## Acknowledgements
 
-This library, together with [styleguide](https://github.com/jensljungblad/styleguide), was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
+This library, together with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide), was inspired by the writings of [Brad Frost](http://bradfrost.com) on atomic design and living style guides, and [Rizzo](http://rizzo.lonelyplanet.com), the Lonely Planet style guide. Other inspirations were:
 
 - [Catalog](https://www.catalog.style) - style guide for React
 - [Storybook](https://storybook.js.org) - style guide for React
