@@ -6,13 +6,13 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
   test "initialize with nothing" do
     component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new)
-    assert_nil component.block
+    assert_nil component.content
   end
 
-  test "initialize with block" do
+  test "initialize with content" do
     component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new) { "foo" }
-    assert_equal "foo", component.block
+    assert_equal "foo", component.content
   end
 
   test "initialize by overwriting existing method with attribute" do
@@ -61,13 +61,13 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "Method 'foo' already exists.", e.message
   end
 
-  test "initialize element with block" do
+  test "initialize element with content" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo
     end
     component = component_class.new(view_class.new)
     component.foo { "foo" }
-    assert_equal "foo", component.foo.block
+    assert_equal "foo", component.foo.content
   end
 
   test "initialize element with attribute with value" do
@@ -81,7 +81,7 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "baz", component.foo.bar
   end
 
-  test "initialize element with block with nested element with block" do
+  test "initialize element with content with nested element with content" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         element :bar
@@ -94,8 +94,8 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
       end
       "foo"
     end
-    assert_equal "foo", component.foo.block
-    assert_equal "bar", component.foo.bar.block
+    assert_equal "foo", component.foo.content
+    assert_equal "bar", component.foo.bar.content
   end
 
   test "initialize element with multiple true" do
@@ -106,8 +106,8 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     component.foo { "foo" }
     component.foo { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].block
-    assert_equal "bar", component.foos[1].block
+    assert_equal "foo", component.foos[0].content
+    assert_equal "bar", component.foos[1].content
   end
 
   test "initialize element with multiple true when singular and plural name are the same" do
@@ -118,8 +118,8 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     component.foos { "foo" }
     component.foos { "bar" }
     assert_equal 2, component.foos.length
-    assert_equal "foo", component.foos[0].block
-    assert_equal "bar", component.foos[1].block
+    assert_equal "foo", component.foos[0].content
+    assert_equal "bar", component.foos[1].content
   end
 
   test "get element when not set" do

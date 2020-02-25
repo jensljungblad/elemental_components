@@ -94,9 +94,9 @@ Or require `components`, which will in turn require the assets for all component
  */
 ```
 
-### Attributes and blocks
+### Attributes and content blocks
 
-There are two ways of passing data to components: attributes and blocks. Attributes are useful for data such as ids, modifiers and data structures (models etc). Blocks are useful when you need to inject HTML content into components.
+There are two ways of passing data to components: attributes and content blocks. Attributes are useful for data such as ids, modifiers and data structures (models etc). Content blocks are useful when you need to inject HTML content into components.
 
 Let's define some attributes for the component we just created:
 
@@ -122,13 +122,13 @@ end
 <%= component "alert", message: "Something went wrong!", context: "danger" %>
 ```
 
-To inject some text or HTML content into our component we can print the component .block method in our template, and populate it by passing a block to the component helper:
+To inject some text or HTML content into our component we can print the component .content method in our template, and populate it by passing a content block to the component helper:
 
 ```erb
 <% # app/components/alert/_alert.html.erb %>
 
 <div class="alert alert--<%= alert.context %>" role="alert">
-  <%= alert.block %>  
+  <%= alert.content %>  
 </div>
 ```
 
@@ -269,19 +269,19 @@ end
 <% # app/components/card/_card.html.erb %>
 
 <div class="card <%= "card--flush" if card.flush %>">
-  <% if card.header.block? %>
+  <% if card.header.content? %>
     <div class="card__header <%= "card__header--centered" if card.header.centered %>">
-      <%= card.header.block %>
+      <%= card.header.content %>
     </div>
   <% end%>
   <% card.sections.each do |section| %>
     <div class="card__section <%= "card__section--#{section.size}" %>">
-      <%= section.block %>
+      <%= section.content %>
     </div>
   <% end %>
-  <% if card.footer.block? %>
+  <% if card.footer.content? %>
     <div class="card__footer">
-      <%= card.footer.block %>
+      <%= card.footer.content %>
     </div>
   <% end %>
 </div>
@@ -289,7 +289,7 @@ end
 
 Elements can be thought of as isolated subcomponents, and they are defined on the component. Passing `multiple: true` makes it a repeating element, and passing a block lets us declare attributes on our elements, in the same way we declare attributes on components.
 
-In order to populate them with data, we pass a block to the component helper, which yields the component, which lets us set attributes and blocks on the element in the same way we do for components:
+In order to populate them with data, we pass a content block to the component helper, which yields the component, which lets us set attributes and content blocks on the element in the same way we do for components:
 
 ```erb
 <%= component "card", flush: true do |c| %>

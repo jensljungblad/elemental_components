@@ -75,11 +75,11 @@ module ElementalComponents
       validate!
     end
 
-    def block?
-      block.present?
+    def content?
+      content.present?
     end
 
-    def block
+    def content
       @yield
     end
 
