@@ -289,7 +289,7 @@ end
 
 Elements can be thought of as isolated subcomponents, and they are defined on the component. Passing `multiple: true` makes it a repeating element, and passing a block lets us declare attributes on our elements, in the same way we declare attributes on components.
 
-In order to populate them with data, we pass a content block to the component helper, which yields the component, which lets us set attributes and content blocks on the element in the same way we do for components:
+In order to populate them with data, we pass a block to the component helper, which yields the component, which lets us set attributes and content blocks on the element in the same way we do for components:
 
 ```erb
 <%= component "card", flush: true do |c| %>
