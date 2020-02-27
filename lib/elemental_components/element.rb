@@ -75,7 +75,11 @@ module ElementalComponents
       validate!
     end
 
-    def to_s
+    def content?
+      content.present?
+    end
+
+    def content
       @yield
     end
 
