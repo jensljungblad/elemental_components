@@ -128,7 +128,7 @@ To inject some text or HTML content into our component we can print the componen
 <% # app/components/alert/_alert.html.erb %>
 
 <div class="alert alert--<%= alert.context %>" role="alert">
-  <%= alert.content %>  
+  <%= alert.content %>
 </div>
 ```
 
