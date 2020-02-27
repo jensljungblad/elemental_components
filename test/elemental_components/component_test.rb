@@ -3,7 +3,7 @@
 require "test_helper"
 
 class ElementalComponents::ComponentTest < ActiveSupport::TestCase
-  test "initialize with nothing" do
+  test "initialize with no content" do
     component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new)
     assert_nil component.content
@@ -13,15 +13,6 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     component_class = Class.new(ElementalComponents::Component)
     component = component_class.new(view_class.new) { "foo" }
     assert_equal "foo", component.content
-  end
-
-  test "initialize by overwriting existing method with attribute" do
-    e = assert_raises(ElementalComponents::Error) do
-      Class.new(ElementalComponents::Component) do
-        attribute :to_s
-      end
-    end
-    assert_equal "Method 'to_s' already exists.", e.message
   end
 
   test "initialize attribute with no value" do
@@ -48,17 +39,13 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "foo", component.foo
   end
 
-  test "initialize by overwriting existing method with element" do
+  test "initialize attribute named same as existing method" do
     e = assert_raises(ElementalComponents::Error) do
       Class.new(ElementalComponents::Component) do
-        def foo
-          "foo"
-        end
-
-        element :foo
+        attribute :content
       end
     end
-    assert_equal "Method 'foo' already exists.", e.message
+    assert_equal "Method 'content' already exists.", e.message
   end
 
   test "initialize element with content" do
@@ -122,6 +109,15 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "bar", component.foos[1].content
   end
 
+  test "initialize element named same as exsiting method" do
+    e = assert_raises(ElementalComponents::Error) do
+      Class.new(ElementalComponents::Component) do
+        element :content
+      end
+    end
+    assert_equal "Method 'content' already exists.", e.message
+  end
+
   test "get element when not set" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo
@@ -138,44 +134,69 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal [], component.foos
   end
 
-  test "initialize with given attribute and successfull validation" do
+  test "initialize with successful content validation" do
     component_class = Class.new(ElementalComponents::Component) do
-      attribute :foo
-      validates :foo, presence: true
+      validates :content, presence: true
     end
-    assert_nothing_raised { component_class.new(view_class.new, foo: "bar") }
+    assert_nothing_raised do
+      component_class.new(view_class.new) { "foo" }
+    end
   end
 
-  test "initialize without attribute and failing validation" do
+  test "initialize with failing content validation" do
+    component_class = Class.new(ElementalComponents::Component) do
+      validates :content, presence: true
+    end
+    e = assert_raises(ActiveModel::ValidationError) do
+      component_class.new(view_class.new)
+    end
+    assert_equal "Validation failed: Content can't be blank", e.message
+  end
+
+  test "initialize with successful attribute validation" do
     component_class = Class.new(ElementalComponents::Component) do
       attribute :foo
       validates :foo, presence: true
     end
-    e = assert_raises(ActiveModel::ValidationError) { component_class.new(view_class.new) }
+    assert_nothing_raised do
+      component_class.new(view_class.new, foo: "bar")
+    end
+  end
+
+  test "initialize with failing attribute validation" do
+    component_class = Class.new(ElementalComponents::Component) do
+      attribute :foo
+      validates :foo, presence: true
+    end
+    e = assert_raises(ActiveModel::ValidationError) do
+      component_class.new(view_class.new)
+    end
     assert_equal "Validation failed: Foo can't be blank", e.message
   end
 
-  test "initialize with default value and successfull validation" do
+  test "initialize with successful attribute validation when attribute has default value" do
     component_class = Class.new(ElementalComponents::Component) do
       attribute :foo, default: "bar"
       validates :foo, presence: true
     end
-    assert_nothing_raised { component_class.new(view_class.new) }
+    assert_nothing_raised do
+      component_class.new(view_class.new)
+    end
   end
 
-  test "initialize element and successfull element validation" do
+  test "initialize with successful element validation" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo
       validates :foo, presence: true
     end
     assert_nothing_raised do
       component_class.new(view_class.new, {}) do |c|
-        c.foo { "lalala" }
+        c.foo { "bar" }
       end
     end
   end
 
-  test "initialize element and failing element validation" do
+  test "initialize with failing element validation" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo
       validates :foo, presence: true
@@ -186,7 +207,7 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "Validation failed: Foo can't be blank", e.message
   end
 
-  test "initialize element and successfull element attribute validation" do
+  test "initialize with successful attribute validation on element" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         attribute :bar
@@ -195,12 +216,12 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     end
     assert_nothing_raised do
       component_class.new(view_class.new, {}) do |c|
-        c.foo(bar: "lalal") { "something" }
+        c.foo(bar: "baz") { "baz" }
       end
     end
   end
 
-  test "initialize element and failing element attribute validation" do
+  test "initialize with failing attribute validation on element" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foo do
         attribute :bar
@@ -209,7 +230,7 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     end
     e = assert_raises(ActiveModel::ValidationError) do
       component_class.new(view_class.new, {}) do |c|
-        c.foo { "something" }
+        c.foo { "bar" }
       end
     end
     assert_equal "Validation failed: Bar can't be blank", e.message
