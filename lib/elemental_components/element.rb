@@ -87,8 +87,13 @@ module ElementalComponents
 
     def initialize_attributes(attributes)
       self.class.attributes.each do |name, options|
-        set_instance_variable(name, attributes[name] || (options[:default] && options[:default].dup))
+        set_instance_variable(name, attribute_value(attributes, name, options[:default]))
       end
+    end
+
+    def attribute_value(attributes, name, default)
+      return attributes[name] if attributes.has_key?(name)
+      default.dup
     end
 
     def initialize_elements

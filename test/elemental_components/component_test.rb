@@ -39,6 +39,14 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "foo", component.foo
   end
 
+  test "attribute with default value is not used when false is provided" do
+    component_class = Class.new(ElementalComponents::Component) do
+      attribute :foo, default: "foo"
+    end
+    component = component_class.new(view_class.new, foo: false)
+    assert_equal false, component.foo
+  end
+
   test "initialize attribute named same as existing method" do
     e = assert_raises(ElementalComponents::Error) do
       Class.new(ElementalComponents::Component) do
