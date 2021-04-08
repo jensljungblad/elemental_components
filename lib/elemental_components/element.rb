@@ -92,7 +92,8 @@ module ElementalComponents
     end
 
     def attribute_value(attributes, name, default)
-      return attributes[name] if attributes.has_key?(name)
+      return attributes[name] if attributes.key?(name)
+
       default.dup
     end
 
