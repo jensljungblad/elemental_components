@@ -105,6 +105,61 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "bar", component.foos[1].content
   end
 
+  test "initialize element with multiple true via plural_name in attributes hash" do
+    component_class = Class.new(ElementalComponents::Component) do
+      element :item, multiple: true
+    end
+    component = component_class.new(view_class.new, items: %w[foo bar])
+    assert_equal 2, component.items.length
+    assert_equal "foo", component.items[0].content
+    assert_equal "bar", component.items[1].content
+  end
+
+  test "initialize element with multiple true via plural_name in attributes hash and via block" do
+    component_class = Class.new(ElementalComponents::Component) do
+      element :item, multiple: true
+    end
+    component = component_class.new(view_class.new, items: %w[foo bar])
+    component.item { "baz" }
+    assert_equal 3, component.items.length
+    assert_equal "foo", component.items[0].content
+    assert_equal "bar", component.items[1].content
+    assert_equal "baz", component.items[2].content
+  end
+
+  test "initialize element with multiple true and attributes via plural_name in attributes hash" do
+    component_class = Class.new(ElementalComponents::Component) do
+      element :item, multiple: true do
+        attribute :title
+        attribute :count
+      end
+    end
+    component = component_class.new(view_class.new, items: [{ title: "foo", count: 1 }, { title: "bar", count: 2 }])
+    assert_equal 2, component.items.length
+    assert_equal "foo", component.items[0].title
+    assert_equal 1, component.items[0].count
+    assert_equal "bar", component.items[1].title
+    assert_equal 2, component.items[1].count
+  end
+
+  test "initialize element with multiple true and attributes via plural_name in attributes hash and via block" do
+    component_class = Class.new(ElementalComponents::Component) do
+      element :item, multiple: true do
+        attribute :title
+        attribute :count
+      end
+    end
+    component = component_class.new(view_class.new, items: [{ title: "foo", count: 1 }, { title: "bar", count: 2 }])
+    component.item({ title: "baz", count: 3 })
+    assert_equal 3, component.items.length
+    assert_equal "foo", component.items[0].title
+    assert_equal 1, component.items[0].count
+    assert_equal "bar", component.items[1].title
+    assert_equal 2, component.items[1].count
+    assert_equal "baz", component.items[2].title
+    assert_equal 3, component.items[2].count
+  end
+
   test "initialize element with multiple true when singular and plural name are the same" do
     component_class = Class.new(ElementalComponents::Component) do
       element :foos, multiple: true

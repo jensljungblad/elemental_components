@@ -67,10 +67,10 @@ module ElementalComponents
     end
     private_class_method :define_method_or_raise
 
-    def initialize(view, attributes = nil, &block)
+    def initialize(view, attributes_or_elements = nil, &block)
       @view = view
-      initialize_attributes(attributes || {})
-      initialize_elements
+      initialize_attributes(attributes_or_elements || {})
+      initialize_elements(attributes_or_elements || {})
       @yield = block_given? ? @view.capture(self, &block) : nil
       validate!
     end
@@ -85,26 +85,40 @@ module ElementalComponents
 
     protected
 
-    def initialize_attributes(attributes)
+    def initialize_attributes(attributes_or_elements)
       self.class.attributes.each do |name, options|
-        set_instance_variable(name, attribute_value(attributes, name, options[:default]))
+        set_instance_variable(name, attribute_value(attributes_or_elements, name, options[:default]))
       end
     end
 
-    def attribute_value(attributes, name, default)
-      return attributes[name] if attributes.key?(name)
-
-      default.dup
+    def attribute_value(attributes_or_elements, name, default)
+      attributes_or_elements.key?(name) ? attributes_or_elements[name] : default.dup
     end
 
-    def initialize_elements
+    def initialize_elements(attributes_or_elements)
       self.class.elements.each do |name, options|
         if (plural_name = options[:multiple])
           set_instance_variable(plural_name, [])
+
+          if (plural_values = element_value(attributes_or_elements, plural_name))
+            plural_values.each { |plural_value| initialize_element(name, plural_value) }
+          end
         else
           set_instance_variable(name, nil)
+
+          if (single_value = element_value(attributes_or_elements, name))
+            initialize_element(name, single_value)
+          end
         end
       end
+    end
+
+    def initialize_element(name, value)
+      value.is_a?(Hash) ? send(name.to_sym, value) : send(name.to_sym, {}) { value }
+    end
+
+    def element_value(attributes_or_elements, name)
+      attributes_or_elements.key?(name) ? attributes_or_elements[name] : nil
     end
 
     private
