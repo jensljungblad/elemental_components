@@ -6,6 +6,6 @@ source "https://rubygems.org"
 
 gem "pry", group: %i[development test]
 gem "rails", "~> 7.1"
-gem "sprockets-rails", require: "sprockets/railtie"
+gem "sprockets-rails"
 
 gemspec path: "../"

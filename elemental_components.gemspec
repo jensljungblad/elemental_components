@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 3.0.0"
 
   s.add_dependency "rails", ">= 6.1.0", "< 8.0.0"
+  s.add_dependency "sprockets-rails"
 
   s.add_development_dependency "appraisal"
   s.add_development_dependency "rubocop"

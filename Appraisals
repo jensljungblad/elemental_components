@@ -6,5 +6,5 @@ end
 
 appraise "rails-7" do
   gem "rails", "~> 7.1"
-  gem "sprockets-rails", require: "sprockets/railtie"
+  gem "sprockets-rails"
 end
