@@ -9,22 +9,13 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '2.5.9'
-          - '2.6.10'
-          - '2.7.8'
           - '3.0.6'
           - '3.1.4'
-          - '3.2.2'
+          - '3.2.3'
+          - '3.3.0'
         gemfile:
-          - 'rails_5'
           - 'rails_6'
-        exclude:
-          - gemfile: 'rails_5'
-            ruby: '3.0.6'
-          - gemfile: 'rails_5'
-            ruby: '3.1.4'
-          - gemfile: 'rails_5'
-            ruby: '3.2.2'
+          - 'rails_7'
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     steps:

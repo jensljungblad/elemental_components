@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-appraise "rails-5" do
-  gem "rails", "~> 5.1"
+appraise "rails-6" do
+  gem "rails", "~> 6.1"
 end
 
-appraise "rails-6" do
-  gem "rails", "~> 6.0"
+appraise "rails-7" do
+  gem "rails", "~> 7.1"
+  gem "sprockets-rails", require: "sprockets/railtie"
 end
