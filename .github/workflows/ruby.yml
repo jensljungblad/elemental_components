@@ -18,8 +18,17 @@ jobs:
         gemfile:
           - 'rails_5'
           - 'rails_6'
+        exclude:
+          - gemfile: 'rails_5'
+            ruby: '3.0.6'
+          - gemfile: 'rails_5'
+            ruby: '3.1.4'
+          - gemfile: 'rails_5'
+            ruby: '3.2.2'
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
