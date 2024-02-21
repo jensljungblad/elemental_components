@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sprockets/railtie"
+
 module ElementalComponents
   class Engine < ::Rails::Engine
     isolate_namespace ElementalComponents
