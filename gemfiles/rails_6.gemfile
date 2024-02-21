@@ -5,6 +5,6 @@
 source "https://rubygems.org"
 
 gem "pry", group: %i[development test]
-gem "rails", "~> 6.0"
+gem "rails", "~> 6.1"
 
 gemspec path: "../"
