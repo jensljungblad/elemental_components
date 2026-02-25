@@ -1,6 +1,7 @@
 AllCops:
   TargetRubyVersion: 3.1.0
   Exclude:
+    - test/generators/tmp/**/*.rb
     - test/tmp/**/*.rb
     - vendor/**/*
 
