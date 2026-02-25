@@ -58,20 +58,20 @@ module ElementalComponents
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/PerceivedComplexity
 
-    def self.define_method_or_raise(method_name, &block)
+    def self.define_method_or_raise(method_name, &)
       if method_defined?(method_name.to_sym)
         raise(ElementalComponents::Error, "Method '#{method_name}' already exists.")
       end
 
-      define_method(method_name, &block)
+      define_method(method_name, &)
     end
     private_class_method :define_method_or_raise
 
-    def initialize(view, attributes = nil, &block)
+    def initialize(view, attributes = nil, &)
       @view = view
       initialize_attributes(attributes || {})
       initialize_elements
-      @yield = block_given? ? @view.capture(self, &block) : nil
+      @yield = block_given? ? @view.capture(self, &) : nil
       validate!
     end
 
