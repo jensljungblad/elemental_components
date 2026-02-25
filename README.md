@@ -1,6 +1,6 @@
 # Elemental Components
 
-Simple view components for Rails 5.1+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
+Simple view components for Rails 7.2+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
 
@@ -316,7 +316,7 @@ Another good use case is a navigation component:
 # app/components/navigation_component.rb %>
 
 class NavigationComponent < ElementalComponents::Component
-  element :items, multiple: true do
+  element :item, multiple: true do
     attribute :label
     attribute :url
     attribute :active, default: false
@@ -329,12 +329,6 @@ end
   <% c.item label: "Home", url: root_path, active: true %>
   <% c.item label: "Explore" url: explore_path %>
 <% end %>
-```
-
-An alternative here is to pass a data structure to the component as an attribute, if no HTML needs to be injected when rendering the component:
-
-```erb
-<%= component "navigation", items: items %>
 ```
 
 Elements can have validations, too:

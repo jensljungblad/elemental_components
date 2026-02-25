@@ -6,24 +6,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         ruby:
-          - '2.5.x'
-          - '2.6.x'
-        rails:
-          - 'rails_5'
-          - 'rails_6'
+          - '3.1.x'
+          - '4.0.x'
+        gemfile:
+          - 'rails_7'
+          - 'rails_8'
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Ruby
-      uses: actions/setup-ruby@v1
+    - uses: actions/checkout@v6
+    - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
     - name: Build and test
       run: |
-        sudo apt-get update
-        sudo apt-get install libsqlite3-dev
-        gem install bundler
-        bundle install --gemfile gemfiles/${{ matrix.rails }}.gemfile --jobs 4 --retry 3
         bundle exec rubocop
         bundle exec rake
