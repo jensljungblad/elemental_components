@@ -1,22 +1,23 @@
 AllCops:
   TargetRubyVersion: 3.1.0
   Exclude:
-    - "test/tmp/**/*.rb"
+    - test/tmp/**/*.rb
+    - vendor/**/*
 
 Metrics/AbcSize:
   Exclude:
-    - "test/**/*_test.rb"
+    - test/**/*_test.rb
 
 Layout/LineLength:
   Max: 120
 
 Metrics/BlockLength:
   Exclude:
-    - "test/**/*.rb"
+    - test/**/*.rb
 
 Metrics/ClassLength:
   Exclude:
-    - "test/**/*.rb"
+    - test/**/*.rb
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case
@@ -29,8 +30,8 @@ Style/IfUnlessModifier:
 
 Style/MixinUsage:
   Exclude:
-    - "test/dummy/bin/setup"
-    - "test/dummy/bin/update"
+    - test/dummy/bin/setup
+    - test/dummy/bin/update
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
