@@ -34,11 +34,10 @@ app/
     alert/
       _alert.html.erb
       alert.css
-      alert.js
     alert_component.rb
 ```
 
-The generator also takes `--skip-css` and `--skip-js` options.
+The generator also takes `--skip-css` and `--skip-erb` options.
 
 Let's add some markup and CSS:
 
@@ -78,7 +77,9 @@ This component can now be rendered using the `component` helper:
 
 ### Assets
 
-In order to require assets such as CSS, either require them manually in the manifest, e.g. `application.css`:
+The `app/components` directory is automatically added to `Rails.application.config.assets.paths` which means CSS assets can be referenced, regardless if you are using sprockets or propshaft.
+
+If using sprockets, require in i.e. `application.css`:
 
 ```css
 /*
@@ -86,12 +87,10 @@ In order to require assets such as CSS, either require them manually in the mani
  */
 ```
 
-Or require `components`, which will in turn require the assets for all components:
+If using propshaft, import in i.e. `application.css`:
 
 ```css
-/*
- *= require elemental_components
- */
+@import url("alert/alert");
 ```
 
 ### Attributes and content blocks
