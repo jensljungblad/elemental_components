@@ -1,6 +1,6 @@
 # Elemental Components
 
-Simple view components for Rails 5.1+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
+Simple view components for Rails 7.2+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
 
@@ -34,11 +34,10 @@ app/
     alert/
       _alert.html.erb
       alert.css
-      alert.js
     alert_component.rb
 ```
 
-The generator also takes `--skip-css` and `--skip-js` options.
+The generator also takes `--skip-css` and `--skip-erb` options.
 
 Let's add some markup and CSS:
 
@@ -78,7 +77,9 @@ This component can now be rendered using the `component` helper:
 
 ### Assets
 
-In order to require assets such as CSS, either require them manually in the manifest, e.g. `application.css`:
+The `app/components` directory is automatically added to `Rails.application.config.assets.paths` which means CSS assets can be referenced, regardless if you are using sprockets or propshaft.
+
+If using sprockets, require in i.e. `application.css`:
 
 ```css
 /*
@@ -86,12 +87,10 @@ In order to require assets such as CSS, either require them manually in the mani
  */
 ```
 
-Or require `components`, which will in turn require the assets for all components:
+If using propshaft, import in i.e. `application.css`:
 
 ```css
-/*
- *= require elemental_components
- */
+@import url("alert/alert");
 ```
 
 ### Attributes and content blocks
@@ -316,7 +315,7 @@ Another good use case is a navigation component:
 # app/components/navigation_component.rb %>
 
 class NavigationComponent < ElementalComponents::Component
-  element :items, multiple: true do
+  element :item, multiple: true do
     attribute :label
     attribute :url
     attribute :active, default: false
@@ -329,12 +328,6 @@ end
   <% c.item label: "Home", url: root_path, active: true %>
   <% c.item label: "Explore" url: explore_path %>
 <% end %>
-```
-
-An alternative here is to pass a data structure to the component as an attribute, if no HTML needs to be injected when rendering the component:
-
-```erb
-<%= component "navigation", items: items %>
 ```
 
 Elements can have validations, too:

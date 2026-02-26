@@ -1,5 +1,7 @@
 .bundle/
+.tool-versions
 Gemfile.lock
+gemfiles/**/*.lock
 log/*.log
 pkg/
 test/dummy/db/*.sqlite3
@@ -10,4 +12,3 @@ test/dummy/storage/
 test/dummy/tmp/
 test/dummy/yarn-error.log
 tmp
-gemfiles/**/*.lock
