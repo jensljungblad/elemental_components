@@ -117,7 +117,7 @@ class ElementalComponents::ComponentTest < ActiveSupport::TestCase
     assert_equal "bar", component.foos[1].content
   end
 
-  test "initialize element named same as exsiting method" do
+  test "initialize element named same as existing method" do
     e = assert_raises(ElementalComponents::Error) do
       Class.new(ElementalComponents::Component) do
         element :content
