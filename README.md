@@ -1,5 +1,8 @@
 # Elemental Components
 
+> [!IMPORTANT]  
+> This gem is no longer maintained. Some of the ideas and concepts were merged into the [view_component](https://github.com/ViewComponent/view_component) gem, which is actively maintained as of 2026.
+
 Simple view components for Rails 7.2+, designed to go well with [elemental_styleguide](https://github.com/jensljungblad/elemental_styleguide). The two together are inspired by the works of [Brad Frost](http://bradfrost.com) and by the [thoughts behind](http://engineering.lonelyplanet.com/2014/05/18/a-maintainable-styleguide.html) Lonely Planet's style guide [Rizzo](http://rizzo.lonelyplanet.com).
 
 ## Installation
